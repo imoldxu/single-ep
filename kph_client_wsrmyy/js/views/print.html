@@ -1,0 +1,125 @@
+
+
+<link rel="stylesheet" href="css/css/print.css?ver={{cssVer}}">
+
+
+<style media="print" type="text/css">
+    .noprint{display:none}
+	
+	.printinfo{display:block}
+</style>
+
+<div class="head noprint">
+
+    <div class="logo">
+
+        <img src="img/logo2.png" alt="" width="54">
+
+        <span>电子处方系统</span>
+
+    </div>
+
+    <div class="goBack" ui-sref="welcome" >返回首页</div>
+
+</div>
+
+<div class="con noprint">
+
+    <h3>处方签</h3>
+
+    <div class="conHead">
+
+        <!--div class="row">
+
+            <div>门诊/住院号：{{userArry.num}}</div>
+            <div>科别/病区：{{userArry.department}}</div>
+            <div>床位号：</div>
+            <div>姓名:{{userArry.patientname}}</div>
+            <div>性别:{{userArry.patientsex}}</div>
+            <div>年龄:{{userArry.patientage}}</div>
+            <div>开具日期:{{dateTime}}</div>
+			<div>费用:{{price | number : 2}}元</div>
+            <div class="dia">诊断:{{userArry.diagnosis}}</div>
+
+        </div-->
+
+		<div class="row">
+
+            <div>门诊/住院号：{{userArry.num}}</div>
+            <div>科别/病区：{{userArry.department}}</div>
+            <div>床位号：</div>
+        </div>
+		<div class="row">
+            <div>姓名:{{userArry.patientname}}</div>
+            <div>性别:{{userArry.patientsex}}</div>
+            <div>年龄:{{userArry.patientage}}</div>
+        </div>
+		<div class="row">
+            <div>开具日期:{{dateTime}}</div>
+			<div>费用:{{price | number : 2}}元</div>
+        </div>
+		<div class="row">
+            <div class="dia">诊断:{{userArry.diagnosis}}</div>
+        </div>
+    </div>
+
+    <div class="conInfo">
+
+        <span class="r">R：</span>
+
+        <div class="infoList" ng-repeat="x in drugArry">
+            <div>{{x.drugname}}</div>
+            <div>{{x.standard +'*' +x.number + '' +x.unit}}</div>
+            <p>{{'用法:'+ x.myusage +','+ x.singledose +',' +x.frequency}}</p>
+        </div>
+
+
+
+    </div>
+
+    <div class="conFoot">
+
+        <div class="row">
+
+            <div>医师:{{userArry.doctorname}}</div>
+            <div>审核、调配:</div>
+            <div>核对、发药:</div>
+
+        </div>
+
+        <p>报销凭据、妥善保存、遗失不补！</p>
+		
+    </div>
+
+</div>
+
+<div class="foot noprint">
+
+    <div class="next"  ng-click="commit()">确认并打印导诊单</div>
+
+    <div class="next" ng-click="goBack()">返回上一步</div>
+
+</div>
+
+<div class="printinfo">
+	<div class="header">
+		<div class="title">武胜人民医院导诊单</div>
+		<io-barcode code="{{userArry.num}}" type="CODE128B"></io-barcode>
+		<div>取药号:{{userArry.num}}</div>
+	</div>
+	
+	<div class="baseinfo">
+		<div class="leftcontent">{{userArry.patientname + '   ' +userArry.patientsex + '   ' + userArry.patientage + '岁'}}</div>
+		<div class="rightcontent">开单医生:{{userArry.doctorname}}</div>
+	</div>
+	
+	<div class="info">
+		<div>温馨提示：注意：如果医嘱中有检验和检查，请先做检验项目。</div>
+	</div>
+	
+	<div class="foot">
+		<div></div>
+		<div>就诊时间：{{nowTime}}</div>
+	</div>
+
+</div>

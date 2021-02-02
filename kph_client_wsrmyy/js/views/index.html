@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="css/css/login.css?ver={{cssVer}}">
+
+<div class="head">
+
+    <img src="img/bg.png" alt="" width="100%">
+
+    <img src="img/logo.png" width="152" class="logo">
+
+</div>
+
+<div class="group">
+
+	<div>
+    	<input type="text" placeholder="请扫描或输入门诊或住院号" ng-model="num">
+	</div>
+	<div>
+    	<div class="submit" ng-click="login(1,1,num)">门诊号开方</div>
+    	<div class="submit" ng-click="login(1,2,num)">住院号开方</div>
+	</div>
+    <a href="#" ng-click="login(1,1,-1)">无门诊号,直接开处方</a>
+
+</div>
