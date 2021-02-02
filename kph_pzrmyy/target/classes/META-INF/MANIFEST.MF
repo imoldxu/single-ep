@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Implementation-Title: pzrmyy
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: Zlinepay
+Built-By: ￨ﾀﾁ￥ﾾﾐ
 Implementation-Vendor-Id: com.yyg
 Class-Path: . lib/spring-boot-starter-web-1.3.5.RELEASE.jar lib/spring
  -boot-starter-1.3.5.RELEASE.jar lib/spring-boot-1.3.5.RELEASE.jar lib
@@ -44,7 +44,7 @@ Class-Path: . lib/spring-boot-starter-web-1.3.5.RELEASE.jar lib/spring
  btf-1.2.jar lib/httpclient-4.5.2.jar lib/httpcore-4.4.4.jar lib/commo
  ns-codec-1.9.jar lib/commons-collections-3.2.2.jar lib/commons-io-2.4
  .jar
-Build-Jdk: 1.8.0_111
+Build-Jdk: 1.8.0_281
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
 Main-Class: com.yyg.pzrmyy.Application

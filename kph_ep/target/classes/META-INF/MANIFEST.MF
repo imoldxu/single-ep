@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Implementation-Title: eprescription
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: Zlinepay
+Built-By: ￨ﾀﾁ￥ﾾﾐ
 Implementation-Vendor-Id: com.yyg
 Class-Path: . lib/spring-boot-starter-web-1.3.5.RELEASE.jar lib/spring
  -boot-starter-1.3.5.RELEASE.jar lib/spring-boot-1.3.5.RELEASE.jar lib
@@ -55,7 +55,7 @@ Class-Path: . lib/spring-boot-starter-web-1.3.5.RELEASE.jar lib/spring
  on-coreutils-1.6.jar lib/msg-simple-1.1.jar lib/btf-1.2.jar lib/commo
  ns-collections-3.2.2.jar lib/commons-io-2.4.jar lib/pinyin4j-2.5.1.ja
  r lib/google-gxp-0.2.4-beta.jar lib/jdom-1.1.jar
-Build-Jdk: 1.8.0_111
+Build-Jdk: 1.8.0_281
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
 Main-Class: com.yyg.eprescription.Application
