@@ -6,14 +6,13 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.yyg.eprescription.BaseMapper;
-
+import tk.mybatis.mapper.common.BaseMapper;
 import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 
 /**
  * MyBatis扫描接口
  * 
- * @author liuzh
+ * @author 
  * @since 2015-12-19 14:46
  */
 @Configuration
@@ -22,7 +21,7 @@ import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 public class MyBatisMapperScannerConfig {
 
     @Bean
-    public MapperScannerConfigurer mapperScannerConfigurer() {
+    public static MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
         mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
         mapperScannerConfigurer.setBasePackage("tk.mybatis.springboot.mapper");

@@ -24,9 +24,9 @@ public class DoctorDrugs {
 	private Integer id;
 	
 	@Column(name = "drugid")
-	@ColumnType(jdbcType = JdbcType.BIGINT)
+	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "drugid")
-	private Long drugid;
+	private Integer drugid;
 		
 	@Column(name = "department")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -46,11 +46,11 @@ public class DoctorDrugs {
 		this.id = id;
 	}
 
-	public Long getDrugid() {
+	public Integer getDrugid() {
 		return drugid;
 	}
 
-	public void setDrugid(Long drugid) {
+	public void setDrugid(Integer drugid) {
 		this.drugid = drugid;
 	}
 

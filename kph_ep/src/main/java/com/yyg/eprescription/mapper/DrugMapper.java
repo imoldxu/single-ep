@@ -6,12 +6,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.yyg.eprescription.BaseMapper;
+import com.x.commons.mybatis.BaseMapper;
 import com.yyg.eprescription.entity.Drug;
-import com.yyg.eprescription.entity.ShortDrugInfo;
+import com.yyg.eprescription.vo.ShortDrugInfo;
 
 @Repository("drugMapper")
-//@Mapper
 public interface DrugMapper extends BaseMapper<Drug> {
 
     List<ShortDrugInfo> getDrugsByKeys(@Param(value="mykeys")String mykeys);

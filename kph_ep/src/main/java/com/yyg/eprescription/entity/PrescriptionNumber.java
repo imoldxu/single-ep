@@ -28,7 +28,7 @@ public class PrescriptionNumber {
 	@Column(name = "number")
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "处方号")
-	private int number;//门诊号
+	private Integer number;//门诊号
 	
 	@Column(name = "opendate")
 	@ColumnType(jdbcType = JdbcType.DATE)
@@ -43,11 +43,11 @@ public class PrescriptionNumber {
 		this.id = id;
 	}
 
-	public int getNumber() {
+	public Integer getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(Integer number) {
 		this.number = number;
 	}
 

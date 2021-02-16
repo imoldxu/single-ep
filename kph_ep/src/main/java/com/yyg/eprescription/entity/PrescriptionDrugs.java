@@ -18,10 +18,6 @@ import tk.mybatis.mapper.annotation.ColumnType;
 @ApiModel(value = "prescriptiondrugs", description = "处方中开具的药品")
 public class PrescriptionDrugs implements Serializable{
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1346530373832969652L;
 
 	@Id
@@ -37,19 +33,10 @@ public class PrescriptionDrugs implements Serializable{
 	private Long prescriptionid;//处方编号
 	
 	@Column(name = "drugid")
-	@ColumnType(jdbcType = JdbcType.BIGINT)
+	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "药品编号")
-	private Long drugid;//处方编号
-	
-	
-	public Long getDrugid() {
-		return drugid;
-	}
-
-	public void setDrugid(Long drugid) {
-		this.drugid = drugid;
-	}
-
+	private Integer drugid;
+		
 	@Column(name = "drugname")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "名称")
@@ -66,9 +53,9 @@ public class PrescriptionDrugs implements Serializable{
 	private String category;//分类
 
 	@Column(name = "price")
-	@ColumnType(jdbcType = JdbcType.DOUBLE)
+	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "单价")
-	private Double price;//单价
+	private Integer price;//单价
 	
 	@Column(name = "unit")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -119,11 +106,11 @@ public class PrescriptionDrugs implements Serializable{
 		this.standard = standard;
 	}
 
-	public Double getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
@@ -182,4 +169,13 @@ public class PrescriptionDrugs implements Serializable{
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+	public Integer getDrugid() {
+		return drugid;
+	}
+
+	public void setDrugid(Integer drugid) {
+		this.drugid = drugid;
+	}
+
 }

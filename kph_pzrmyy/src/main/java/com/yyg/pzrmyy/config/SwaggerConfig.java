@@ -33,12 +33,12 @@ public class SwaggerConfig {
     @SuppressWarnings("deprecation")
 	private ApiInfo liveApiInfo() {
         ApiInfo apiInfo = new ApiInfo("康普惠电子处方系统",//大标题
-                "康普惠电子处方系统",//小标题
+                "处方患者信息共享系统",//小标题
                 "0.1",//版本
-                "康普惠",
-                "KPH",//作者
+                "惠普康",
+                "HPK",//作者
                 "康普惠",//链接显示文字
-                "http://www.baidu.com"//网站链接
+                "http://www.xxx.com"//网站链接
         );
 
         return apiInfo;

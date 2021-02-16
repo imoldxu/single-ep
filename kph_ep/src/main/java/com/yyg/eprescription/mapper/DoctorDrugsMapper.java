@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yyg.eprescription.BaseMapper;
+import com.x.commons.mybatis.BaseMapper;
 import com.yyg.eprescription.entity.DoctorDrugs;
-import com.yyg.eprescription.entity.ShortDrugInfo;
+import com.yyg.eprescription.vo.ShortDrugInfo;
 
 public interface DoctorDrugsMapper extends BaseMapper<DoctorDrugs>{
 

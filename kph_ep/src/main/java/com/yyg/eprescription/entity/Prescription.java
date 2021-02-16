@@ -19,11 +19,6 @@ import tk.mybatis.mapper.annotation.ColumnType;
 @ApiModel(value = "prescription", description = "处方")
 public class Prescription implements Serializable{
 
-	
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3080928075066734357L;
 
 	@Id
@@ -44,7 +39,7 @@ public class Prescription implements Serializable{
 	@Column(name = "type")
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "处方类型")
-	private int type;
+	private Integer type;
 	
 	@Column(name = "department")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -55,6 +50,16 @@ public class Prescription implements Serializable{
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "诊断")
 	private String diagnosis;//诊断
+
+	@Column(name = "patient_card_no")
+	@ColumnType(jdbcType = JdbcType.VARCHAR)
+	@ApiModelProperty(value = "患者姓名")
+	private String cardNo;//患者就诊卡卡号
+	
+	@Column(name = "patient_reg_no")
+	@ColumnType(jdbcType = JdbcType.VARCHAR)
+	@ApiModelProperty(value = "患者姓名")
+	private String regNo;//患者登记号
 	
 	@Column(name = "patientname")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -64,7 +69,7 @@ public class Prescription implements Serializable{
 	@Column(name = "patientage")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "患者年龄")
-	private int patientage;//患者年龄
+	private Integer patientage;//患者年龄
 	
 	@Column(name = "patientsex")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -74,7 +79,12 @@ public class Prescription implements Serializable{
 	@Column(name = "patientphone")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "患者电话")
-	private String patientphone;//患者性别
+	private String patientphone;//患者电话
+	
+	@Column(name = "patient_birthday")
+	@ColumnType(jdbcType = JdbcType.DATE)
+	@ApiModelProperty(value = "患者生日")
+	private Date patientBirthday;//患者生日
 	
 	@Column(name = "doctorname")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -86,55 +96,55 @@ public class Prescription implements Serializable{
 	@ApiModelProperty(value = "开具日期")
 	private Date createdate;//开具日期
 	
-	public static final String STATE_NEW = "生成处方";
-	public static final String STATE_OVER = "已领药";
+//	public static final String STATE_NEW = "生成处方";
+//	public static final String STATE_OVER = "已领药";
+//	
+//	@Column(name = "state")
+//	@ColumnType(jdbcType = JdbcType.VARCHAR)
+//	@ApiModelProperty(value = "处方状态")
+//	private String state;
 	
-	@Column(name = "state")
-	@ColumnType(jdbcType = JdbcType.VARCHAR)
-	@ApiModelProperty(value = "处方状态")
-	private String state;//处方图片的地址？
+//	@Column(name = "zynum")
+//	@ColumnType(jdbcType = JdbcType.INTEGER)
+//	@ApiModelProperty(value = "中药的用法")
+//	private int zynum;
+//	
+//	@Column(name = "zyusage")
+//	@ColumnType(jdbcType = JdbcType.VARCHAR)
+//	@ApiModelProperty(value = "用法")
+//	private String zyusage;
+//	
+//	@Column(name = "zysingledose")
+//	@ColumnType(jdbcType = JdbcType.VARCHAR)
+//	@ApiModelProperty(value = "一次用量")
+//	private String zysingledose;
+//	
+//	@Column(name = "zyfrequence")
+//	@ColumnType(jdbcType = JdbcType.VARCHAR)
+//	@ApiModelProperty(value = "每日用量")
+//	private String zyfrequence;
+//	
+//
+//	@Column(name = "zymode")
+//	@ColumnType(jdbcType = JdbcType.VARCHAR)
+//	@ApiModelProperty(value = "方式")
+//	private String zymode;
 	
-	@Column(name = "zynum")
-	@ColumnType(jdbcType = JdbcType.INTEGER)
-	@ApiModelProperty(value = "中药的用法")
-	private int zynum;
-	
-	@Column(name = "zyusage")
-	@ColumnType(jdbcType = JdbcType.VARCHAR)
-	@ApiModelProperty(value = "用法")
-	private String zyusage;
-	
-	@Column(name = "zysingledose")
-	@ColumnType(jdbcType = JdbcType.VARCHAR)
-	@ApiModelProperty(value = "一次用量")
-	private String zysingledose;
-	
-	@Column(name = "zyfrequence")
-	@ColumnType(jdbcType = JdbcType.VARCHAR)
-	@ApiModelProperty(value = "每日用量")
-	private String zyfrequence;
-	
+//	public String getZymode() {
+//		return zymode;
+//	}
+//
+//	public void setZymode(String zymode) {
+//		this.zymode = zymode;
+//	}
 
-	@Column(name = "zymode")
-	@ColumnType(jdbcType = JdbcType.VARCHAR)
-	@ApiModelProperty(value = "方式")
-	private String zymode;
-	
-	public String getZymode() {
-		return zymode;
-	}
-
-	public void setZymode(String zymode) {
-		this.zymode = zymode;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
+//	public String getState() {
+//		return state;
+//	}
+//
+//	public void setState(String state) {
+//		this.state = state;
+//	}
 
 	public Long getId() {
 		return id;
@@ -215,45 +225,69 @@ public class Prescription implements Serializable{
 	public void setCreatedate(Date createdate) {
 		this.createdate = createdate;
 	}
+	
+//	public int getZynum() {
+//		return zynum;
+//	}
+//
+//	public void setZynum(int zynum) {
+//		this.zynum = zynum;
+//	}
+//
+//	public String getZyusage() {
+//		return zyusage;
+//	}
+//
+//	public void setZyusage(String zyusage) {
+//		this.zyusage = zyusage;
+//	}
+//
+//	public String getZysingledose() {
+//		return zysingledose;
+//	}
+//
+//	public void setZysingledose(String zysingledose) {
+//		this.zysingledose = zysingledose;
+//	}
+//
+//	public String getZyfrequence() {
+//		return zyfrequence;
+//	}
+//
+//	public void setZyfrequence(String zyfrequence) {
+//		this.zyfrequence = zyfrequence;
+//	}
 
-	public int getType() {
-		return type;
+	public Date getPatientBirthday() {
+		return patientBirthday;
 	}
 
-	public void setType(int type) {
+	public void setPatientBirthday(Date patientBirthday) {
+		this.patientBirthday = patientBirthday;
+	}
+
+	public void setType(Integer type) {
 		this.type = type;
 	}
-	
-	public int getZynum() {
-		return zynum;
+
+	public void setPatientage(Integer patientage) {
+		this.patientage = patientage;
 	}
 
-	public void setZynum(int zynum) {
-		this.zynum = zynum;
+	public String getCardNo() {
+		return cardNo;
 	}
 
-	public String getZyusage() {
-		return zyusage;
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
 	}
 
-	public void setZyusage(String zyusage) {
-		this.zyusage = zyusage;
+	public String getRegNo() {
+		return regNo;
 	}
 
-	public String getZysingledose() {
-		return zysingledose;
-	}
-
-	public void setZysingledose(String zysingledose) {
-		this.zysingledose = zysingledose;
-	}
-
-	public String getZyfrequence() {
-		return zyfrequence;
-	}
-
-	public void setZyfrequence(String zyfrequence) {
-		this.zyfrequence = zyfrequence;
+	public void setRegNo(String regNo) {
+		this.regNo = regNo;
 	}
 
 }

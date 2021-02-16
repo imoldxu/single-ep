@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
-@ComponentScan("com.*")
+@ComponentScan("com.yyg.pzrmyy.*")
 @Configuration
 public class Application {
 

@@ -56,9 +56,9 @@ public class Drug implements Serializable{
 	private String subcategory;//子类：抗生素、输液、心血管、呼吸、消化、神经、内分泌、解热镇痛、维生素激素、外用、中成药、滋补
 	
 	@Column(name = "price")
-	@ColumnType(jdbcType = JdbcType.DOUBLE)
+	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "单价")
-	private Double price;//单价
+	private Integer price;//单价
 	
 	@Column(name = "unit")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -161,11 +161,11 @@ public class Drug implements Serializable{
 		this.category = category;
 	}
 
-	public Double getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 

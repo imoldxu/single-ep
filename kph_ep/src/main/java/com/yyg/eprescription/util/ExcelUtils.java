@@ -198,9 +198,10 @@ public class ExcelUtils {
 			drug.setSubcategory(subcategory);
 			
 			if(priceCell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC){
-				drug.setPrice(priceCell.getNumericCellValue());
+				drug.setPrice(new Double(priceCell.getNumericCellValue()*100).intValue());
 			}else if(priceCell.getCellType() == XSSFCell.CELL_TYPE_STRING){
-				drug.setPrice(Double.valueOf(priceCell.getStringCellValue()));
+				double price = Double.valueOf(priceCell.getStringCellValue()).doubleValue()*100;
+				drug.setPrice(new Double(price).intValue());
 			}
 			String unit = unitCell.getStringCellValue();
 			if(unit!= null){
