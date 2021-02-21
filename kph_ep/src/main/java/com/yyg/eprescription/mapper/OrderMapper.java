@@ -6,11 +6,14 @@ import org.apache.ibatis.annotations.Param;
 
 import com.x.commons.mybatis.BaseMapper;
 import com.yyg.eprescription.entity.Order;
+import com.yyg.eprescription.vo.IOrderVo;
 
 public interface OrderMapper extends BaseMapper<Order>{
 	
 	Order selectOrderForUpdate(@Param("orderno") String orderno);
 
-	List<Order> queryUnpayOrders(@Param("regNo") String regNo );
+	List<IOrderVo> queryOrder(@Param("regNo") String regNo, @Param("state") Integer state, @Param("startTime") String StartTime, @Param("endTime") String endTime, @Param("current") Integer current, @Param("pageSize") Integer pageSize );
+	
+	List<IOrderVo> queryPatientOrder(@Param("regNo")String regNo, @Param("state") Integer state);
 
 }

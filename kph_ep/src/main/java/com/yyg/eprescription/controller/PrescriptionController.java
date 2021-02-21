@@ -28,15 +28,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSON;
+import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.OpenPrescriptionBo;
-import com.yyg.eprescription.bo.SearchOption;
+import com.yyg.eprescription.bo.PrescriptionQuery;
 import com.yyg.eprescription.context.ErrorCode;
+import com.yyg.eprescription.context.HandleException;
 import com.yyg.eprescription.context.Response;
 import com.yyg.eprescription.entity.Prescription;
-import com.yyg.eprescription.entity.PrescriptionDrugs;
-import com.yyg.eprescription.mapper.DoctorDrugsMapper;
-import com.yyg.eprescription.service.DiagnosisMsgService;
 import com.yyg.eprescription.service.PrescriptionService;
 import com.yyg.eprescription.util.ExportUtil;
 import com.yyg.eprescription.vo.CountPrescriptionInfo;
@@ -48,133 +46,43 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(value = "/prescition")
+@RequestMapping(value = "/prescription")
 @Api(description = "处方签接口")
 public class PrescriptionController {
 	
 	@Autowired
 	PrescriptionService prescriptionService;
 	
-	/**
-	 * 从武胜医院的webservice获取信息
-	 * @param number
-	 * @return
-	 * @throws Exception
-	 */
-//	private Patient getDiagnosisInfoByWS(String type, String number) throws Exception{
-//		return new WSAPIProxy().getDiagnosis(type, number);
-//	}
-	
-	
-//	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-//	@RequestMapping(value = "/getDiagnosis", method = RequestMethod.GET)
-//	@ApiOperation(value = "获取诊断信息", notes = "获取诊断信息")
-//	public Response getDiagnosis(
-//			@ApiParam(name = "diagnosisnum", value = "诊断号") @RequestParam(name = "diagnosisnum") String diagnosisnum,
-//			HttpServletRequest request, HttpServletResponse respons) {
-//		respons.setHeader("Access-Control-Allow-Origin", "*");
-//		respons.setHeader("Access-Control-Allow-Methods", "GET");
-//		if(diagnosisnum.equalsIgnoreCase("-1")){
-//			DiagnosisVo diagnosis = new DiagnosisVo();
-//			diagnosis.setNum(getSysNumber());
-//			Response resp = new Response(ErrorCode.OK, diagnosis, ErrorCode.OK_MSG);
-//			return resp;
-//		}else{
-//			//TODO 从医院HIS系统中获得相关信息,武胜医院使用武胜的代码
-//			try{
-//				DiagnosisVo diagnosis = getDiagnosisInfo(diagnosisnum);
-//				if(diagnosis != null){
-//					Response resp = new Response(ErrorCode.OK, diagnosis, ErrorCode.OK_MSG);
-//					return resp;
-//				}else{
-//					Response resp = new Response(ErrorCode.ARG_ERROR, null, "诊断号错误，请检查就诊号信息");
-//					return resp;
-//				}
-//			}catch (Exception e) {
-//				e.printStackTrace();
-//				Response resp = new Response(ErrorCode.ARG_ERROR, null, e.getMessage());
-//				return resp;
-//			}
-//		}
-//	}
-	
-//	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-//	@RequestMapping(value = "/getDiagnosisByType", method = RequestMethod.GET)
-//	@ApiOperation(value = "获取诊断信息--武胜专用", notes = "获取诊断信息--武胜专用")
-//	public Response getDiagnosisByType(
-//			@ApiParam(name = "type", value = "门诊1，住院2") @RequestParam(name = "type") String type,
-//			@ApiParam(name = "diagnosisnum", value = "诊断号") @RequestParam(name = "diagnosisnum") String diagnosisnum,
-//			HttpServletRequest request, HttpServletResponse respons) {
-//		respons.setHeader("Access-Control-Allow-Origin", "*");
-//		respons.setHeader("Access-Control-Allow-Methods", "GET");
-//		if(diagnosisnum.equalsIgnoreCase("-1")){
-//			DiagnosisVo diagnosis = new DiagnosisVo();
-//			diagnosis.setNum(getSysNumber());
-//			Response resp = new Response(ErrorCode.OK, diagnosis, ErrorCode.OK_MSG);
-//			return resp;
-//		}else{
-//			//TODO 从医院HIS系统中获得相关信息,武胜医院使用武胜的代码
-//			try{
-//				//Diagnosis diagnosis = getDiagnosisInfo(diagnosisnum);
-//				DiagnosisVo diagnosis = getDiagnosisInfoByWS(type, diagnosisnum);
-//				if(diagnosis != null){
-//					Response resp = new Response(ErrorCode.OK, diagnosis, ErrorCode.OK_MSG);
-//					return resp;
-//				}else{
-//					Response resp = new Response(ErrorCode.ARG_ERROR, null, "诊断号错误，请检查就诊号信息");
-//					return resp;
-//				}
-//			}catch (Exception e) {
-//				e.printStackTrace();
-//				Response resp = new Response(ErrorCode.ARG_ERROR, null, e.getMessage());
-//				return resp;
-//			}
-//		}
-//	}
-
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	@ApiOperation(value = "初始化处方基本信息", notes = "初始化处方基本信息")
 	public Response init(
 			@ApiParam(name = "cardNo", value = "患者卡号") @RequestParam(name = "cardNo") String cardNo,
-			HttpServletRequest request, HttpServletResponse respons) {
+			HttpServletRequest request, HttpServletResponse respons) throws Exception {
 		respons.setHeader("Access-Control-Allow-Origin", "*");
 		respons.setHeader("Access-Control-Allow-Methods", "GET");
 		
-		try{
-			PrescriptionInitVo diagnosis = prescriptionService.init(cardNo);
-			if(diagnosis != null){
-				Response resp = new Response(ErrorCode.OK, diagnosis, "OK");
-				return resp;
-			}else{
-				Response resp = new Response(ErrorCode.ARG_ERROR, null, "诊断号错误，请检查就诊号信息");
-				return resp;
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-			Response resp = new Response(ErrorCode.ARG_ERROR, null, e.getMessage());
+		PrescriptionInitVo diagnosis = prescriptionService.init(cardNo);
+		if(diagnosis != null){
+			Response resp = new Response(ErrorCode.OK, diagnosis, "OK");
 			return resp;
-		}	
+		}else{
+			throw new HandleException(ErrorCode.ARG_ERROR, "请检查患者就诊卡号信息");
+		}
 	}	
 	
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getPrescriptionList", method = RequestMethod.GET)
 	@ApiOperation(value = "获取处方列表", notes = "获取处方列表")
-	public Response getPrescriptionList(
-			@ApiParam(name = "option", value = "查询条件") @Valid SearchOption searchOption,
+	public PageResult<Prescription> getPrescriptionList(
+			@ApiParam(name = "option", value = "查询条件") @Valid PrescriptionQuery searchOption,
 			HttpServletRequest request, HttpServletResponse respons) {
 		respons.setHeader("Access-Control-Allow-Origin", "*");
 		respons.setHeader("Access-Control-Allow-Methods", "GET");
-		Response resp = null;
-		try{
-			List<Prescription> plist = prescriptionService.queryPrescription(searchOption);
+		
+		PageResult<Prescription> ret = prescriptionService.queryPrescription(searchOption);
 			
-			resp = new Response(ErrorCode.OK, plist, "成功");		
-			return resp;
-		}catch (Exception e) {
-			e.printStackTrace();
-			return new Response(ErrorCode.ARG_ERROR, null, "系统异常");		
-		}
+		return ret;
 	}
 	
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")

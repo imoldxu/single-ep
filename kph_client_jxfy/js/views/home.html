@@ -94,14 +94,14 @@
 
         <div class="iptGroup">
 
-            <label>患<i class="ls"></i>者</label> <input type="text" ng-model="ipt.patientname">
+            <label>患<i class="ls"></i>者</label> <input type="text" ng-model="ipt.patientname" readonly="readonly">
 
         </div>
 
         <div class="iptGroup">
 
             <label>性<i class="ls"></i>别</label>
-            <select  ng-init="ipt.patientsex" ng-model="ipt.patientsex">
+            <select  ng-init="ipt.patientsex" ng-model="ipt.patientsex" readonly="readonly">
             <!--<option value="1">{{ipt.patientsex}}</option>-->
 				<option value="男">男</option>
                 <option value="女">女</option>
@@ -111,13 +111,13 @@
 
         <div class="iptGroup">
 
-            <label>年<i class="ls"></i>龄</label><input type="text" maxlength="3" style="width:40px" ng-model="ipt.patientage">岁
+            <label>年<i class="ls"></i>龄</label><input type="text" maxlength="10" style="width:40px" ng-model="ipt.patientage" readonly="readonly">
 
         </div>
 
         <div class="iptGroup">
 
-            <label>联系电话</label> <input type="text" maxlength="11" ng-model="ipt.patientphone">
+            <label>出生日期</label> <input type="text" maxlength="11" ng-model="ipt.patientBirthday" readonly="readonly">
 
         </div>
 

@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import org.apache.ibatis.type.JdbcType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import tk.mybatis.mapper.annotation.ColumnType;
@@ -69,7 +71,7 @@ public class Prescription implements Serializable{
 	@Column(name = "patientage")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "患者年龄")
-	private Integer patientage;//患者年龄
+	private String patientage;//患者年龄
 	
 	@Column(name = "patientsex")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -81,6 +83,7 @@ public class Prescription implements Serializable{
 	@ApiModelProperty(value = "患者电话")
 	private String patientphone;//患者电话
 	
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	@Column(name = "patient_birthday")
 	@ColumnType(jdbcType = JdbcType.DATE)
 	@ApiModelProperty(value = "患者生日")
@@ -91,6 +94,7 @@ public class Prescription implements Serializable{
 	@ApiModelProperty(value = "医生姓名")
 	private String doctorname;//医生姓名
 	
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	@Column(name = "createdate")
 	@ColumnType(jdbcType = JdbcType.DATE)
 	@ApiModelProperty(value = "开具日期")
@@ -186,11 +190,11 @@ public class Prescription implements Serializable{
 		this.patientname = patientname;
 	}
 
-	public int getPatientage() {
+	public String getPatientage() {
 		return patientage;
 	}
 
-	public void setPatientage(int patientage) {
+	public void setPatientage(String patientage) {
 		this.patientage = patientage;
 	}
 
@@ -265,13 +269,13 @@ public class Prescription implements Serializable{
 	public void setPatientBirthday(Date patientBirthday) {
 		this.patientBirthday = patientBirthday;
 	}
+	
+	public Integer getType() {
+		return type;
+	}
 
 	public void setType(Integer type) {
 		this.type = type;
-	}
-
-	public void setPatientage(Integer patientage) {
-		this.patientage = patientage;
 	}
 
 	public String getCardNo() {

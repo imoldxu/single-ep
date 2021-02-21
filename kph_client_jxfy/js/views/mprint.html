@@ -5,6 +5,8 @@
 
 <style media="print" type="text/css">
     .noprint{display:none}
+	
+	.printinfo{display:block}
 </style>
 
 <div class="head noprint">
@@ -22,46 +24,52 @@
 </div>
 
 <div class="con">
-    <h4>四川锦欣妇女儿童医院●成都市锦江区妇幼保健金卡医院</h4>
-    <div><span class="title">处方笺</span><span>普通</span>
-        <div></div>
+    <div class="topHead">四川锦欣妇女儿童医院●成都市锦江区妇幼保健金卡医院</div>
+    <div class="title_area">
+        <div class="title">处方笺</div>
+        <div class="tip">普通</div>
+        <div class="qrtip">登记号</div>
+        <div class="qrcode">
+            <qrcode data="{{userArry.regNo}}" version="2" error-correction-level="Q" size="40"></qrcode>
+        </div>
     </div>
     
     <div class="conHead">
 
         <div class="row">
-            <div>姓名:{{userArry.patientname}}</div>
-            <div>性别:{{userArry.patientsex}}</div>
-            <div>年龄:{{userArry.patientage}}</div>
-            <div>费别<span class="valueinput">:{{userArry.patientage}}</span></div>
+            <div class="label">姓名:</div><div class="valueInput" style="width: 100px;">{{userArry.patientname}}</div>
+            <div class="label">性别:</div><div class="valueInput">{{userArry.patientsex}}</div>
+            <div class="label">年龄:</div><div class="valueInput">{{userArry.patientage}}岁</div>
+            <div class="label">费别:</div><div class="valueInput">自费</div>
         </div>
         <div class="row">
-            <div>出生日期:{{userArry.patientBirthday}}</div>
+            <div class="label">出生日期:</div><div class="valueInput" style="min-width: 100px;">{{userArry.patientBirthday}}</div>
         </div>
         <div class="row">
-            <div>门诊/住院病案号：{{userArry.num}}</div>
-            <div>科别：{{userArry.department}}</div>
+            <div class="label">门诊/住院病案号：</div><div class="valueInput" style="width:100px;margin-right: 15px;">{{userArry.regNo}}</div>
+            <div class="label">科别：</div><div class="valueInput" style="width: 80px;">{{userArry.department}}</div>
         </div>
         <div class="row">
-            <div>处方号：{{userArry.num}}</div>
-            <div>开具日期:{{format(userArry.createdate,"yyyy-MM-dd")}}</div>
+            <div class="label">处方号：</div><div class="valueInput" style="margin-right: 30px;padding: 0 30px;">{{userArry.num}}</div>
+            <div class="label">开具日期:</div><div class="valueInput" style="padding: 0 55px 0 20px">{{format(userArry.createdate,"yyyy-MM-dd")}}</div>
         </div>
 		<div class="row">
-            <div class="dia">临床诊断:{{userArry.diagnosis}}</div>
+            <div class="label">临床诊断:</div><div class="valueInput" style="width: 390px;">{{userArry.diagnosis}}</div>
         </div>
 
     </div>
 
     <div class="conInfo">
 
-        <span class="r">R.</span>
+        <div class="r">R.</div>
 
         <div class="infoList" ng-repeat="x in drugArry">
-            <div>{{x.drugname}}</div>
-            <div>{{x.standard +'*' +x.number + '' +x.unit}}</div>
-            <p>{{'用法用量:'+ x.singledose +'  ' +x.frequency+ '  '+ x.myusage}}</p>
+            <div style="display: inline-block; margin-right: 20px;">{{$index+1}}</div>
+            <div style="display: inline-block;">{{x.drugname}}</div>
+            <div style="display: inline-block;">{{'('+x.standard+') '+' X ' +x.number +x.unit}}</div>
+            <div style="margin-left: 35px;"><span>{{'用法用量:'+ x.singledose}}</span><span style="margin-left: 20px;">{{x.frequency}}</span><span style="margin-left: 20px;">{{x.myusage}}</span></div>
         </div>
-        <div>---------------------(处方正文请勿写过此线)----------------------</div>
+        <div style="text-align: center;">------------------------(处方正文请勿写过此线)------------------------</div>
 
 
     </div>
@@ -70,18 +78,20 @@
 
         <div class="row">
 
-            <div>医师签名并盖章:{{userArry.doctorname}}</div>
-            <div>金额(元):{{price/100}}元</div>
+            <div class="label">医师签名并盖章:</div><div class="valueInput" style="width: 100px; margin-right: 30px;">{{userArry.doctorname}}</div>
+            <div class="label">金额(元):</div><div class="valueInput" style="width: 120px;">{{price/100}}元</div>
         </div>
         <div class="row">  
-            <div>审核'校对'发药:</div>
-            <div>调配:</div>
+            <div class="label" style="letter-spacing: 2px;">审核'校对'发药:</div><div class="valueInput" style="width: 100px; margin-right: 20px;"></div>
+            <div class="label" style="letter-spacing: 10px;">调配:</div><div class="valueInput" style="width: 120px;"></div>
         </div>
-
-        <p>处方用量超过七天’请医生再次确认签字。</p>
-		<p>药品属特殊商品’一经发出概不退换。</p>
+        <div style="margin: 5 0px">处方用量超过七天’请医生再次确认签字。</div>
+		<div>药品属特殊商品’一经发出概不退换。</div>
     </div>
 
+    <div class="payQrCode">
+        <qrcode data="http://xxxx/pharmacy/scan/index?u=jxfyhpk&d={{paycode}}&fairtype=f" version="2" error-correction-level="Q" size="120"></qrcode>
+    </div>
 </div>
 
 <div class="foot noprint">

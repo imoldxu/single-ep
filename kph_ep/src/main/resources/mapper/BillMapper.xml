@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yyg.eprescription.mapper.BillMapper" >
+	<resultMap id="statisticDto" type="com.yyg.eprescription.dto.BillStatisticDTO" autoMapping="true">		
+  	</resultMap>
+
+	<select id="queryBill" resultType="Bill">
+	    select * from t_bill
+	</select>
+
+	<select id="statistic" resultMap="statisticDto">
+		select type, sum(amount) as totalAmount FROM t_bill where createtime between #{query.startTime} and #{query.endTime} 
+		<if test="query.payway !=null">
+			AND payway = #{query.payway}
+		</if>
+		GROUP BY type
+	</select>
+
+</mapper>

@@ -1,13 +1,30 @@
 package com.yyg.eprescription.bo;
 
-public class PayOverBo {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class JXPayOverBo {
+	
+	@JsonProperty("PatientNo")
 	private String PatientNo; //	病人登记号	是	[string]		
+	
+	@JsonProperty("TPTradeNo")
 	private String TPTradeNo; //	第三方系统交易号	是	[string]		
+	
+	@JsonProperty("ClientType")
 	private String ClientType; //	客户端	是	[string]	CSYT	查看
+	
+	@JsonProperty("PharmacyCode")
 	private String PharmacyCode; //	药店唯一标识	是	[string]	jxfyhpk	查看
+	
+	@JsonProperty("PayMode")
 	private	String PayMode; //	支付方式	是	[string]	wxjs	查看
+	
+	@JsonProperty("PayAmt")
 	private String PayAmt;	//支付金额	是	[string]	单位分	查看
+	
+	@JsonProperty("PhTradeNo")
 	private String PhTradeNo; //	处方订单号	是	[string]
+	
 	public String getPatientNo() {
 		return PatientNo;
 	}

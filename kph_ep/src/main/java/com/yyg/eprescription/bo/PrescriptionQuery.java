@@ -1,17 +1,18 @@
 package com.yyg.eprescription.bo;
 
+import org.springframework.format.annotation.DateTimeFormat;
 
-public class SearchOption {
+public class PrescriptionQuery {
 
-	private String number;
+	private String num;
+	
+	private String regNo;
 	
 	private String patientname;//患者姓名
 	
 	private String doctorname;//医生姓名 
 	
 	private String department;//科室
-
-	private String patientphone;//患者性别
 	
 	private String startdate;//起始日期
 	
@@ -19,7 +20,9 @@ public class SearchOption {
 	
 	private String state;//状态
 	
-	private Integer pageindex;//pageindex;
+	private Integer current;//pageindex;
+	
+	private Integer pageSize;//
 	
 	public String getPatientname() {
 		return patientname;
@@ -45,20 +48,12 @@ public class SearchOption {
 		this.department = department;
 	}
 
-	public String getPatientphone() {
-		return patientphone;
+	public String getNum() {
+		return num;
 	}
 
-	public void setPatientphone(String patientphone) {
-		this.patientphone = patientphone;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
+	public void setNum(String num) {
+		this.num = num;
 	}
 
 	public String getStartdate() {
@@ -85,13 +80,28 @@ public class SearchOption {
 		this.state = state;
 	}
 
-	public Integer getPageindex() {
-		return pageindex;
+	public String getRegNo() {
+		return regNo;
 	}
 
-	public void setPageindex(Integer pageindex) {
-		this.pageindex = pageindex;
+	public void setRegNo(String regNo) {
+		this.regNo = regNo;
 	}
 
+	public Integer getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(Integer current) {
+		this.current = current;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
 	
 }

@@ -36,5 +36,9 @@ public class ErrorCode {
 	
 	public static final int DOMAIN_ERROR = 14; //权限错误
 
-
+	public static final int UNLOGIN = 15;
+	
+	public static final int UNAUTH = 16; //未授权
+	
+	public static final int OTHERPAY = 17; //其他渠道已支付，或相同渠道的第二笔支付
 }

@@ -192,7 +192,7 @@ define(['app','angular'], function(app,angular){
 			
 			 $http({
                 method: 'get',
-                url: URL+'prescition/getDiagnosisByKeys',
+                url: URL+'prescription/getDiagnosisByKeys',
                 requestType: 'json',
                 params: {
                     keys: keyword

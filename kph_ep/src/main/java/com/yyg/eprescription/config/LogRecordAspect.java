@@ -28,7 +28,7 @@ public class LogRecordAspect {
 	private static final Logger logger = LoggerFactory.getLogger(LogRecordAspect.class);
 	 
     // 定义切点Pointcut
-    @Pointcut("execution(* com.x.lfs.controller..*.*(..))")
+    @Pointcut("execution(* com.yyg.eprescription.controller..*.*(..))")
     public void webLog() {
     }
  
@@ -51,7 +51,9 @@ public class LogRecordAspect {
         		 if (args[i] instanceof HttpServletRequest || args[i] instanceof HttpServletResponse) {
 					continue;
 				}
-        		paramStr = JSON.toJSONString(args[i]);
+        	    if(request.getContentType()=="application/json") {
+        	    	paramStr = JSON.toJSONString(args[i]);
+        	    }
         	}
         }else if("GET".equals(method)){
         	paramStr = request.getQueryString();;

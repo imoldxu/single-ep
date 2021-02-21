@@ -1,40 +1,21 @@
 package com.yyg.eprescription.bo;
 
-import javax.validation.constraints.NotBlank;
-
 public class BillQuery {
 
-	@NotBlank(message="不能为空")
-	private String StartDate;
-	@NotBlank(message="不能为空")
-	private String EndDate;
-	@NotBlank(message="不能为空")
 	private String StartTime;
-	@NotBlank(message="不能为空")
-	private String EndTime;
-	@NotBlank(message="不能为空")
-	private String PayMode;
-	@NotBlank(message="不能为空")
-	private String TradeFlag;
-	@NotBlank(message="不能为空")
-	private String PharmacyCode;
+	
+	private String endTime;
+	
+	private Integer payway;
 
-	public String getStartDate() {
-		return StartDate;
-	}
-
-	public void setStartDate(String startDate) {
-		StartDate = startDate;
-	}
-
-	public String getEndDate() {
-		return EndDate;
-	}
-
-	public void setEndDate(String endDate) {
-		EndDate = endDate;
-	}
-
+	private String payid;
+	
+	private String orderno;
+	
+	private Integer current;
+	
+	private Integer pageSize;
+	
 	public String getStartTime() {
 		return StartTime;
 	}
@@ -44,35 +25,51 @@ public class BillQuery {
 	}
 
 	public String getEndTime() {
-		return EndTime;
+		return endTime;
 	}
 
 	public void setEndTime(String endTime) {
-		EndTime = endTime;
+		this.endTime = endTime;
 	}
 
-	public String getPayMode() {
-		return PayMode;
+	public Integer getPayway() {
+		return payway;
 	}
 
-	public void setPayMode(String payMode) {
-		PayMode = payMode;
+	public void setPayway(Integer payway) {
+		this.payway = payway;
 	}
 
-	public String getTradeFlag() {
-		return TradeFlag;
+	public String getPayid() {
+		return payid;
 	}
 
-	public void setTradeFlag(String tradeFlag) {
-		TradeFlag = tradeFlag;
+	public void setPayid(String payid) {
+		this.payid = payid;
 	}
 
-	public String getPharmacyCode() {
-		return PharmacyCode;
+	public String getOrderno() {
+		return orderno;
 	}
 
-	public void setPharmacyCode(String pharmacyCode) {
-		PharmacyCode = pharmacyCode;
+	public void setOrderno(String orderno) {
+		this.orderno = orderno;
+	}
+
+	public Integer getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(Integer current) {
+		this.current = current;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 	
 }

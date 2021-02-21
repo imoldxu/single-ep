@@ -1,0 +1,117 @@
+import React, { useEffect, useState } from 'react'
+import { getPrescriptionById } from '@/services/ant-design-pro/prescription';
+import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
+import styles from './index.less'
+//import QRCode from 'qrcode.react/lib/index'
+import { message, Spin } from 'antd';
+
+export default ()=>{
+
+    const [detail, setDetail ] = useState();
+    const [isloading, setLoading] = useState(true)
+
+    const { query } = history.location;
+    const { id } = query;
+
+    useEffect(async ()=>{
+        try{
+            const resp = await getPrescriptionById({id:id})
+            const {code} = resp
+            if(code == 1){
+                setDetail(resp.data)
+            }else{
+                message.error(resp.message,3)
+            }
+        }catch(e){
+            message.error(e.message,3)
+        } finally{
+            setLoading(false)
+        }
+    },[id])
+    let price = 0
+    if(detail){
+        detail.drugList.forEach(drug=>{
+            price  +=  drug.price*drug.number;
+        });
+    }
+
+    return (
+        <Spin spinning={isloading}>
+           { detail &&
+            <div className={styles.con}>
+                <div className={styles.topHead}>四川锦欣妇女儿童医院●成都市锦江区妇幼保健金卡医院</div>
+                <div className={styles.title_area}>
+                    <div className={styles.title}>处方笺</div>
+                    <div className={styles.tip}>普通</div>
+                    <div className={styles.qrtip}>登记号</div>
+                    <div className={styles.qrcode}>
+                        {/* <QRCode data={detail.prescription.regNo} version="2" error-correction-level="Q" size="40"></QRCode> */}
+                    </div>
+                </div>
+                
+                <div className={styles.conHead}>
+
+                    <div className={styles.row}>
+                        <div className={styles.label}>姓名:</div><div className={styles.valueInput} style={{width: "100px"}}>{detail.prescription.patientname}</div>
+                        <div className={styles.label}>性别:</div><div className={styles.valueInput}>{detail.prescription.patientsex}</div>
+                        <div className={styles.label}>年龄:</div><div className={styles.valueInput}>{detail.prescription.patientage}</div>
+                        <div className={styles.label}>费别:</div><div className={styles.valueInput}>自费</div>
+                    </div>
+                    <div className={styles.row}>
+                        <div className={styles.label}>出生日期:</div><div className={styles.valueInput} style={{minWidth: "100px"}}>{detail.prescription.patientBirthday}</div>
+                    </div>
+                    <div className={styles.row}>
+                        <div className={styles.label}>门诊/住院病案号：</div><div className={styles.valueInput} style={{width:"100px", marginRight: "15px"}}>{detail.prescription.regNo}</div>
+                        <div className={styles.label}>科别：</div><div className={styles.valueInput} style={{width: "80px"}}>{detail.prescription.department}</div>
+                    </div>
+                    <div className={styles.row}>
+                        <div className={styles.label}>处方号：</div><div className={styles.valueInput} style={{marginRight: "30px",padding: "0 30px"}}>{detail.prescription.num}</div>
+                        <div className={styles.label}>开具日期:</div><div className={styles.valueInput} style={{padding: "0 55px 0 20px"}}>{detail.prescription.createdate}</div>
+                    </div>
+                    <div className={styles.row}>
+                        <div className={styles.label}>临床诊断:</div><div className={styles.valueInput} style={{width: "390px"}}>{detail.prescription.diagnosis}</div>
+                    </div>
+
+                </div>
+
+                <div className={styles.conInfo}>
+
+                    <div className={styles.r}>R.</div>
+
+                    {detail.drugList.map((drug, index)=>{
+                        return(
+                        <div className={styles.infoList}>
+                            <div style={{display: "inline-block", marginRight: "20px"}}>{index+1}</div>
+                            <div style={{display: "inline-block"}}>{drug.drugname}</div>
+                            <div style={{display: "inline-block"}}>{'('+drug.standard+') '+' X ' +drug.number + drug.unit}</div>
+                            <div style={{marginLeft: "35px"}}><span>{'用法用量:'+ drug.singledose}</span><span style={{marginLeft: "20px"}}>{drug.frequency}</span><span style={{marginLeft: "20px"}}>{drug.myusage}</span></div>
+                        </div>
+                        )
+                    })
+                    }
+                    <div style={{textAlign: "center"}}>------------------------(处方正文请勿写过此线)------------------------</div>
+                </div>
+
+                <div className={styles.conFoot}>
+
+                    <div className={styles.row}>
+
+                        <div className={styles.label}>医师签名并盖章:</div><div className={styles.valueInput} style={{width: "100px", marginRight: "30px"}}>{detail.prescription.doctorname}</div>
+                        <div className={styles.label}>金额(元):</div><div className={styles.valueInput} style={{width: "120px"}}>{price/100}元</div>
+                    </div>
+                    <div className={styles.row}>  
+                        <div className={styles.label} style={{letterSpacing: "2px"}}>审核'校对'发药:</div><div className={styles.valueInput} style={{width: "100px", marginRight: "20px"}}></div>
+                        <div className={styles.label} style={{letterSpacing: "10px"}}>调配:</div><div className={styles.valueInput} style={{width: "120px"}}></div>
+                    </div>
+                    <div style={{margin: "5 0px"}}>处方用量超过七天’请医生再次确认签字。</div>
+                    <div>药品属特殊商品’一经发出概不退换。</div>
+                </div>
+
+                <div className={styles.payQrCode}>
+                    {/* <QRCode data="http://xxxx/pharmacy/scan/index?u=jxfyhpk&d={{paycode}}&fairtype=f" version="2" error-correction-level="Q" size="120"></QRCode> */}
+                </div>
+            </div>
+            }
+        </Spin>
+    )
+}

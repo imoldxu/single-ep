@@ -10,25 +10,35 @@ import java.util.List;
 public class PageResult<T> {
 
 	@ApiModelProperty("分页信息")
-    private Pagination pagination;
+    private Integer total;
     
     @ApiModelProperty("数据")
-    private List<T> list;
+    private List<T> data;
 
-	public Pagination getPagination() {
-		return pagination;
+    private boolean success;
+    
+	public Integer getTotal() {
+		return total;
 	}
 
-	public void setPagination(Pagination pagination) {
-		this.pagination = pagination;
+	public void setTotal(Integer total) {
+		this.total = total;
 	}
 
-	public List<T> getList() {
-		return list;
+	public List<T> getData() {
+		return data;
 	}
 
-	public void setList(List<T> list) {
-		this.list = list;
+	public void setData(List<T> data) {
+		this.data = data;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 }

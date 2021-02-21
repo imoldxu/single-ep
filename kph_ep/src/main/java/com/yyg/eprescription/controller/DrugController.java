@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
+import com.x.commons.mybatis.PageResult;
+import com.yyg.eprescription.bo.DrugQuery;
+import com.yyg.eprescription.bo.UpDownDrugBo;
 import com.yyg.eprescription.context.ErrorCode;
+import com.yyg.eprescription.context.HandleException;
 import com.yyg.eprescription.context.Response;
 import com.yyg.eprescription.entity.Drug;
 import com.yyg.eprescription.service.DoctorDrugService;
@@ -57,15 +63,14 @@ public class DrugController {
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getDrugInfoListByKeys", method = RequestMethod.GET)
 	@ApiOperation(value = "根据药品的拼音缩写搜索药品", notes = "根据药品的拼音缩写搜索药品")
-	public Response getDrugInfoListByKeys(
-			@ApiParam(name = "keys", value = "拼音首字母索引") @RequestParam(name = "keys") String keys,
+	public PageResult<Drug> getDrugInfoListByKeys(
+			@ApiParam(name = "query", value = "查询条件") @Valid DrugQuery query,
 			HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "GET");
 		
-		List<Drug> ret = drugService.queryDrugInfoByKeys(keys);
+		PageResult<Drug> resp = drugService.queryDrugInfoByKeys(query);
 		
-		Response resp = new Response(ErrorCode.OK, ret, "OK");
 		return resp;
 	}
 	
@@ -172,83 +177,100 @@ public class DrugController {
 	}
 	
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-	@RequestMapping(value = "/modifyDrug", method = RequestMethod.POST)
-	@ApiOperation(value = "修改药品信息", notes = "{     \"id\": 23,     \"drugname\": \"硫酸亚铁片\",     \"standard\": \"0.3g*60片\",     \"category\": \"OTC\",     \"price\": 38,     \"unit\": \"盒\",     \"form\": \"片剂\",     \"singledose\": \"1\",     \"doseunit\": \"片\",     \"defaultusage\": \"饭前\",     \"frequency\": \"一天三次\",     \"fullkeys\": \"LSYTP\",     \"shortnamekeys\": \"LSYTP\"   }")
-	public Response modifyDrug(@ApiParam(name = "drugInfo", value = "drugInfo") @RequestParam(value="drugInfo") String drugInfo,
+	@RequestMapping(value = "/addDrug", method = RequestMethod.POST)
+	@ApiOperation(value = "添加药品信息", notes = "")
+	public Response addDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
 			HttpServletRequest request,HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST");
 		
 		Response resp = null;
 		
-		Drug drug = JSON.parseObject(drugInfo, Drug.class);
-		if (drug == null) {
-			resp = new Response(ErrorCode.ARG_ERROR, null, "请求参数错误");
-			return resp;
+		if(drug.getId() == null){
+			int opRet = drugService.addDrug(drug);
+			if(opRet == 0){
+				throw new HandleException(ErrorCode.NORMAL_ERROR, "修改失败");    
+			}else{
+				resp = new Response(ErrorCode.OK, drug, "OK");
+				return resp;
+			}
+		}else{
+			throw new HandleException(ErrorCode.ARG_ERROR, "参数错误");
 		}
+	}
+	
+	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	@RequestMapping(value = "/modifyDrug", method = RequestMethod.PUT)
+	@ApiOperation(value = "修改药品信息", notes = "")
+	public Response modifyDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
+			HttpServletRequest request,HttpServletResponse response) {
+		//response.setHeader("Access-Control-Allow-Origin", "*");
+		//response.setHeader("Access-Control-Allow-Methods", "PUT");
+		
+		Response resp = null;
 		
 		if(drug.getId() != null){
 			int opRet = drugService.updateDrug(drug);
 			if(opRet == 0){
-				resp = new Response(ErrorCode.ARG_ERROR, null, "修改失败");    
+				throw new HandleException(ErrorCode.NORMAL_ERROR, "修改失败");    
 			}else{
-				resp = new Response(ErrorCode.OK, drug, "OK");    
+				resp = new Response(ErrorCode.OK, drug, "OK");
+				return resp;
 			}
 		}else{
-			resp = new Response(ErrorCode.ARG_ERROR, null, "药品不存在");
+			throw new HandleException(ErrorCode.ARG_ERROR, "参数错误");
 		}
-		return resp;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-	@RequestMapping(value = "/delDrug", method = RequestMethod.POST)
-	@ApiOperation(value = "删除药品信息", notes = "删除药品")
-	public Response delDrug(@ApiParam(name="drugid", value="drugid") @RequestParam(value="drugid") int drugid, HttpServletRequest request,HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "POST");
-		
-		Response resp = null;			
-		int optRet = drugService.deleteDrug(drugid);
+//	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+//	@RequestMapping(value = "/delDrug", method = RequestMethod.POST)
+//	@ApiOperation(value = "删除药品信息", notes = "删除药品")
+//	public Response delDrug(@ApiParam(name="drugid", value="drugid") @RequestParam(value="drugid") int drugid, HttpServletRequest request,HttpServletResponse response) {
+//		response.setHeader("Access-Control-Allow-Origin", "*");
+//		response.setHeader("Access-Control-Allow-Methods", "POST");
+//		
+//		Response resp = null;			
+//		int optRet = drugService.deleteDrug(drugid);
+//	
+//		if(optRet!=0){	
+//			resp = new Response(ErrorCode.OK, null, "删除成功");
+//		}else{
+//			resp = new Response(ErrorCode.ARG_ERROR, null, "药品不存在");
+//		}
+//		return resp;
+//	}
 	
-		if(optRet!=0){	
-			resp = new Response(ErrorCode.OK, null, "删除成功");
-		}else{
-			resp = new Response(ErrorCode.ARG_ERROR, null, "药品不存在");
-		}
-		return resp;
-	}
-	
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-	@RequestMapping(value = "/downDrug", method = RequestMethod.POST)
-	@ApiOperation(value = "下架药品", notes = "{     \"id\": 23,     \"drugname\": \"硫酸亚铁片\",     \"standard\": \"0.3g*60片\",     \"category\": \"OTC\",     \"price\": 38,     \"unit\": \"盒\",     \"form\": \"片剂\",     \"singledose\": \"1\",     \"doseunit\": \"片\",     \"defaultusage\": \"饭前\",     \"frequency\": \"一天三次\",     \"fullkeys\": \"LSYTP\",     \"shortnamekeys\": \"LSYTP\"   }")
-	public Response downDrug(@RequestParam(value="drugid") int drugid, HttpServletRequest request,HttpServletResponse response) {
+	@RequestMapping(value = "/downDrug", method = RequestMethod.PUT)
+	@ApiOperation(value = "下架药品", notes = "")
+	public Response downDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST");
 		
 		Response resp = null;	
-		int opRet = drugService.downDrug(drugid);
+		int opRet = drugService.downDrug(drugbo.getDrugid());
 		if(opRet!=0){
 			resp = new Response(ErrorCode.OK, null, "删除成功");
+			return resp;
 		}else{
-			resp = new Response(ErrorCode.ARG_ERROR, null, "药品不存在");
+			throw new HandleException(ErrorCode.ARG_ERROR, "药品不存在");
 		}
-		return resp;
 	}
 	
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-	@RequestMapping(value = "/upDrug", method = RequestMethod.POST)
+	@RequestMapping(value = "/upDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "上架药品信息", notes = "上架药品信息")
-	public Response upDrug(@RequestParam(value="drugid") int drugid, HttpServletRequest request,HttpServletResponse response) {
+	public Response upDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST");
 		
 		Response resp = null;			
-		int opRet = drugService.upDrug(drugid);
+		int opRet = drugService.upDrug(drugbo.getDrugid());
 		if(opRet!=0){
 			resp = new Response(ErrorCode.OK, null, "删除成功");
+			return resp;
 		}else{
-			resp = new Response(ErrorCode.ARG_ERROR, null, "药品不存在");
+			throw new HandleException(ErrorCode.ARG_ERROR, "药品不存在");
 		}
-		return resp;
 	}
 }

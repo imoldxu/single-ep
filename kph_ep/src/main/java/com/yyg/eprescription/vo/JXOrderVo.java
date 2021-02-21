@@ -2,7 +2,7 @@ package com.yyg.eprescription.vo;
 
 import java.util.List;
 
-public class OrderVo {
+public class JXOrderVo {
 
 	private String Adm;    //处方系统的就诊号	是	[string]	
 	private String PhTradeNo; //	处方订单号	是	[string]	

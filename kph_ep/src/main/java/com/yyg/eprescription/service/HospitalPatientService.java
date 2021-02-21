@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yyg.eprescription.context.ErrorCode;
+import com.yyg.eprescription.context.HandleException;
 import com.yyg.eprescription.vo.PrescriptionInitVo;
 
 @Service
@@ -40,10 +41,10 @@ public class HospitalPatientService {
 					return ret;
 				} else {
 					String msg = respObj.getString("msg");
-					throw new Exception(msg);
+					throw new HandleException(ErrorCode.NORMAL_ERROR, msg);
 				}
 			} else {
-				throw new Exception("获取不到患者信息");
+				throw new HandleException(ErrorCode.NORMAL_ERROR, "获取不到患者信息");
 			}
 		} finally {
 			response.close();

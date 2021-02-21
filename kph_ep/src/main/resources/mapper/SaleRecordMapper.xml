@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yyg.eprescription.mapper.SalesRecordMapper">
+
+	<resultMap id="record"  type="com.yyg.eprescription.vo.SalesRecordVo" autoMapping="true">
+	</resultMap>
+	
+	<resultMap type="java.lang.Integer" id="count">
+		<result column="total"/>
+	</resultMap>
+	
+	<resultMap type="com.yyg.eprescription.vo.SalesRecordStatisticVo" id="statisticVo" autoMapping="true">
+	</resultMap>
+	
+	
+	<select id="test" resultMap="">
+	
+	</select>
+
+	<select id="querySalesRecord" resultMap="record">
+		SELECT t_sales_record.*, t_prescription.num as prescriptionno, t_prescription.patient_reg_no as regNo, t_prescription.doctorname, t_prescription.department, t_order.orderno FROM t_sales_record LEFT JOIN t_prescription ON t_sales_record.prescriptionid = t_prescription.id LEFT JOIN t_order ON t_sales_record.orderid = t_order.id
+		<where>
+			<if test="query.startTime !=null and query.endTime != null">
+				t_sales_record.createtime between #{query.startTime} and #{query.endTime}
+			</if>
+			<if test="query.regNo != null">
+				AND t_prescription.patient_reg_no = #{query.regNo}
+			</if>
+			<if test="query.prescriptionno != null">
+				AND t_prescription.num = #{query.prescriptionno}
+			</if>
+		</where>
+		limit ${(query.current-1)*query.pageSize}, ${query.pageSize}
+	</select>
+
+	<select id="countSalesRecord" resultMap="count">
+		SELECT count(*) as total FROM t_sales_record LEFT JOIN t_prescription ON t_sales_record.prescriptionid = t_prescription.id LEFT JOIN t_order ON t_sales_record.orderid = t_order.id
+		<where>
+			<if test="query.startTime !=null and query.endTime != null">
+				t_sales_record.createtime between #{query.startTime} and #{query.endTime}
+			</if>
+			<if test="query.regNo != null">
+				AND t_prescription.patient_reg_no = #{query.regNo}
+			</if>
+			<if test="query.prescriptionno != null">
+				AND t_prescription.num = #{query.prescriptionno}
+			</if>
+		</where>
+	</select>
+	
+	<select id="statistic" resultMap="statisticVo">
+		SELECT SUM(t_sales_record.num-t_sales_record.refundnum) as totalSale, t_sales_record.drugname, t_sales_record.standard, t_prescription.doctorname, t_prescription.department FROM t_sales_record LEFT JOIN t_prescription ON t_sales_record.prescriptionid = t_prescription.id 
+		<where>
+			<if test="query.startTime !=null and query.endTime != null">
+				t_sales_record.createtime between #{query.startTime} and #{query.endTime}
+			</if>
+			<if test="query.doctorname != null">
+				AND t_prescription.doctorname = #{query.doctorname}
+			</if>
+		</where>
+		GROUP BY t_prescription.doctorname, t_prescription.department, t_sales_record.drugname, t_sales_record.standard
+	</select>
+
+</mapper>

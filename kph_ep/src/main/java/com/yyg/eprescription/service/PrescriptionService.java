@@ -3,6 +3,7 @@ package com.yyg.eprescription.service;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.OpenPrescriptionBo;
-import com.yyg.eprescription.bo.SearchOption;
+import com.yyg.eprescription.bo.PrescriptionQuery;
 import com.yyg.eprescription.entity.Prescription;
 import com.yyg.eprescription.entity.PrescriptionDrugs;
 import com.yyg.eprescription.entity.PrescriptionNumber;
@@ -55,9 +57,49 @@ public class PrescriptionService {
 	 */
 	public PrescriptionInitVo init(String cardNo) throws Exception {
 		PrescriptionInitVo diagnosisVo = hospitalPatientService.getDiagnosisInfo(cardNo);
+		if(diagnosisVo.getPatientage().equals("0")) {
+			String birthday = diagnosisVo.getPatientBirthday();
+			String age = getAge(birthday);
+			diagnosisVo.setPatientage(age);
+		}else {
+			diagnosisVo.setPatientage(diagnosisVo.getPatientage()+"岁");
+		}
 		diagnosisVo.setNum(getSysNumber());
 		return diagnosisVo;
 	}
+	
+	/**
+	 * 根据出生日期计算年龄、不足1岁精确到几月或几天
+	 * @param birthDayStr
+	 * @return
+	 * @throws ParseException
+	 */
+	private String getAge(String birthDayStr) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date birthDay = format.parse(birthDayStr);
+		
+		Calendar now = Calendar.getInstance();
+        long nowmillSeconds = now.getTimeInMillis();
+        Calendar birth = Calendar.getInstance();
+        birth.setTime(birthDay);
+        long birmillSeconds = birth.getTimeInMillis();
+        Calendar difference = Calendar.getInstance();
+        long millis = nowmillSeconds - birmillSeconds;
+        difference.setTimeInMillis(millis);
+        int year = difference.get(Calendar.YEAR);
+        int month = difference.get(Calendar.MONTH);
+        int day = difference.get(Calendar.DAY_OF_MONTH);
+        int hour = difference.get(Calendar.HOUR_OF_DAY);
+        if (year > 1970) {
+            return year - 1970 + "岁";
+        } else if (month > Calendar.JANUARY) {
+            return month - Calendar.JANUARY + "月";
+        } else if (day > 1) {
+            return day - 1 + "天";
+        }else{
+            return "1天";
+        }
+    }
 	
 	/**
 	 * 开处方，开处方的同时，需要创建待支付的Order
@@ -123,6 +165,11 @@ public class PrescriptionService {
 		payService.noticePay(p);
 	}
 	
+	public Prescription getPrescription(Long id) {
+		Prescription p = prescriptionMapper.selectByPrimaryKey(id);
+		return p;
+	}
+	
 	public PrescriptionInfo getPrescriptionById(Integer id) {
 		Prescription p = prescriptionMapper.selectByPrimaryKey(id);
 		
@@ -141,11 +188,11 @@ public class PrescriptionService {
 		return info;
 	}
 	
-	public List<Prescription> queryPrescription(SearchOption searchOption){
+	public PageResult<Prescription> queryPrescription(PrescriptionQuery searchOption){
 		Example ex = new Example(Prescription.class);
 		Criteria criteria = ex.createCriteria();
-		if(searchOption.getNumber() != null && !searchOption.getNumber().isEmpty()){
-			criteria = criteria.andEqualTo("num", searchOption.getNumber());
+		if(searchOption.getNum() != null && !searchOption.getNum().isEmpty()){
+			criteria = criteria.andEqualTo("num", searchOption.getNum());
 		}
 		if(searchOption.getDoctorname() != null && !searchOption.getDoctorname().isEmpty()){
 			criteria = criteria.andEqualTo("doctorname", searchOption.getDoctorname());
@@ -156,27 +203,39 @@ public class PrescriptionService {
 		if(searchOption.getPatientname() != null && !searchOption.getPatientname().isEmpty()){
 			criteria = criteria.andEqualTo("patientname", searchOption.getPatientname());		
 		}
-		if(searchOption.getPatientphone() != null && !searchOption.getPatientphone().isEmpty()){
-			criteria = criteria.andEqualTo("patientphone", searchOption.getPatientphone());
+		if(searchOption.getRegNo() != null && !searchOption.getRegNo().isEmpty()){
+			criteria = criteria.andEqualTo("regNo", searchOption.getRegNo());
 		}
 		if(searchOption.getStartdate() != null && !searchOption.getStartdate().isEmpty()){
-			String startDate =UTCStringtODefaultString(searchOption.getStartdate());
+			String startDate = searchOption.getStartdate();//UTCStringtODefaultString(searchOption.getStartdate());
 			criteria = criteria.andGreaterThanOrEqualTo("createdate", startDate);
 		}
 		if(searchOption.getEnddate() != null && !searchOption.getEnddate().isEmpty()){
-			String endDate =UTCStringtODefaultString(searchOption.getEnddate());
+			String endDate = searchOption.getEnddate();//UTCStringtODefaultString(searchOption.getEnddate());
 			criteria = criteria.andLessThanOrEqualTo("createdate", endDate);
 		}
 		if(searchOption.getState() != null && !searchOption.getState().isEmpty()){
 			criteria = criteria.andEqualTo("state", searchOption.getState());
 		}
 		ex.setOrderByClause("id Desc");
-		
-		int pageIndex = searchOption.getPageindex().intValue();
+		int pageIndex = 1;
+		if(searchOption.getCurrent() != null) {
+			pageIndex = searchOption.getCurrent().intValue();
+		}		
 		int maxSize = 50;
-		RowBounds rowBounds = new RowBounds(pageIndex*maxSize, maxSize);
+		if(searchOption.getPageSize() != null) {
+			maxSize = searchOption.getPageSize().intValue();
+		}	
+		RowBounds rowBounds = new RowBounds((pageIndex-1)*maxSize, maxSize);
+		
+		int total = prescriptionMapper.selectCountByExample(ex);
 		List<Prescription> plist = prescriptionMapper.selectByExampleAndRowBounds(ex, rowBounds);
-		return plist;
+		
+		PageResult<Prescription> result = new PageResult<Prescription>();
+		result.setData(plist);
+		result.setTotal(total);
+		result.setSuccess(true);
+		return result;
 	}
 	
 	private String UTCStringtODefaultString(String UTCString) {

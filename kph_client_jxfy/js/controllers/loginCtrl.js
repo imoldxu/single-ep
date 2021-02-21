@@ -16,7 +16,7 @@ define([], function(){
 			
             $http({
                 method: 'get',
-                url: URL+'prescition/init',
+                url: URL+'prescription/init',
                 requestType: 'json',
                 params: {
                     cardNo: cardNo
@@ -64,11 +64,11 @@ define([], function(){
 				}
 
             })
-			.error(function(data){
+			.error(function(resp){
 				
 				$rootScope.myloader = false;
-				
-				alert('系统服务异常，请联系管理员');
+                
+				alert(resp.message);
 				
 			})
         }

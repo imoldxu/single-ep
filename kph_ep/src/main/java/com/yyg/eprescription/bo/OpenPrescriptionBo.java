@@ -35,7 +35,7 @@ public class OpenPrescriptionBo {
 	@NotBlank
 	private String patientname;//患者姓名
 	
-	private Integer patientage;//患者年龄
+	private String patientage;//患者年龄
 	
 	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date patientBirthday;//患者年龄
@@ -111,11 +111,11 @@ public class OpenPrescriptionBo {
 		this.patientname = patientname;
 	}
 
-	public Integer getPatientage() {
+	public String getPatientage() {
 		return patientage;
 	}
 
-	public void setPatientage(Integer patientage) {
+	public void setPatientage(String patientage) {
 		this.patientage = patientage;
 	}
 

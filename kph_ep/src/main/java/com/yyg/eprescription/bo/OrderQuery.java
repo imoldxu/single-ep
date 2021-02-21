@@ -1,28 +1,67 @@
 package com.yyg.eprescription.bo;
 
+import javax.validation.constraints.NotBlank;
+
 public class OrderQuery {
 
-	private String PharmacyCode;	//药店唯一标识	是	[string]	目前暂默认为：jxfyhpk	查看
-	private String PatientNo; //	病人登记号	是	[string]		
-	private String ClientType; //客户端	是	[string]	目前默认为：CSYT
+	private String regNo; //	病人登记号	是	[string]		
 	
-	public String getPharmacyCode() {
-		return PharmacyCode;
+	private String startTime;
+	
+	private String endTime;
+	
+	private Integer state;
+	
+	private Integer current;
+	
+	private Integer pageSize;
+
+	public String getRegNo() {
+		return regNo;
 	}
-	public void setPharmacyCode(String pharmacyCode) {
-		PharmacyCode = pharmacyCode;
+
+	public void setRegNo(String regNo) {
+		this.regNo = regNo;
 	}
-	public String getPatientNo() {
-		return PatientNo;
+
+	public String getStartTime() {
+		return startTime;
 	}
-	public void setPatientNo(String patientNo) {
-		PatientNo = patientNo;
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
-	public String getClientType() {
-		return ClientType;
+
+	public String getEndTime() {
+		return endTime;
 	}
-	public void setClientType(String clientType) {
-		ClientType = clientType;
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public Integer getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(Integer current) {
+		this.current = current;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 	
 }

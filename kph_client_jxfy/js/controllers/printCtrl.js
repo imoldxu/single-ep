@@ -44,7 +44,7 @@ define(['angular','layer'], function(angular,layer){
 			$http({
 				method: 'post',
 
-				url: URL+'prescition/open',
+				url: URL+'prescription/open',
 
 				requestType: 'json',
 

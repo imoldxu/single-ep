@@ -66,6 +66,10 @@ public class Order implements Serializable {
 	@ColumnType(jdbcType = JdbcType.BIGINT)
 	private Long prescriptionid;//状态
 	
+	@Column(name = "payway")
+	@ColumnType(jdbcType = JdbcType.INTEGER)
+	private Integer payway;//支付方式
+	
 	public Long getId() {
 		return id;
 	}
@@ -144,6 +148,14 @@ public class Order implements Serializable {
 
 	public void setPrescriptionid(Long prescriptionid) {
 		this.prescriptionid = prescriptionid;
+	}
+
+	public Integer getPayway() {
+		return payway;
+	}
+
+	public void setPayway(Integer payway) {
+		this.payway = payway;
 	}
 
 }

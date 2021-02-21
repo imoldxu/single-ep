@@ -15,7 +15,7 @@ define(['jquery'], function($){
 
 			$http({
                 method: 'get',
-                url: URL+'prescition/getPrescriptionByID',
+                url: URL+'prescription/getPrescriptionByID',
                 requestType: 'json',
                 params: {
                     id : $scope.optArry[i].id
@@ -63,7 +63,7 @@ define(['jquery'], function($){
 		
 			$http({
                 method: 'post',
-                url: URL+'prescition/over',
+                url: URL+'prescription/over',
                 requestType: 'json',
                 params: {
                     id : $scope.optArry[i].id
@@ -106,7 +106,7 @@ define(['jquery'], function($){
 
 			$http({
                 method: 'post',
-                url: URL+'prescition/rollback',
+                url: URL+'prescription/rollback',
                 requestType: 'json',
                 params: {
                     id : $scope.optArry[i].id
@@ -140,7 +140,7 @@ define(['jquery'], function($){
 		
         $scope.downloadExcel = function(){
 		
-            $window.location = URL+'prescition/downloadExcel';
+            $window.location = URL+'prescription/downloadExcel';
 		
 		};
 
@@ -178,10 +178,10 @@ define(['jquery'], function($){
 						
             $http({
                 method: 'get',
-                url: URL+'prescition/getPrescriptionList',
+                url: URL+'prescription/getPrescriptionList',
                 requestType: 'json',
                 params: {
-                    option : JSON.stringify($scope.searchopt)
+                    ...$scope.searchopt
                 }
             })
             .success(function(data){

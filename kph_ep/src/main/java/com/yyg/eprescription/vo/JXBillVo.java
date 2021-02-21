@@ -1,6 +1,6 @@
 package com.yyg.eprescription.vo;
 
-public class BillVo {
+public class JXBillVo {
 
 	private String InvoiceNO;	//本次交易唯一标识	
 	private String TPTradeNo;   //第三方系统订单号	是	[string]	

@@ -65,7 +65,7 @@ public class PrescriptionDrugs implements Serializable{
 	@Column(name = "number")
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "数量")
-	private int number;//数量
+	private Integer number;//数量
 	
 	@Column(name = "singledose")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
@@ -122,11 +122,11 @@ public class PrescriptionDrugs implements Serializable{
 		this.unit = unit;
 	}
 
-	public int getNumber() {
+	public Integer getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(Integer number) {
 		this.number = number;
 	}
 

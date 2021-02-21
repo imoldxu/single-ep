@@ -41,6 +41,14 @@ public class SalesRecord {
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	private Integer num;//销售数量
 	
+	@Column(name = "standard")
+	@ColumnType(jdbcType = JdbcType.VARCHAR)
+	private String standard;//规格
+	
+	@Column(name = "drugunit")
+	@ColumnType(jdbcType = JdbcType.VARCHAR)
+	private String drugunit;//单位
+	
 	@Column(name = "price")
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	private Integer price;//销售价格
@@ -61,14 +69,6 @@ public class SalesRecord {
 		this.id = id;
 	}
 
-	public Long getOrderid() {
-		return orderid;
-	}
-
-	public void setOrderid(Long orderid) {
-		this.orderid = orderid;
-	}
-
 	public Integer getDrugid() {
 		return drugid;
 	}
@@ -84,14 +84,7 @@ public class SalesRecord {
 	public void setNum(Integer num) {
 		this.num = num;
 	}
-	
-	public Long getPrescriptionid() {
-		return prescriptionid;
-	}
 
-	public void setPrescriptionid(Long prescriptionid) {
-		this.prescriptionid = prescriptionid;
-	}
 
 	public String getDrugname() {
 		return drugname;
@@ -115,6 +108,38 @@ public class SalesRecord {
 
 	public void setPrice(Integer price) {
 		this.price = price;
+	}
+
+	public Long getPrescriptionid() {
+		return prescriptionid;
+	}
+
+	public void setPrescriptionid(Long prescriptionid) {
+		this.prescriptionid = prescriptionid;
+	}
+
+	public String getStandard() {
+		return standard;
+	}
+
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+
+	public String getDrugunit() {
+		return drugunit;
+	}
+
+	public void setDrugunit(String drugunit) {
+		this.drugunit = drugunit;
+	}
+
+	public Long getOrderid() {
+		return orderid;
+	}
+
+	public void setOrderid(Long orderid) {
+		this.orderid = orderid;
 	}
 
 	public Integer getRefundnum() {

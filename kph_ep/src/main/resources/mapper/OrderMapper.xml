@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yyg.eprescription.mapper.OrderMapper" >
+	
+	<resultMap type="com.yyg.eprescription.entity.Order" id="myorder" autoMapping="true">
+		<id column="id" property="id"></id>
+		<result column="reg_no" property="regNo"/>
+		<result column="trade_info" property="tradeInfo"/>
+	</resultMap>
 		
+	<resultMap type="com.yyg.eprescription.vo.IOrderVo" id="pOrder" autoMapping="true">
+		<id column="id" property="id"></id>
+		<result column="reg_no" property="regNo"/>
+		<result column="trade_info" property="tradeInfo"/>
+		<result column="num" property="prescriptionno"/>
+	</resultMap>
 
-	<select id="selectOrderForUpdate" resultType="Order">
+	<select id="selectOrderForUpdate" resultMap="myorder">
 		SELECT * FROM t_order where orderno = #{orderno,jdbcType=VARCHAR} FOR UPDATE
 	</select>
 	
-	<select id="queryUnpayOrders" resultType="Order">
-		SELECT * FROM t_order where reg_no = #{regNo,jdbcType=VARCHAR} and state = 1 
+	<select id="queryPatientOrder" resultMap="pOrder">
+		SELECT t_order.*, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
+		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id WHERE t_order.reg_no = #{regNo,jdbcType=VARCHAR} AND t_order.state = #{state}
+	</select>
+	
+	<select id="queryOrder" resultMap="pOrder">
+		SELECT t_order.*, t_prescription.num, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
+		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id 
+		<where>
+		   <if test="regNo != null">
+		        t_order.reg_no = #{regNo} 
+		   </if>
+		   <if test="state != null">
+		       AND t_order.state = #{state} 
+		   </if>
+		   <if test="startTime != null and endTime != null">
+		       AND t_order.createTime BETWEEN #{startTime} AND #{endTime} 
+		   </if>
+		</where>
+		order by t_order.id DESC 
+		limit ${(current-1) * pageSize}, ${pageSize};
 	</select>
 	
 </mapper>

@@ -26,10 +26,10 @@
 				<input type="text" placeholder="请输入患者姓名" ng-model="searchopt.patientname" />
 				<label>日期</label><input type="date" ng-model="searchopt.startdate" />
 				<label>-</label><input type="date" ng-model="searchopt.enddate" />
-				<label>状态</label><select ng-model="searchopt.state">
+				<!-- <label>状态</label><select ng-model="searchopt.state">
 					<option value="生成处方">生成处方</option>
 					<option value="已领药">已领药</option>
-				</select>
+				</select> -->
 			</div>
 			<div class="row">
 				<div class="submit" ng-click="getPrescriptionByFirstPage()">查询</div>
@@ -56,13 +56,12 @@
                 <th>医生姓名</th>
                 <th>医生科室</th>
                 <th>开方日期</th>
-				<th>状态</th>
 				<th>操作</th>
             </tr>
             </thead>
             <tbody>
 			<tr ng-repeat="x in optArry">
-				<td ng-if="x.state == '已领药'">{{x.num}}</td>
+				<!-- <td ng-if="x.state == '已领药'">{{x.num}}</td>
 				<td class="emptystate" ng-if="x.state == '生成处方'">{{x.num}}</td>
 				<td ng-if="x.state == '已领药'">{{x.patientname}}</td>
 				<td class="emptystate" ng-if="x.state == '生成处方'">{{x.patientname}}</td>
@@ -82,8 +81,17 @@
 				<td class="emptystate" ng-if="x.state == '生成处方'">{{x.state}}</td>
                 <td><img src="img/print.png" ng-click="print(x.id,$index)" width="16px">
 				<img ng-if="x.state == '生成处方'" src="img/complete.png" ng-click="complete(x.id,$index)" width="16px">
-				<img ng-if="x.state == '已领药'" src="img/cancel.png" ng-click="cancel(x.id,$index)" width="16px"></td>
-            </tr>
+				<img ng-if="x.state == '已领药'" src="img/cancel.png" ng-click="cancel(x.id,$index)" width="16px"></td> -->
+				<td>{{x.num}}</td>
+				<td>{{x.patientname}}</td>
+				<td>{{x.patientsex}}</td>
+				<td>{{x.patientage}}</td>
+				<td>{{x.patientphone}}</td>
+				<td>{{x.doctorname}}</td>
+				<td>{{x.department}}</td>
+				<td>{{format(x.createdate,"yyyy-MM-dd")}}</td>
+				<td><img src="img/print.png" ng-click="print(x.id,$index)" width="16px">
+			</tr>
             </tbody>
         </table>
 		<div>

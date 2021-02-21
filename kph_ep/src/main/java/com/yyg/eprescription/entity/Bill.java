@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import org.apache.ibatis.type.JdbcType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import tk.mybatis.mapper.annotation.ColumnType;
 
 @Table(name="t_bill")
@@ -35,7 +37,8 @@ public class Bill {
 	public static final int WXPAY = 1;
 	public static final int ZFB = 2;
 	public static final int SHIYIBAO = 3;
-	public static final int SHENGYIBAO = 4; 
+	public static final int SHENGYIBAO = 4;
+	public static final int CASH = 5; 
 	
 	@Column(name = "payway")
 	@ColumnType(jdbcType = JdbcType.TINYINT)
@@ -45,13 +48,14 @@ public class Bill {
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	private String payid;//第三方支付编号
 	
+	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",timezone="GMT+8")
 	@Column(name = "createtime")
 	@ColumnType(jdbcType = JdbcType.TIMESTAMP)
 	private Date createtime;//交易的时间
 	
-	@Column(name = "orderid")
-	@ColumnType(jdbcType = JdbcType.BIGINT)
-	private Long orderid;//关联订单
+	@Column(name = "orderno")
+	@ColumnType(jdbcType = JdbcType.VARCHAR)
+	private String orderno;//关联订单
 
 	public Long getId() {
 		return id;
@@ -101,12 +105,12 @@ public class Bill {
 		this.createtime = createtime;
 	}
 
-	public Long getOrderid() {
-		return orderid;
+	public String getOrderno() {
+		return orderno;
 	}
 
-	public void setOrderid(Long orderid) {
-		this.orderid = orderid;
+	public void setOrderno(String orderno) {
+		this.orderno = orderno;
 	}
 	
 }
