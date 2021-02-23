@@ -30,7 +30,7 @@ public class PayService {
 		String host = env.getProperty("pay.host", "http://127.0.0.1");
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 		
 		Date orderDate = prescription.getCreatedate();
 		
@@ -67,7 +67,6 @@ public class PayService {
 				JSONObject respObj = JSON.parseObject(resp);
 				String code = respObj.getString("code");
 				if ("1".equals(code)) {
-
 					return true;
 				} else {
 					return false;

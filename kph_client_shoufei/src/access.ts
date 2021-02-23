@@ -7,21 +7,26 @@ export default function access(initialState: { currentUser?: API.CurrentUser | u
     const {roles} = currentUser;
     let admin = false;
     let tollman = false;
+    let manager = false;
     roles.forEach( role =>{
       const {name} = role;
-      if(name === 'manager'){
+      if(name === 'admin'){
         admin = true
-      }else if(name === 'tollman'){
+      } else if(name === 'manager'){
+        manager = true
+      } else if(name === 'tollman'){
         tollman = true
       }
     })
     return {
       admin,
+      manager,
       tollman,
     }
   } else{
     return {
       admin: false,
+      manager: false,
       tollman: false,
     }
   }

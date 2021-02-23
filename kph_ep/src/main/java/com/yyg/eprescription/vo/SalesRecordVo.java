@@ -2,16 +2,7 @@ package com.yyg.eprescription.vo;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import org.apache.ibatis.type.JdbcType;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import tk.mybatis.mapper.annotation.ColumnType;
 
 public class SalesRecordVo {
 
@@ -43,7 +34,7 @@ public class SalesRecordVo {
 	
 	private Integer price;//销售价格
 	
-	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss", timezone="GMT+8")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	private Date createtime;//创建时间
 	
 	private Integer refundnum;

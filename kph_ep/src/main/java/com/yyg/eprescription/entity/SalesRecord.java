@@ -49,6 +49,10 @@ public class SalesRecord {
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	private String drugunit;//单位
 	
+	@Column(name = "drugcompany")
+	@ColumnType(jdbcType = JdbcType.VARCHAR)
+	private String drugcompany;//单位
+	
 	@Column(name = "price")
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	private Integer price;//销售价格
@@ -148,6 +152,14 @@ public class SalesRecord {
 
 	public void setRefundnum(Integer refundnum) {
 		this.refundnum = refundnum;
+	}
+
+	public String getDrugcompany() {
+		return drugcompany;
+	}
+
+	public void setDrugcompany(String drugcompany) {
+		this.drugcompany = drugcompany;
 	}
 
 }

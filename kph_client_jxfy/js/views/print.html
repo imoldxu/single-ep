@@ -6,7 +6,7 @@
 <style media="print" type="text/css">
     .noprint{display:none}
 	
-	.printinfo{display:block}
+    .printinfo{display:block}
 </style>
 
 <div class="head noprint">
@@ -50,7 +50,7 @@
             <div class="label">科别：</div><div class="valueInput" style="width: 80px;">{{userArry.department}}</div>
         </div>
         <div class="row">
-            <div class="label">处方号：</div><div class="valueInput" style="margin-right: 30px;padding: 0 30px;">{{userArry.num}}</div>
+            <div class="label">处方号：</div><div class="valueInput" style="margin-right: 30px;padding: 0 30px;">{{userArry.prescriptionno}}</div>
             <div class="label">开具日期:</div><div class="valueInput" style="padding: 0 55px 0 20px">{{createTime}}</div>
         </div>
 		<div class="row">
@@ -95,9 +95,9 @@
 </div>
 
 <div class="foot noprint">
-
-    <div class="next"  ng-click="commit()">确认并打印导诊单</div>
-
-    <div class="next" ng-click="goBack()">返回上一步</div>
+    
+    <div class="next" ng-if="!isCommit"  ng-click="commit()">确认并打印处方</div>
+    <div class="next" ng-if="isCommit"  ng-click="print()">再次打印处方</div>
+    <div class="next" ng-if="!isCommit" ng-click="goBack()">返回上一步</div>
 
 </div>

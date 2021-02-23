@@ -7,7 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,31 +16,38 @@ import org.springframework.transaction.annotation.Transactional;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.OpenPrescriptionBo;
 import com.yyg.eprescription.bo.PrescriptionQuery;
+import com.yyg.eprescription.context.ErrorCode;
+import com.yyg.eprescription.context.HandleException;
+import com.yyg.eprescription.entity.Drug;
 import com.yyg.eprescription.entity.Prescription;
 import com.yyg.eprescription.entity.PrescriptionDrugs;
 import com.yyg.eprescription.entity.PrescriptionNumber;
+import com.yyg.eprescription.jxfy.entity.Patient;
 import com.yyg.eprescription.mapper.PrescriptionDrugsMapper;
 import com.yyg.eprescription.mapper.PrescriptionMapper;
 import com.yyg.eprescription.mapper.PrescriptionNumberMapper;
-import com.yyg.eprescription.vo.CountPrescriptionInfo;
 import com.yyg.eprescription.vo.PrescriptionInitVo;
 import com.yyg.eprescription.vo.PrescriptionInfo;
 
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.Criteria;
 
 @Service
 public class PrescriptionService {
 
+	private static final Logger logger = LoggerFactory.getLogger(PrescriptionService.class);
+	
 	@Autowired
 	PrescriptionMapper prescriptionMapper;
 	@Autowired
 	PrescriptionDrugsMapper pDrugMapper;
 	@Autowired
 	PrescriptionNumberMapper pNumberMapper;
-	
 	@Autowired
-	HospitalPatientService hospitalPatientService;
+	PatientService patientService;
+	@Autowired
+	DrugService drugService;
+	//@Autowired
+	//HospitalPatientService hospitalPatientService;
 	@Autowired
 	OrderService orderService;
 	@Autowired
@@ -56,16 +64,25 @@ public class PrescriptionService {
 	 * @throws Exception
 	 */
 	public PrescriptionInitVo init(String cardNo) throws Exception {
-		PrescriptionInitVo diagnosisVo = hospitalPatientService.getDiagnosisInfo(cardNo);
-		if(diagnosisVo.getPatientage().equals("0")) {
-			String birthday = diagnosisVo.getPatientBirthday();
+		//PrescriptionInitVo initInfo = hospitalPatientService.getDiagnosisInfo(cardNo);
+		Patient patient = patientService.getPatientByCardNo(cardNo);
+		PrescriptionInitVo initInfo = new PrescriptionInitVo();
+		initInfo.setCardNo(patient.getCardNo());
+		if(patient.getPatientAge()==0) {
+			Date birthday = patient.getPatientBirthday();
 			String age = getAge(birthday);
-			diagnosisVo.setPatientage(age);
+			initInfo.setPatientage(age);
 		}else {
-			diagnosisVo.setPatientage(diagnosisVo.getPatientage()+"岁");
+			initInfo.setPatientage(patient.getPatientAge()+"岁");
 		}
-		diagnosisVo.setNum(getSysNumber());
-		return diagnosisVo;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		initInfo.setPatientBirthday(format.format(patient.getPatientBirthday()));
+		initInfo.setPatientId(patient.getPatientId());
+		initInfo.setPatientname(patient.getPatientName());
+		initInfo.setPatientsex(patient.getPatientSex());
+		initInfo.setRegNo(patient.getRegNo());
+		initInfo.setPrescriptionno(getSysNumber());
+		return initInfo;
 	}
 	
 	/**
@@ -74,9 +91,9 @@ public class PrescriptionService {
 	 * @return
 	 * @throws ParseException
 	 */
-	private String getAge(String birthDayStr) throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date birthDay = format.parse(birthDayStr);
+	private String getAge(Date birthDay) throws ParseException {
+		//SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		//Date birthDay = format.parse(birthDayStr);
 		
 		Calendar now = Calendar.getInstance();
         long nowmillSeconds = now.getTimeInMillis();
@@ -89,11 +106,11 @@ public class PrescriptionService {
         int year = difference.get(Calendar.YEAR);
         int month = difference.get(Calendar.MONTH);
         int day = difference.get(Calendar.DAY_OF_MONTH);
-        int hour = difference.get(Calendar.HOUR_OF_DAY);
+        //int hour = difference.get(Calendar.HOUR_OF_DAY);
         if (year > 1970) {
             return year - 1970 + "岁";
         } else if (month > Calendar.JANUARY) {
-            return month - Calendar.JANUARY + "月";
+            return month - Calendar.JANUARY + "个月";
         } else if (day > 1) {
             return day - 1 + "天";
         }else{
@@ -116,7 +133,7 @@ public class PrescriptionService {
 		p.setDepartment(openP.getDepartment());
 		p.setDiagnosis(openP.getDiagnosis());
 		p.setDoctorname(openP.getDoctorname());
-		p.setNum(openP.getNum());
+		p.setPrescriptionno(openP.getPrescriptionno());
 		p.setPatientage(openP.getPatientage());
 		p.setPatientname(openP.getPatientname());
 		p.setPatientphone(openP.getPatientphone());
@@ -127,32 +144,41 @@ public class PrescriptionService {
 	    
 		//检查是否有相同编号的处方签	
 		Example ex = new Example(Prescription.class);
-		ex.createCriteria().andEqualTo("num", p.getNum());
+		ex.createCriteria().andEqualTo("prescriptionno", p.getPrescriptionno());
 		List<Prescription> pList = prescriptionMapper.selectByExample(ex);
 		if(!pList.isEmpty()){
-			//相同的处方，先删除，再插入？不允许重复提交
-			Example drugEx = new Example(PrescriptionDrugs.class);
-			drugEx.createCriteria().andEqualTo("prescriptionid", pList.get(0).getId());
-			pDrugMapper.deleteByExample(drugEx);
-			
-			prescriptionMapper.delete(pList.get(0));
-		}	
+			//不允许重复提交
+			throw new HandleException(ErrorCode.NORMAL_ERROR, "处方已提交，不可重复提交");
+			//相同的处方，先删除，再插入？
+//			Example drugEx = new Example(PrescriptionDrugs.class);
+//			drugEx.createCriteria().andEqualTo("prescriptionid", pList.get(0).getId());
+//			pDrugMapper.deleteByExample(drugEx);
+//			
+//			prescriptionMapper.delete(pList.get(0));
+		}
 		prescriptionMapper.insertUseGeneratedKeys(p);
 		Long pid = p.getId();
 		
 		for(PrescriptionDrugs pdrug : openP.getDrugs()){
 			pdrug.setPrescriptionid(pid);
-			
 			if(pdrug.getDrugid()==null){
-				System.out.println("药品id丢失");
+				logger.error("药品id丢失");
+				throw new HandleException(ErrorCode.ARG_ERROR, "请求数据异常，联系管理员");
 			}
+			Drug drug = drugService.getDrugById(pdrug.getDrugid());
+			//价格后台来给，避免前端给错价格
+			if(!pdrug.getDrugname().equals(drug.getDrugname())){
+				logger.error("开方药品不匹配");
+				throw new HandleException(ErrorCode.ARG_ERROR, "请求数据异常，联系管理员");
+			}
+			pdrug.setPrice(drug.getPrice());
+			pdrug.setCategory(drug.getCategory());
 			
 			//加入医生开药信息
 			doctorDrugService.add(p.getDoctorname(), p.getDepartment(), pdrug.getDrugid());
 		}
 		//添加开药信息
 		pDrugMapper.insertList(openP.getDrugs());
-		
 		
 		//加入诊断信息
 		String dmsg = p.getDiagnosis();
@@ -162,7 +188,12 @@ public class PrescriptionService {
 		orderService.create(pid, openP.getRegNo(), openP.getDrugs());
 
 		//通知医院
-		payService.noticePay(p);
+		try {
+			payService.noticePay(p);
+		}catch (Exception e) {
+			logger.error("通知医院在线支付系统网络异常");
+			//throw new HandleException(ErrorCode.NORMAL_ERROR, "通知医院在线支付系统网络异常");
+		}
 	}
 	
 	public Prescription getPrescription(Long id) {
@@ -189,76 +220,13 @@ public class PrescriptionService {
 	}
 	
 	public PageResult<Prescription> queryPrescription(PrescriptionQuery searchOption){
-		Example ex = new Example(Prescription.class);
-		Criteria criteria = ex.createCriteria();
-		if(searchOption.getNum() != null && !searchOption.getNum().isEmpty()){
-			criteria = criteria.andEqualTo("num", searchOption.getNum());
-		}
-		if(searchOption.getDoctorname() != null && !searchOption.getDoctorname().isEmpty()){
-			criteria = criteria.andEqualTo("doctorname", searchOption.getDoctorname());
-		}
-		if(searchOption.getDepartment() != null && !searchOption.getDepartment().isEmpty()){
-			criteria = criteria.andEqualTo("department", searchOption.getDepartment());	
-		}
-		if(searchOption.getPatientname() != null && !searchOption.getPatientname().isEmpty()){
-			criteria = criteria.andEqualTo("patientname", searchOption.getPatientname());		
-		}
-		if(searchOption.getRegNo() != null && !searchOption.getRegNo().isEmpty()){
-			criteria = criteria.andEqualTo("regNo", searchOption.getRegNo());
-		}
-		if(searchOption.getStartdate() != null && !searchOption.getStartdate().isEmpty()){
-			String startDate = searchOption.getStartdate();//UTCStringtODefaultString(searchOption.getStartdate());
-			criteria = criteria.andGreaterThanOrEqualTo("createdate", startDate);
-		}
-		if(searchOption.getEnddate() != null && !searchOption.getEnddate().isEmpty()){
-			String endDate = searchOption.getEnddate();//UTCStringtODefaultString(searchOption.getEnddate());
-			criteria = criteria.andLessThanOrEqualTo("createdate", endDate);
-		}
-		if(searchOption.getState() != null && !searchOption.getState().isEmpty()){
-			criteria = criteria.andEqualTo("state", searchOption.getState());
-		}
-		ex.setOrderByClause("id Desc");
-		int pageIndex = 1;
-		if(searchOption.getCurrent() != null) {
-			pageIndex = searchOption.getCurrent().intValue();
-		}		
-		int maxSize = 50;
-		if(searchOption.getPageSize() != null) {
-			maxSize = searchOption.getPageSize().intValue();
-		}	
-		RowBounds rowBounds = new RowBounds((pageIndex-1)*maxSize, maxSize);
+	
+		List<List<?>> sqlResult = prescriptionMapper.queryPrescriptionWithTotal(searchOption);
 		
-		int total = prescriptionMapper.selectCountByExample(ex);
-		List<Prescription> plist = prescriptionMapper.selectByExampleAndRowBounds(ex, rowBounds);
-		
-		PageResult<Prescription> result = new PageResult<Prescription>();
-		result.setData(plist);
-		result.setTotal(total);
-		result.setSuccess(true);
+		PageResult<Prescription> result = PageResult.buildPageResult(sqlResult, Prescription.class);
 		return result;
 	}
-	
-	private String UTCStringtODefaultString(String UTCString) {
-        UTCString = UTCString.replace("Z", " UTC");
-        SimpleDateFormat utcFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
-        SimpleDateFormat defaultFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date;
-		try {
-			date = utcFormat.parse(UTCString);
-           return defaultFormat.format(date);
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return "";
-		}
- 	    
-	}
-	
-	public List<CountPrescriptionInfo> count(String lastMonthStr) {
-		List<CountPrescriptionInfo> infoList = prescriptionMapper.countPrescription(lastMonthStr+"-1", lastMonthStr+"-31");
-		return infoList;
-	}
-	
+		
 	private synchronized String getSysNumber(){
 		Date now = new Date();
 		SimpleDateFormat localSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -275,12 +243,12 @@ public class PrescriptionService {
 			number.setNumber(1);
 			number.setOpendate(now);
 			pNumberMapper.insert(number);
-			return "K"+todaynum+formatNumber(number.getNumber());
+			return "B"+todaynum+formatNumber(number.getNumber());
 		}else{
 			PrescriptionNumber number = list.get(0);
 			number.setNumber(number.getNumber()+1);
 			pNumberMapper.updateByPrimaryKey(number);
-			return "K"+todaynum+formatNumber(number.getNumber());
+			return "B"+todaynum+formatNumber(number.getNumber());
 		}
 	}
 	

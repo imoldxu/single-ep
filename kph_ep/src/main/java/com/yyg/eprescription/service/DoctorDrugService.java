@@ -3,6 +3,8 @@ package com.yyg.eprescription.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.yyg.eprescription.entity.DoctorDrugs;
@@ -17,6 +19,7 @@ public class DoctorDrugService {
 	@Autowired
 	DoctorDrugsMapper doctorDrugsMapper;
 	
+	@CacheEvict(cacheNames="simpleDrugListByDoctor", key="#doctorName + #department")
 	public void add(String doctorName,String department,int drugid) {
 		Example dex = new Example(DoctorDrugs.class);
 		dex.createCriteria().andEqualTo("drugid", drugid).andEqualTo("department", department).andEqualTo("doctorname", doctorName);
@@ -30,6 +33,7 @@ public class DoctorDrugService {
 		}
 	}
 	
+	@Cacheable(cacheNames="simpleDrugListByDoctor", key="#doctorName + #department")
 	public List<ShortDrugInfo> queryDrugByDoctor(int type, String doctorName, String department){
 		List<ShortDrugInfo> ret = null;
 		if(1 == type){
@@ -40,10 +44,10 @@ public class DoctorDrugService {
 		return ret;
 	}
 	
-	public void delete(int drugid) {
-		Example ex = new Example(DoctorDrugs.class);
-		ex.createCriteria().andEqualTo("drugid", drugid);
-		doctorDrugsMapper.deleteByExample(ex);
-	}
+//	public void delete(int drugid) {
+//		Example ex = new Example(DoctorDrugs.class);
+//		ex.createCriteria().andEqualTo("drugid", drugid);
+//		doctorDrugsMapper.deleteByExample(ex);
+//	}
 	
 }

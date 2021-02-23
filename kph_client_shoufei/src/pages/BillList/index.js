@@ -5,6 +5,7 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import { queryBill } from '@/services/ant-design-pro/bill';
+import { regFenToYuan } from "@/utils/money";
 
 export default ()=>{
 
@@ -22,18 +23,18 @@ export default ()=>{
                 text: '支付宝',
             }, 
             3: {
-                text: '市医保',
+                text: '医保',
             },
-            4: {
-                text: '省医保',
-            },
+            // 4: {
+            //     text: '省医保',
+            // },
             5: {
                 text: '现金',
             }
         }
     },
     {
-        title: '支付流水号',
+        title: '支付流水号/收款员',
         dataIndex: 'payid',
     },
     {
@@ -43,11 +44,11 @@ export default ()=>{
         render: (_,record)=> {
           if(record.type===1){  
             return (
-              <span style={{color:"green"}}>{record.amount/100}元</span>
+              <span style={{color:"green"}}>{regFenToYuan(record.amount)}元</span>
               )
           }else{
               return (
-                  <span style={{color:"red"}}>{0-record.amount/100}元</span>
+                  <span style={{color:"red"}}>{regFenToYuan(0-record.amount/100)}元</span>
               )  
           }
           }
@@ -76,9 +77,9 @@ export default ()=>{
         actionRef={actionRef}
         rowKey="key"
         request={(params) => {
-            if(params.dateRange){
-              params.startTime = params.dateRange[0].format("yyyy-MM-DD") + "00:00:00";
-              params.endTime = params.dateRange[1].format("yyyy-MM-DD") + "23:59:59";
+            if(params.dateRange && params.dateRange.length>1){
+              params.startTime = params.dateRange[0] + " 00:00:00";
+              params.endTime = params.dateRange[1] + " 23:59:59";
             }
             return queryBill(params)
           }

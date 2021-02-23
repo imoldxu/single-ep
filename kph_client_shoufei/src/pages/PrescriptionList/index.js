@@ -1,4 +1,4 @@
-import { Space } from "antd";
+import { message, Space } from "antd";
 import { useRef, useState } from "react";
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 //import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -24,7 +24,7 @@ export default ()=>{
   const columns = [
     {
       title: '处方号',
-      dataIndex: 'num',
+      dataIndex: 'prescriptionno',
     },
     {
       title: '登记号',
@@ -87,12 +87,16 @@ export default ()=>{
         headerTitle="处方列表"
         actionRef={actionRef}
         rowKey="key"
-        request={(params) => {
-            if(params.dateRange){
+        request={async(params) => {
+          try{
+            if(params.dateRange && params.dateRange.length>1){
               params.startdate = params.dateRange[0];
               params.enddate = params.dateRange[1];
             }  
-            return queryPrescription(params)
+            return await queryPrescription(params)
+            }catch(e){
+              message.error(e.message, 3)
+            }
           }
         }
         columns={columns}

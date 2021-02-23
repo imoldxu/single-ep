@@ -12,34 +12,52 @@
 		<id column="id" property="id"></id>
 		<result column="reg_no" property="regNo"/>
 		<result column="trade_info" property="tradeInfo"/>
-		<result column="num" property="prescriptionno"/>
+		<result column="prescriptionno" property="prescriptionno"/>
+	</resultMap>
+	
+	<resultMap type="com.x.commons.mybatis.PageResult" id="pageResult">
+		<result column="total"/>
+		<collection property="data" ofType="com.yyg.eprescription.vo.IOrderVo" resultSet="items" column="id" foreignColumn="">
+			<id column="id" property="id"></id>
+			<result column="reg_no" property="regNo"/>
+			<result column="trade_info" property="tradeInfo"/>
+		</collection>
 	</resultMap>
 
 	<select id="selectOrderForUpdate" resultMap="myorder">
 		SELECT * FROM t_order where orderno = #{orderno,jdbcType=VARCHAR} FOR UPDATE
 	</select>
 	
-	<select id="queryPatientOrder" resultMap="pOrder">
+	<select id="getOrderByNo"  resultMap="pOrder">
 		SELECT t_order.*, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
-		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id WHERE t_order.reg_no = #{regNo,jdbcType=VARCHAR} AND t_order.state = #{state}
+		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id WHERE t_order.orderno = #{orderno} LIMIT 1;
 	</select>
 	
-	<select id="queryOrder" resultMap="pOrder">
-		SELECT t_order.*, t_prescription.num, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
+	<select id="queryPatientUnpayOrder" resultMap="pOrder">
+		SELECT t_order.*, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
+		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id WHERE t_order.reg_no = #{regNo,jdbcType=VARCHAR} AND t_order.state = 1 AND t_order.invalidtime > #{now}
+	</select>
+	
+	<select id="queryOrderWithTotal" resultMap="pOrder, com.yyg.eprescription.mapper.CommonMapper.totalResult">
+		SELECT t_order.*, t_prescription.prescriptionno, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
 		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id 
 		<where>
-		   <if test="regNo != null">
-		        t_order.reg_no = #{regNo} 
+		   <if test="query.regNo != null and query.regNo !=''">
+		        t_order.reg_no = #{query.regNo} 
 		   </if>
-		   <if test="state != null">
-		       AND t_order.state = #{state} 
+		   <if test="query.prescriptionno != null and query.prescriptionno !=''">
+		       AND  t_prescription.prescriptionno = #{query.prescriptionno} 
 		   </if>
-		   <if test="startTime != null and endTime != null">
-		       AND t_order.createTime BETWEEN #{startTime} AND #{endTime} 
+		   <if test="query.state != null">
+		       AND t_order.state = #{query.state} 
+		   </if>
+		   <if test="query.startTime != null and query.endTime != null">
+		       AND t_order.createTime BETWEEN #{query.startTime} AND #{query.endTime} 
 		   </if>
 		</where>
 		order by t_order.id DESC 
-		limit ${(current-1) * pageSize}, ${pageSize};
+		limit ${(query.current-1) * query.pageSize}, ${query.pageSize};
+		SELECT FOUND_ROWS() as total;
 	</select>
 	
 </mapper>

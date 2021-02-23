@@ -3,21 +3,20 @@ package com.yyg.eprescription.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
-import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.druid.util.StringUtils;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.DrugQuery;
 import com.yyg.eprescription.entity.Drug;
-import com.yyg.eprescription.entity.Prescription;
 import com.yyg.eprescription.mapper.DrugMapper;
 import com.yyg.eprescription.util.ChineseCharacterUtil;
 import com.yyg.eprescription.vo.ShortDrugInfo;
-
-import tk.mybatis.mapper.entity.Example;
 
 @Service
 public class DrugService {
@@ -28,6 +27,7 @@ public class DrugService {
 	DoctorDrugService doctorDrugService;
 	//DoctorDrugsMapper doctorDrugsMapper;
 	
+	@Cacheable(cacheNames="simpleDrugListByKey")
 	public List<ShortDrugInfo> queryDrugsByKeys(int type, String keys) {
 		List<ShortDrugInfo> ret = new ArrayList<ShortDrugInfo>();
 		
@@ -57,40 +57,21 @@ public class DrugService {
 		return ret;
 	}
 	
+	@Cacheable(cacheNames="drugList")
 	public PageResult<Drug> queryDrugInfoByKeys(DrugQuery query) {
 		
-		Example ex = new Example(Drug.class);
-		
-		if(query.getKeys()!= null && !query.getKeys().isEmpty()) {
-			String keys = query.getKeys();
-			keys = keys.toUpperCase();
-		
-			ex.or().andLike("drugname", "%"+keys+"%");
-			ex.or().andLike("fullkeys", "%"+keys+"%");
-			ex.or().andLike("shortnamekeys", "%"+keys+"%");
+		if(!StringUtils.isEmpty(query.getKeys())) {
+			query.setKeys("%"+query.getKeys()+"%");
 		}
-		ex.setOrderByClause("id Desc");
-		int pageIndex = 1;
-		if(query.getCurrent() != null) {
-			pageIndex = query.getCurrent().intValue();
-		}		
-		int maxSize = 50;
-		if(query.getPageSize() != null) {
-			maxSize = query.getPageSize().intValue();
-		}	
-		RowBounds rowBounds = new RowBounds((pageIndex-1)*maxSize, maxSize);
 		
-		int total = drugMapper.selectCountByExample(ex);
-		List<Drug> list = drugMapper.selectByExampleAndRowBounds(ex, rowBounds);
+		List<List<?>> sqlResult = drugMapper.queryDrugWithTotal(query);
 		
-		PageResult<Drug> result = new PageResult<Drug>();
-		result.setData(list);
-		result.setTotal(total);
-		result.setSuccess(true);
+		PageResult<Drug> result = PageResult.buildPageResult(sqlResult, Drug.class);
 		
 		return result;
 	}
 	
+	@Cacheable(cacheNames="simpleDrugListByCategory")
 	public List<ShortDrugInfo> queryDrugByCategory(int type, String category) {
 		List<ShortDrugInfo> ret = null;
 		if(type==1){
@@ -101,48 +82,85 @@ public class DrugService {
 		return ret;
 	}
 	
-	public Drug getDrugById(int drugid) {
+	@Cacheable(cacheNames="drug")
+	public Drug getDrugById(Integer drugid) {
 		Drug drug = drugMapper.selectByPrimaryKey(drugid);
 		return drug;
 	}
 
+	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})
 	public void insertList(List<Drug> drugList) {
 		drugMapper.insertList(drugList);	
 	}
 	
-	public int addDrug(Drug drug) {
+	@Caching(
+        put = {
+        	@CachePut(cacheNames="drug", key="#result.id")
+        },
+        evict = {
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})	
+        }
+    )
+	public Drug addDrug(Drug drug) {
 		drug.setFullkeys(ChineseCharacterUtil.convertHanzi2Pinyin(drug.getDrugname(), false));
 		drug.setShortnamekeys(ChineseCharacterUtil.convertHanzi2Pinyin(drug.getShortname(), false));;
 		drug.setState(Drug.STATE_OK);//缺省上传之后药品可见
-		return drugMapper.insert(drug);
+		drugMapper.insertUseGeneratedKeys(drug);
+		return drug;
 	}
 	
-	public int updateDrug(Drug drug) {
+	
+	@Caching(
+        put = {
+        	@CachePut(cacheNames="drug", key="#drug.id")
+        },
+        evict = {
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","drugList"})	
+        }
+    )
+	public Drug updateDrug(Drug drug) {
 		Drug dbDrug = getDrugById(drug.getId());
 		drug.setState(dbDrug.getState());
-		return drugMapper.updateByPrimaryKey(drug);
+		drugMapper.updateByPrimaryKey(drug);
+		return drug; 
 	}
 	
-	@Transactional
-	public int deleteDrug(int drugid) {
-		int opRet = drugMapper.deleteByPrimaryKey(drugid);
-		if(opRet!=0) {
-			doctorDrugService.delete(drugid);
-		}
-		return opRet;
-	}
+//	@Transactional
+//	public int deleteDrug(int drugid) {
+//		int opRet = drugMapper.deleteByPrimaryKey(drugid);
+//		if(opRet!=0) {
+//			doctorDrugService.delete(drugid);
+//		}
+//		return opRet;
+//	}
 	
-	public int downDrug(Integer drugid) {
+	@Caching(
+        put = {
+        	@CachePut(cacheNames="drug")
+        },
+        evict = {
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})	
+        }
+    )
+	public Drug downDrug(Integer drugid) {
 		Drug drug = drugMapper.selectByPrimaryKey(drugid);
 		drug.setState(Drug.STATE_EMPTY);
-		int opRet = drugMapper.updateByPrimaryKey(drug);
-		return opRet;
+		drugMapper.updateByPrimaryKey(drug);
+		return drug;
 	}
 	
-	public int upDrug(Integer drugid) {
+	@Caching(
+        put = {
+        	@CachePut(cacheNames="drug")
+        },
+        evict = {
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})	
+        }
+    )
+	public Drug upDrug(Integer drugid) {
 		Drug drug = drugMapper.selectByPrimaryKey(drugid);
 		drug.setState(Drug.STATE_OK);
-		int opRet = drugMapper.updateByPrimaryKey(drug);
-		return opRet;
+		drugMapper.updateByPrimaryKey(drug);
+		return drug;
 	}
 }

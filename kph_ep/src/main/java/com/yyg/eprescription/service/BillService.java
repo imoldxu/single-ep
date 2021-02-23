@@ -2,28 +2,29 @@ package com.yyg.eprescription.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.BillQuery;
+import com.yyg.eprescription.bo.HospitalBillQuery;
 import com.yyg.eprescription.bo.JXBillQuery;
+import com.yyg.eprescription.context.ErrorCode;
 import com.yyg.eprescription.context.HandleException;
+import com.yyg.eprescription.dto.BillDTO;
 import com.yyg.eprescription.dto.BillStatisticDTO;
 import com.yyg.eprescription.entity.Bill;
 import com.yyg.eprescription.entity.Order;
-import com.yyg.eprescription.entity.Prescription;
 import com.yyg.eprescription.mapper.BillMapper;
 import com.yyg.eprescription.vo.BillStatisticVo;
+import com.yyg.eprescription.vo.JXBillVo;
 
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.Criteria;
 
 @Service
 public class BillService {
@@ -64,7 +65,7 @@ public class BillService {
 			paymode = "cash";
 			break;
 		default:
-			break;
+			throw new HandleException(403, "不支持的支付方式");
 		}
 		return paymode;
 	}
@@ -87,55 +88,107 @@ public class BillService {
 	
 	//获取账单明细
 	public PageResult<Bill> query(BillQuery billQuery) {
-		String endTime = billQuery.getEndTime();
-		String startTime = billQuery.getStartTime();
-		Integer payway = billQuery.getPayway();
-		String orderno = billQuery.getOrderno();
-		String payid = billQuery.getPayid();
-		Integer pageIndex = billQuery.getCurrent();
-		Integer maxSize = billQuery.getPageSize();
 		
-		Example ex = new Example(Bill.class);
-		Criteria criteria = ex.createCriteria();
-		if(orderno!=null) {
-			criteria = criteria.andEqualTo("orderno", orderno);
-		}
-		if(payid!=null) {
-			criteria = criteria.andEqualTo("payid", payid);
-		}
-		if(payway!=null) {
-			criteria = criteria.andEqualTo("payway", payway);
-		}
-		if(startTime!=null && endTime!=null) {
-			criteria = criteria.andBetween("createtime", startTime, endTime);
-		}
+		List<List<?>> sqlResult = billMapper.queryBillWithTotal(billQuery);
 		
-		RowBounds rowBounds = new RowBounds((pageIndex-1)*maxSize, maxSize);
-		
-		int total = billMapper.selectCountByExample(ex);
-		List<Bill> plist = billMapper.selectByExampleAndRowBounds(ex, rowBounds);
-		
-		PageResult<Bill> result = new PageResult<Bill>();
-		result.setData(plist);
-		result.setTotal(total);
-		result.setSuccess(true);
+		PageResult<Bill> result = PageResult.buildPageResult(sqlResult, Bill.class);
 		return result;
 	}
 	
+	public List<JXBillVo> queryRefundBill(JXBillQuery billQuery) {
+		HospitalBillQuery query = new HospitalBillQuery();
+		
+		try {
+			Date end = convert2Date(billQuery.getEndDate(), billQuery.getEndTime());
+			Date start = convert2Date(billQuery.getStartDate(), billQuery.getStartTime());
+	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			String[] payModes = billQuery.getPayMode().split("\\|");
+			String payType = billQuery.getTradeFlag();
+			Integer type = Integer.valueOf(payType);
+			if(type != 2) {
+				throw new HandleException(ErrorCode.ARG_ERROR, "TradeFlag参数错误，只能是2");
+			}
+			List<Integer> payways = new ArrayList<Integer>();
+			for(int i=0;i<payModes.length;i++) {
+				Integer payway = payMode2Payway(payModes[i]);
+				payways.add(payway);
+			}
+			query.setPayway(payways);
+			query.setStartTime(sdf.format(start));
+			query.setEndTime(sdf.format(end));
+			query.setType(type);
+		
+		}catch (ParseException e) {
+			throw new HandleException(ErrorCode.ARG_ERROR, "时间参数错误");
+		}
+		List<BillDTO> list = billMapper.jxfyQueryBill(query);
+		
+		List<JXBillVo> ret = toJXBillVo(list);
+		
+		return ret;
+	}
+	
 	//获取对账明细
-	public List<Bill> reconcile(JXBillQuery billQuery) throws Exception {
-		Date end = convert2Date(billQuery.getEndDate(), billQuery.getEndTime());
-		Date start = convert2Date(billQuery.getStartDate(), billQuery.getStartTime());
+	public List<JXBillVo> reconcile(JXBillQuery billQuery) {
+		HospitalBillQuery query = new HospitalBillQuery();
+		
+		try {
+			Date end = convert2Date(billQuery.getEndDate(), billQuery.getEndTime());
+			Date start = convert2Date(billQuery.getStartDate(), billQuery.getStartTime());
+	
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			String[] payModes = billQuery.getPayMode().split("\\|");
+			String payType = billQuery.getTradeFlag();
+			Integer type = Integer.valueOf(payType);
+			if(type != 1 && type != 2) {
+				throw new HandleException(ErrorCode.ARG_ERROR, "TradeFlag参数错误，只能是1或2");
+			}
+			List<Integer> payways = new ArrayList<Integer>();
+			for(int i=0;i<payModes.length;i++) {
+				Integer payway = payMode2Payway(payModes[i]);
+				payways.add(payway);
+			}
+			query.setPayway(payways);
+			query.setStartTime(sdf.format(start));
+			query.setEndTime(sdf.format(end));
+			query.setType(type);
+		
+		}catch (ParseException e) {
+			throw new HandleException(ErrorCode.ARG_ERROR, "时间参数错误");
+		}
+		List<BillDTO> list = billMapper.jxfyQueryBill(query);
+		
+		List<JXBillVo> ret = toJXBillVo(list);
+		
+		return ret;
+	}
 
-		String payMode = billQuery.getPayMode();
-		String type = billQuery.getTradeFlag();
-		List<Bill> list = billMapper.queryBill(payMode, type, start, end);
-		return list;
+	private List<JXBillVo> toJXBillVo(List<BillDTO> list) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		
+		List<JXBillVo> ret = list.stream().map(dto->{
+			JXBillVo vo = new JXBillVo();
+			vo.setInvoiceNO(dto.getOrderno());
+			vo.setPatientName(dto.getPatientname());
+			vo.setPatientNo(dto.getRegNo());
+			vo.setPayAmt(dto.getAmount().toString());
+			vo.setTPTradeNo(dto.getPayid());
+			vo.setTradeFlag(dto.getType().toString());
+			vo.setPayDate(dateFormat.format(dto.getCreatetime()));
+			vo.setPayTime(timeFormat.format(dto.getCreatetime()));
+			vo.setPayMode(payWay2PayMode(dto.getPayway()));
+			return vo;
+		}).collect(Collectors.toList());
+		return ret;
 	}
 	
 	private Date convert2Date(String date, String time) throws ParseException {
 		String dateTime = date+" "+time;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.parse(dateTime);
 	}
 
@@ -156,14 +209,12 @@ public class BillService {
 		return vo;
 	}
 
-	public Bill getBillByOrder(Long oid) {
+	//获取
+	public Bill getPayBillByOrderno(String orderno) {
 		Example ex = new Example(Bill.class);
-		ex.createCriteria().andEqualTo("orderid", oid).andEqualTo("type", Bill.TYPE_PAY);
+		ex.createCriteria().andEqualTo("orderno", orderno).andEqualTo("type", Bill.TYPE_PAY);
 		Bill bill = billMapper.selectOneByExample(ex);
 		return bill;
 	}
 
-	
-	
-	
 }

@@ -16,7 +16,7 @@ public class PrescriptionInitVo implements Serializable{
 	@JsonIgnoreProperties
 	private Integer patientId;
 	
-	private String num;//处方签号
+	private String prescriptionno;//处方签号
 	
 	private String regNo;//锦欣妇幼的患者登记号
 	
@@ -118,12 +118,12 @@ public class PrescriptionInitVo implements Serializable{
 		this.cardNo = cardNo;
 	}
 
-	public String getNum() {
-		return num;
+	public String getPrescriptionno() {
+		return prescriptionno;
 	}
 
-	public void setNum(String num) {
-		this.num = num;
+	public void setPrescriptionno(String prescriptionno) {
+		this.prescriptionno = prescriptionno;
 	}
 
 	public String getPatientBirthday() {

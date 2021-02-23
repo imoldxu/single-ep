@@ -8,10 +8,10 @@ import {
 } from '@ant-design/icons';
 import { Alert, Space, message, Tabs } from 'antd';
 import React, { useState } from 'react';
-import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
-import Footer from '@/components/Footer';
-import { login, getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { login } from '@/services/ant-design-pro/login';
+import MD5 from 'crypto-js/md5'
 
 import styles from './index.less';
 
@@ -36,15 +36,16 @@ const goto = (role) => {
     const { redirect } = query as { redirect: string };
     if(role.tollman){
       history.push('/Charge')
-    }else{
-      history.push(redirect || '/');
+    } else if(role.admin){
+      history.push('/saleStatistic')
+    } else{
+      history.push('/dashboard');
     }
   }, 10);
 };
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const intl = useIntl();
@@ -63,35 +64,39 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       // 登录
-      const userInfo = await login({ ...values });
-      //if (msg.status === 'ok') {
+      const payload = {
+        ...values,
+        password: MD5(values.password+"x").toString()
+      }
+      const userInfo = await login({ ...payload });
         message.success('登录成功！');
         await fetchUserInfo();
         const {roles} = userInfo;
           let admin = false;
+          let manager = false;
           let tollman = false;
           roles.forEach( role =>{
             const {name} = role;
-            if(name === 'manager'){
+            if(name === 'admin'){
               admin = true
+            }else if(name === 'manager'){
+              manager = true
             }else if(name === 'tollman'){
               tollman = true
             }
           })
           goto({
             admin,
+            manager,
             tollman,
           });
         return;
-      //}
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
     } catch (error) {
-      message.error('登录失败，请重试！');
+      message.error(error.message, 3);
     }
     setSubmitting(false);
   };
-  const { status } = userLoginState;
+  const { status } = {};
 
   return (
     <div className={styles.container}>

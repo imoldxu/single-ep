@@ -1,10 +1,8 @@
 package com.yyg.eprescription.bo;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 public class PrescriptionQuery {
 
-	private String num;
+	private String prescriptionno;
 	
 	private String regNo;
 	
@@ -48,12 +46,12 @@ public class PrescriptionQuery {
 		this.department = department;
 	}
 
-	public String getNum() {
-		return num;
+	public String getPrescriptionno() {
+		return prescriptionno;
 	}
 
-	public void setNum(String num) {
-		this.num = num;
+	public void setPrescriptionno(String prescriptionno) {
+		this.prescriptionno = prescriptionno;
 	}
 
 	public String getStartdate() {

@@ -62,30 +62,30 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         history.push('/user/login');
       }
     },
-    links: isDev
-      ? [
-          <>
-            <LinkOutlined />
-            <span
-              onClick={() => {
-                window.open('/umi/plugin/openapi');
-              }}
-            >
-              openAPI 文档
-            </span>
-          </>,
-          <>
-            <BookOutlined />
-            <span
-              onClick={() => {
-                window.open('/~docs');
-              }}
-            >
-              业务组件文档
-            </span>
-          </>,
-        ]
-      : [],
+    // links: isDev
+    //   ? [
+    //       <>
+    //         <LinkOutlined />
+    //         <span
+    //           onClick={() => {
+    //             window.open('/umi/plugin/openapi');
+    //           }}
+    //         >
+    //           openAPI 文档
+    //         </span>
+    //       </>,
+    //       <>
+    //         <BookOutlined />
+    //         <span
+    //           onClick={() => {
+    //             window.open('/~docs');
+    //           }}
+    //         >
+    //           业务组件文档
+    //         </span>
+    //       </>,
+    //     ]
+    //   : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -125,9 +125,10 @@ const errorHandler = (error: ResponseError) => {
     //   message: `请求错误 ${status}: ${url}`,
     //   description: errorText,
     // });
-    if(data.code===4 || data.code===15 || data.code===16){
+    if(data.code===4 || data.code===15 ){
       history.push('/user/login')
     }
+    throw data;
   }
 
   if (!response) {
@@ -136,7 +137,9 @@ const errorHandler = (error: ResponseError) => {
       message: '网络异常',
     });
   }
-  throw error;
+  
+  //将后台返回的{code,message}抛出给外面处理
+  throw error
 };
 
 // https://umijs.org/zh-CN/plugins/plugin-request

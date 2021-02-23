@@ -1,8 +1,10 @@
 package com.yyg.eprescription.bo;
 
+import javax.validation.constraints.NotNull;
+
 public class BillQuery {
 
-	private String StartTime;
+	private String startTime;
 	
 	private String endTime;
 	
@@ -17,11 +19,11 @@ public class BillQuery {
 	private Integer pageSize;
 	
 	public String getStartTime() {
-		return StartTime;
+		return startTime;
 	}
 
 	public void setStartTime(String startTime) {
-		StartTime = startTime;
+		this.startTime = startTime;
 	}
 
 	public String getEndTime() {

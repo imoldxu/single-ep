@@ -1,37 +1,39 @@
 package com.yyg.eprescription.bo;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class JXBillQuery {
 
-	@JsonProperty("StartDate")
+	@JsonProperty(value="StartDate", access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message="不能为空")
 	private String StartDate;
 	
-	@JsonProperty("EndDate")
+	@JsonProperty(value="EndDate", access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message="不能为空")
 	private String EndDate;
 	
-	@JsonProperty("StartTime")
+	@JsonProperty(value="StartTime", access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message="不能为空")
 	private String StartTime;
 	
-	@JsonProperty("EndTime")
+	@JsonProperty(value="EndTime", access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message="不能为空")
 	private String EndTime;
 	
-	@JsonProperty("PayMode")
+	@JsonProperty(value="PayMode", access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message="不能为空")
 	private String PayMode;
 	
-	@JsonProperty("TradeFlag")
+	@JsonProperty(value="TradeFlag", access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message="不能为空")
 	private String TradeFlag;
 	
-	@JsonProperty("PharmacyCode")
+	@JsonProperty(value="PharmacyCode", access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message="不能为空")
+	@Pattern(regexp="^jxfyhpk")
 	private String PharmacyCode;
 
 	public String getStartDate() {

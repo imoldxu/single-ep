@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { getPrescriptionById } from '@/services/ant-design-pro/prescription';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import styles from './index.less'
-//import QRCode from 'qrcode.react/lib/index'
-import { message, Spin } from 'antd';
+import QRCode from 'qrcode.react/lib/index'
+import { Button, message, Spin } from 'antd';
+import { PageContainer } from '@ant-design/pro-layout';
+import { regFenToYuan } from '@/utils/money';
+import { PrinterOutlined, RollbackOutlined } from '@ant-design/icons';
+import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
 
 export default ()=>{
 
     const [detail, setDetail ] = useState();
     const [isloading, setLoading] = useState(true)
+
+    const printRef = useRef()
 
     const { query } = history.location;
     const { id } = query;
@@ -28,24 +34,66 @@ export default ()=>{
             setLoading(false)
         }
     },[id])
+
+    // function handlePrint(){
+    //     if(document.execCommand("print") == true){
+    //         message.success("打印成功")
+    //     } else {
+    //         message.error("打印机故障")
+    //     }
+    // }
+
+    /**
+     * 编码 base64 -> URL Safe base64
+     * description: base64
+     * '+' -> '-'
+     * '/' -> '_'
+     * '=' -> ''
+     * param {type} string
+     * return: URL Safe base64 string;
+     */
+    function urlSateBase64Encode(base64Str) {
+        if (!base64Str) 
+            return;
+        let safeStr = base64Str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '’');
+        return safeStr;
+    }
+
     let price = 0
+    let payCode = 0
     if(detail){
         detail.drugList.forEach(drug=>{
             price  +=  drug.price*drug.number;
         });
+        let paycodeStr = JSON.stringify({"PatientName": detail.prescription.patientname,"PatientNo": detail.prescription.regNo})
+
+        payCode = urlSateBase64Encode(window.btoa(window.encodeURIComponent(paycodeStr)))
     }
 
+
     return (
+        <PageContainer 
+            extra={[
+                <Button type="default" key="2" onClick={()=> history.goBack()}><RollbackOutlined /> 返回</Button>,
+                <ReactToPrint content={() => printRef.current}>
+                <PrintContextConsumer>
+                    {({ handlePrint }) => (
+                        <Button type="primary" onClick={handlePrint}><PrinterOutlined /> 打印处方</Button>
+                        )}
+                    </PrintContextConsumer>
+                </ReactToPrint>
+            ]}>
+            
         <Spin spinning={isloading}>
            { detail &&
-            <div className={styles.con}>
+            <div ref={printRef} className={`${styles.con}`}>
                 <div className={styles.topHead}>四川锦欣妇女儿童医院●成都市锦江区妇幼保健金卡医院</div>
                 <div className={styles.title_area}>
                     <div className={styles.title}>处方笺</div>
                     <div className={styles.tip}>普通</div>
                     <div className={styles.qrtip}>登记号</div>
                     <div className={styles.qrcode}>
-                        {/* <QRCode data={detail.prescription.regNo} version="2" error-correction-level="Q" size="40"></QRCode> */}
+                        <QRCode value={detail.prescription.regNo} level="Q" size={40}></QRCode>
                     </div>
                 </div>
                 
@@ -65,7 +113,7 @@ export default ()=>{
                         <div className={styles.label}>科别：</div><div className={styles.valueInput} style={{width: "80px"}}>{detail.prescription.department}</div>
                     </div>
                     <div className={styles.row}>
-                        <div className={styles.label}>处方号：</div><div className={styles.valueInput} style={{marginRight: "30px",padding: "0 30px"}}>{detail.prescription.num}</div>
+                        <div className={styles.label}>处方号：</div><div className={styles.valueInput} style={{marginRight: "30px",padding: "0 30px"}}>{detail.prescription.prescriptionno}</div>
                         <div className={styles.label}>开具日期:</div><div className={styles.valueInput} style={{padding: "0 55px 0 20px"}}>{detail.prescription.createdate}</div>
                     </div>
                     <div className={styles.row}>
@@ -97,7 +145,7 @@ export default ()=>{
                     <div className={styles.row}>
 
                         <div className={styles.label}>医师签名并盖章:</div><div className={styles.valueInput} style={{width: "100px", marginRight: "30px"}}>{detail.prescription.doctorname}</div>
-                        <div className={styles.label}>金额(元):</div><div className={styles.valueInput} style={{width: "120px"}}>{price/100}元</div>
+                        <div className={styles.label}>金额(元):</div><div className={styles.valueInput} style={{width: "120px"}}>{ regFenToYuan(price)}元</div>
                     </div>
                     <div className={styles.row}>  
                         <div className={styles.label} style={{letterSpacing: "2px"}}>审核'校对'发药:</div><div className={styles.valueInput} style={{width: "100px", marginRight: "20px"}}></div>
@@ -108,10 +156,11 @@ export default ()=>{
                 </div>
 
                 <div className={styles.payQrCode}>
-                    {/* <QRCode data="http://xxxx/pharmacy/scan/index?u=jxfyhpk&d={{paycode}}&fairtype=f" version="2" error-correction-level="Q" size="120"></QRCode> */}
+                    <QRCode value={`http://xxxx/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="Q" size={100}></QRCode>
                 </div>
             </div>
             }
         </Spin>
+        </PageContainer>
     )
 }

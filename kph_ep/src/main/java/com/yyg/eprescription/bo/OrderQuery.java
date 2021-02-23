@@ -1,10 +1,10 @@
 package com.yyg.eprescription.bo;
 
-import javax.validation.constraints.NotBlank;
-
 public class OrderQuery {
 
-	private String regNo; //	病人登记号	是	[string]		
+	private String regNo; //	病人登记号	
+	
+	private String prescriptionno;//处方号
 	
 	private String startTime;
 	
@@ -62,6 +62,14 @@ public class OrderQuery {
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	public String getPrescriptionno() {
+		return prescriptionno;
+	}
+
+	public void setPrescriptionno(String prescriptionno) {
+		this.prescriptionno = prescriptionno;
 	}
 	
 }

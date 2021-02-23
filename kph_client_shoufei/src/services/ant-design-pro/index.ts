@@ -8,6 +8,7 @@ import * as prescription from './prescription';
 import * as drug from './drug';
 import * as order from './order';
 import * as saleRecord from './saleRecord';
+import * as users from './users'
 export default {
   api,
   login,

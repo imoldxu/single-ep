@@ -4,6 +4,8 @@ public class DrugQuery {
 
 	private String keys;
 	
+	private Integer state;
+	
 	private Integer current;
 	
 	private Integer pageSize;
@@ -30,6 +32,14 @@ public class DrugQuery {
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 	
 }

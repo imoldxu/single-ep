@@ -13,7 +13,7 @@ import com.yyg.eprescription.entity.PrescriptionDrugs;
 public class OpenPrescriptionBo {
 
 	@NotBlank
-	private String num;//门诊号
+	private String prescriptionno;//门诊号
 	
 	private Integer type = 1;//默认是西药
 	
@@ -47,12 +47,12 @@ public class OpenPrescriptionBo {
 	
 	List<PrescriptionDrugs> drugs;
 
-	public String getNum() {
-		return num;
+	public String getPrescriptionno() {
+		return prescriptionno;
 	}
 
-	public void setNum(String num) {
-		this.num = num;
+	public void setPrescriptionno(String prescriptionno) {
+		this.prescriptionno = prescriptionno;
 	}
 
 	public Integer getType() {

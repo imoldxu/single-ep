@@ -1,49 +1,44 @@
 
 package com.yyg.eprescription.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.RefundInfo;
 import com.yyg.eprescription.bo.SaleRecordQuery;
 import com.yyg.eprescription.context.ErrorCode;
 import com.yyg.eprescription.context.HandleException;
-import com.yyg.eprescription.entity.Prescription;
+import com.yyg.eprescription.entity.Drug;
 import com.yyg.eprescription.entity.PrescriptionDrugs;
 import com.yyg.eprescription.entity.SalesRecord;
 import com.yyg.eprescription.mapper.SalesRecordMapper;
-import com.yyg.eprescription.util.DateUtils;
-import com.yyg.eprescription.util.MoneyUtil;
+import com.yyg.eprescription.vo.SalesRecordStatisticVo;
 import com.yyg.eprescription.vo.SalesRecordVo;
 
-import tk.mybatis.mapper.entity.Example;
 
 @Service
 public class SalesRecordService {
 
 	@Autowired
 	SalesRecordMapper recordMapper;
-	
+	@Autowired
+	DrugService drugService;
+	/**
+	 * 分页查询
+	 * @param query
+	 * @return
+	 */
 	public PageResult<SalesRecordVo> query(SaleRecordQuery query){
-		Integer total = recordMapper.countSalesRecord(query);
-		List<SalesRecordVo> list = recordMapper.querySalesRecord(query);		
 		
-		PageResult<SalesRecordVo> result = new PageResult<SalesRecordVo>();
-		result.setData(list);
-		result.setTotal(total);
-		result.setSuccess(true);
-		
+		List<List<?>> sqlResult = recordMapper.querySalesRecordWithTotal(query);		
+		PageResult<SalesRecordVo> result = PageResult.buildPageResult(sqlResult, SalesRecordVo.class);	
 		return result;
 	}
 
@@ -65,6 +60,8 @@ public class SalesRecordService {
 		for(PrescriptionDrugs transdrug : transactionList){
 			SalesRecord record = new SalesRecord();
 			
+			Drug drug = drugService.getDrugById(transdrug.getDrugid());
+			
 			record.setCreatetime(new Date());
 			record.setDrugid(transdrug.getDrugid());		
 			record.setDrugname(transdrug.getDrugname());
@@ -72,6 +69,7 @@ public class SalesRecordService {
 			record.setOrderid(orderid);
 			record.setStandard(transdrug.getStandard());
 			record.setDrugunit(transdrug.getUnit());
+			record.setDrugcompany(drug.getCompany());
 			record.setPrescriptionid(transdrug.getPrescriptionid());
 			record.setPrice(transdrug.getPrice());
 			record.setRefundnum(0);
@@ -109,6 +107,7 @@ public class SalesRecordService {
 			refundRecord.setDrugid(record.getDrugid());
 			refundRecord.setDrugname(record.getDrugname());
 			refundRecord.setDrugunit(record.getDrugunit());
+			refundRecord.setDrugcompany(record.getDrugcompany());
 			refundRecord.setNum(toRefund);
 			refundRecord.setPrescriptionid(record.getPrescriptionid());
 			refundRecord.setPrice(record.getPrice());
@@ -120,4 +119,13 @@ public class SalesRecordService {
 		
 	}
 
+	public PageResult<SalesRecordStatisticVo> statistic(SaleRecordQuery query){
+		
+		List<List<?>> sqlResult = recordMapper.statistic(query);
+		
+		PageResult<SalesRecordStatisticVo> result = PageResult.buildPageResult(sqlResult, SalesRecordStatisticVo.class);
+		
+		return  result;
+	}
+	
 }

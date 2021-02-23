@@ -7,7 +7,7 @@ import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from '
 import { addDrug, downDrug, modifyDrug, queryDrug, upDrug } from '@/services/ant-design-pro/drug';
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import DrugModal from './drugModal'
-import { regYuanToFen } from "@/utils/money";
+import { regFenToYuan, regYuanToFen } from "@/utils/money";
 
 export default () => {
 
@@ -56,9 +56,12 @@ export default () => {
 
     const columns = [
         {
-            title: '药品名称或拼音简称',
+            title: '药品名称',
             dataIndex: 'keys',
             hideInTable: true,
+            fieldProps:{
+                placeholder: "请输入药品名称或简称的拼音首字母"
+            }
         },
         {
             title: '药品名称',
@@ -89,7 +92,7 @@ export default () => {
             title: '单价',
             dataIndex: 'price',
             search: false,
-            render: (_, record) => { return (<span>{record.price / 100}元</span>) }
+            render: (_, record) => { return (<span>{regFenToYuan(record.price)}元</span>) }
         },
         {
             title: '状态',
@@ -148,8 +151,12 @@ export default () => {
                 headerTitle="药品清单"
                 actionRef={actionRef}
                 rowKey="key"
-                request={(params) => {
-                    return queryDrug(params)
+                request={async (params) => {
+                    try{
+                        return await queryDrug(params)
+                    }catch(e){
+                        message.error(e.message, 3)
+                    }
                 }
                 }
                 columns={columns}

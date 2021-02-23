@@ -3,16 +3,39 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yyg.eprescription.mapper.PrescriptionMapper" >
-	<resultMap id="CountPrescriptionInfo" type="com.yyg.eprescription.vo.CountPrescriptionInfo" >
-	    <result column="drugname" property="drugname" jdbcType="VARCHAR" />
-	    <result column="doctorname" property="doctorname" jdbcType="VARCHAR" />
-	    <result column="department" property="department" jdbcType="VARCHAR" />
-	    <result column="countnumber" property="countnumber" jdbcType="VARCHAR" />
-	    <result column="drugunit" property="drugunit" jdbcType="VARCHAR"/>
-  	</resultMap>
 
-	<select id="countPrescription" resultMap="CountPrescriptionInfo">
-	       select drugname, doctorname, department, sum(t_prescriptiondrugs.number*t_prescription.zynum) as countnumber, t_prescriptiondrugs.unit as drugunit from t_prescriptiondrugs LEFT JOIN t_prescription ON t_prescriptiondrugs.prescriptionid = t_prescription.id WHERE t_prescription.state like '已领药' AND t_prescription.createdate BETWEEN #{startdate,jdbcType=VARCHAR} and #{enddate,jdbcType=VARCHAR} GROUP BY drugname, doctorname ORDER BY drugname
+	<resultMap type="com.yyg.eprescription.entity.Prescription" id="prescriptionMap">
+		<id column="id" property="id"/>
+		<result column="patient_card_no" property="cardNo"/>
+		<result column="patient_reg_no" property="regNo"/>
+		<result column="patient_birthday" property="patientBirthday"/>
+	</resultMap>
+
+	<select id="queryPrescriptionWithTotal" resultMap="prescriptionMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
+		select * from t_prescription
+		<where>
+			<if test="query.prescriptionno !=null and query.prescriptionno !=''">
+				t_prescription.prescriptionno = #{query.prescriptionno}
+			</if>
+			<if test="query.regNo != null and query.regNo !=''">
+				AND t_prescription.patient_reg_no = #{query.regNo}
+			</if>
+			<if test="query.doctorname != null and query.doctorname !=''">
+				AND t_prescription.doctorname = #{query.doctorname}
+			</if>
+			<if test="query.department != null and query.department !=''">
+				AND t_prescription.department = #{query.department}
+			</if>
+			<if test="query.patientname != null and query.patientname !=''">
+				AND t_prescription.patientname = #{query.patientname}
+			</if>
+			<if test="query.startdate != null and query.enddate != null">
+				AND t_prescription.createdate BETEEWN #{query.startdate} AND #{query.enddate}
+			</if>
+		</where>
+		order by t_prescription.id DESC 
+		limit ${(query.current-1)*query.pageSize}, ${query.pageSize};
+		SELECT FOUND_ROWS() as total;
 	</select>
 
 

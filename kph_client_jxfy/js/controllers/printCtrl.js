@@ -21,11 +21,12 @@ define(['angular','layer'], function(angular,layer){
 
 		$scope.paycode = urlSateBase64Encode($window.btoa($window.encodeURIComponent(paycodeStr)))
 
+		$scope.isCommit = false;
+
         angular.forEach($scope.drugArry, function(data,index,array){
 
 
-            $scope.price  = $scope.price  + data.price*data.number*$scope.userArry.zynum;
-
+            $scope.price  = $scope.price  + data.price*data.number;
 
         });
 
@@ -35,7 +36,26 @@ define(['angular','layer'], function(angular,layer){
 
         };
 
+		$scope.print = function(){
+			if(document.execCommand("print") == true){
 
+				layer.confirm('是否完成打印？', {
+					btn: ['确定','取消'] //按钮
+				}, function(){
+					setTimeout(function(){
+
+						layer.closeAll();
+
+						$state.go('welcome')
+
+					},500)
+
+				});
+
+			}else{
+				alert("打印配置异常");
+			}
+		}
 
         $scope.commit = function(){
 		
@@ -64,7 +84,8 @@ define(['angular','layer'], function(angular,layer){
 
 				if (data.code == 1){
 			
-					
+					$scope.isCommit = true;
+
 					var docArray = {
 
 						doctorname : $scope.userArry.doctorname,
@@ -91,7 +112,7 @@ define(['angular','layer'], function(angular,layer){
 						});
 
 					}else{
-						alert("打印服务异常，请联系管理员");
+						alert("打印服务异常");
 					}
 					
 				}else{

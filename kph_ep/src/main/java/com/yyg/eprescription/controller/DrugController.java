@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSON;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.DrugQuery;
 import com.yyg.eprescription.bo.UpDownDrugBo;
@@ -137,6 +137,7 @@ public class DrugController {
 		return resp;
 	}
 	
+	@RequiresRoles({"manager"})
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/uploadByExcel", method = RequestMethod.POST)
 	@ApiOperation(value = "新增上传药品信息", notes = "新增上传药品信息")
@@ -176,47 +177,26 @@ public class DrugController {
 		return resp;
 	}
 	
+	@RequiresRoles({"manager"})
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/addDrug", method = RequestMethod.POST)
 	@ApiOperation(value = "添加药品信息", notes = "")
-	public Response addDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
+	public Drug addDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
 			HttpServletRequest request,HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "POST");
-		
-		Response resp = null;
-		
-		if(drug.getId() == null){
-			int opRet = drugService.addDrug(drug);
-			if(opRet == 0){
-				throw new HandleException(ErrorCode.NORMAL_ERROR, "修改失败");    
-			}else{
-				resp = new Response(ErrorCode.OK, drug, "OK");
-				return resp;
-			}
-		}else{
-			throw new HandleException(ErrorCode.ARG_ERROR, "参数错误");
-		}
+
+		Drug ret = drugService.addDrug(drug);
+		return ret;
 	}
 	
+	@RequiresRoles({"manager"})
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/modifyDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "修改药品信息", notes = "")
-	public Response modifyDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
+	public Drug modifyDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
 			HttpServletRequest request,HttpServletResponse response) {
-		//response.setHeader("Access-Control-Allow-Origin", "*");
-		//response.setHeader("Access-Control-Allow-Methods", "PUT");
-		
-		Response resp = null;
-		
 		if(drug.getId() != null){
-			int opRet = drugService.updateDrug(drug);
-			if(opRet == 0){
-				throw new HandleException(ErrorCode.NORMAL_ERROR, "修改失败");    
-			}else{
-				resp = new Response(ErrorCode.OK, drug, "OK");
-				return resp;
-			}
+			Drug ret = drugService.updateDrug(drug);
+			return ret;
 		}else{
 			throw new HandleException(ErrorCode.ARG_ERROR, "参数错误");
 		}
@@ -240,37 +220,22 @@ public class DrugController {
 //		return resp;
 //	}
 	
+	@RequiresRoles({"manager"})
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/downDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "下架药品", notes = "")
-	public Response downDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "POST");
+	public void downDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
 		
-		Response resp = null;	
-		int opRet = drugService.downDrug(drugbo.getDrugid());
-		if(opRet!=0){
-			resp = new Response(ErrorCode.OK, null, "删除成功");
-			return resp;
-		}else{
-			throw new HandleException(ErrorCode.ARG_ERROR, "药品不存在");
-		}
+		Drug drug = drugService.downDrug(drugbo.getDrugid());
 	}
 	
+	@RequiresRoles({"manager"})
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/upDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "上架药品信息", notes = "上架药品信息")
-	public Response upDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "POST");
+	public void upDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
+			
+		Drug drug = drugService.upDrug(drugbo.getDrugid());
 		
-		Response resp = null;			
-		int opRet = drugService.upDrug(drugbo.getDrugid());
-		if(opRet!=0){
-			resp = new Response(ErrorCode.OK, null, "删除成功");
-			return resp;
-		}else{
-			throw new HandleException(ErrorCode.ARG_ERROR, "药品不存在");
-		}
 	}
 }

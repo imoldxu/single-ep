@@ -15,14 +15,13 @@ import com.alibaba.druid.support.http.WebStatFilter;
 @Configuration
 public class DruidConfig {
 
-	@Bean
+	@Bean(name="coreDS")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource druidDataSource() {
 		// 将所有前缀为spring.datasource下的配置项都加载DataSource中
 		DataSource ds = new DruidDataSource();
 		return ds;
     }
-	
 	
 	/**
 	 * 配置druid的监控

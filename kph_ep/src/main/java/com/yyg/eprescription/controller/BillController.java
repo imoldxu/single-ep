@@ -21,6 +21,7 @@ import com.yyg.eprescription.context.JXResp;
 import com.yyg.eprescription.entity.Bill;
 import com.yyg.eprescription.service.BillService;
 import com.yyg.eprescription.vo.BillStatisticVo;
+import com.yyg.eprescription.vo.JXBillVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,6 +63,24 @@ public class BillController {
 	
 	//医院需要的接口
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	@RequestMapping(value = "/queryRefundBill", method = RequestMethod.POST)
+	@ApiOperation(value = "查询退费", notes = "查询退费")
+	public JXResp queryRefundBill(
+			@ApiParam(name = "billQuery", value = "查询信息") @RequestBody @Valid JXBillQuery billQuery,
+			HttpServletRequest request, HttpServletResponse response) {
+	
+		try {
+			List<JXBillVo> list = billService.queryRefundBill(billQuery);
+	
+			JXResp resp = new JXResp(list);
+
+			return resp;
+		}catch (Exception e) {
+			return new JXResp("-1", e.getMessage());
+		}
+	}
+	
+	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/reconcile", method = RequestMethod.POST)
 	@ApiOperation(value = "对账", notes = "对账")
 	public JXResp reconcile(
@@ -69,7 +88,7 @@ public class BillController {
 			HttpServletRequest request, HttpServletResponse response) {
 	
 		try {
-			List<Bill> list = billService.reconcile(billQuery);
+			List<JXBillVo> list = billService.reconcile(billQuery);
 	
 			JXResp resp = new JXResp(list);
 

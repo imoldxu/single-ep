@@ -8,6 +8,10 @@
 	    <id column="id" property="id" jdbcType="INTEGER" />
 	    <result column="showname" property="showname" jdbcType="VARCHAR" />
   	</resultMap>
+  	
+  	<resultMap type="com.yyg.eprescription.entity.Drug" id="drugMap">
+  		<id column="id" property="id" />
+  	</resultMap>
 
 	<select id="getDrugsByKeys" resultMap="ShortDrugInfo">
 		SELECT id ,CONCAT(drugname,'--',standard,'--',company) as showname FROM t_drug WHERE state = 1 and category not like '中药' and (drugname LIKE #{mykeys,jdbcType=VARCHAR} OR fullkeys LIKE #{mykeys,jdbcType=VARCHAR} OR shortnamekeys LIKE #{mykeys,jdbcType=VARCHAR}); 	
@@ -31,5 +35,17 @@
 	
 	<select id="getZyDrugBySubCategory" resultMap="ShortDrugInfo">
 		select id ,CONCAT(drugname,'--',standard,'--',company) as showname from t_drug where state = 1 and subcategory like #{category, jdbcType=VARCHAR} and category like '中药';
+	</select>
+	
+	<select id="queryDrugWithTotal" resultMap="drugMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
+		select * from t_drug
+		<where>
+			<if test="query.keys != null and query.keys !=''">
+				t_drug.drugname like #{query.keys} Or t_drug.fullkeys like #{query.keys} Or t_drug.shortnamekeys like #{query.keys}
+			</if>
+		</where>
+		order by t_drug.id DESC 
+		limit ${(query.current-1) * query.pageSize}, ${query.pageSize};
+		SELECT FOUND_ROWS() as total;
 	</select>
 </mapper>

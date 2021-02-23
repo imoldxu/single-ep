@@ -5,22 +5,11 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import { querySaleRecord } from '@/services/ant-design-pro/saleRecord';
+import { regFenToYuan } from "@/utils/money";
 
 export default ()=>{
 
   const actionRef = useRef();
-
-  const handleRefund = async (orderno) => {
-    const hide = message.loading('退货中')
-    try{
-        
-    }catch(e){
-        message.error(e.message, 3)
-    }finally{
-        hide()
-    }
-    actionRef.current.reload();
-  };
 
   const columns = [
     {
@@ -48,10 +37,14 @@ export default ()=>{
       dataIndex: 'standard',
     },
     {
+      title: '厂商',
+      dataIndex: 'drugcompany',
+    },
+    {
       title: '单价',
       dataIndex: 'price',
       search: false,
-      render: (_,record)=> (<span>{record.price/100}元</span>)
+      render: (_,record)=> (<span>{regFenToYuan(record.price)}元</span>)
     },
     {
         title: '数量',
@@ -82,12 +75,16 @@ export default ()=>{
         headerTitle="售药记录"
         actionRef={actionRef}
         rowKey="key"
-        request={(params) => {
-            if(params.dateRange){
-              params.startTime = params.dateRange[0] + "00:00:00";
-              params.endTime = params.dateRange[1] + "23:59:59";
+        request={async (params) => {
+            try{
+                if(params.dateRange && params.dateRange.length>1){
+                params.startTime = params.dateRange[0] + " 00:00:00";
+                params.endTime = params.dateRange[1] + " 23:59:59";
+                }
+                return await querySaleRecord(params)
+            }catch(e){
+                message.error(e.message, 3)
             }
-            return querySaleRecord(params)
           }
         }
         columns={columns}

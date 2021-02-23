@@ -1,5 +1,5 @@
 import { checkTwoPointNum, regFenToYuan, regYuanToFen } from '@/utils/money';
-import { Button, Col, Descriptions, Divider, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, Descriptions, Divider, Input, message, Modal, Row, Select } from 'antd';
 import Form from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import React, { useRef, useState } from "react";
@@ -43,7 +43,10 @@ const DrugModal = (props) => {
                     setLoading(true)
                     try{
                         handleCommit(values)
-                    }finally{
+                        message.success('提交成功')
+                    } catch(e){
+                        message.error(e.message, 3)
+                    } finally{
                         setLoading(false)
                     }
                 }

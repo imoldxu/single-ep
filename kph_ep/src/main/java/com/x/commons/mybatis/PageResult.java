@@ -41,4 +41,15 @@ public class PageResult<T> {
 		this.success = success;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> PageResult<T> buildPageResult(List<List<?>> sqlResult, Class<T> T) {
+		List<T> list = ( List<T>) sqlResult.get(0);
+		Integer total = (Integer)sqlResult.get(1).get(0);
+		
+		PageResult<T> result = new PageResult<T>();
+		result.setData(list);
+		result.setTotal(total);
+		result.setSuccess(true);
+		return result;
+	}
 }

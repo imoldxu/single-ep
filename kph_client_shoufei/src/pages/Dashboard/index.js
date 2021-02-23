@@ -6,6 +6,7 @@ import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useRef, useState } from "react";
 import FormItem from "antd/lib/form/FormItem";
 import moment from 'moment';
+import { regFenToYuan } from "@/utils/money";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -24,7 +25,7 @@ export default ()=>{
         const hide =  message.loading("统计中")
         const { rangeTime, payway } = values;
         let query = {}
-        if(rangeTime){
+        if(rangeTime && rangeTime.length>1){
             query.startTime = rangeTime[0].format('yyyy-MM-DD') + " 00:00:00"
             query.endTime = rangeTime[1].format('yyyy-MM-DD') + " 23:59:59"
         }
@@ -73,7 +74,7 @@ export default ()=>{
                 >
                     <Row gutter={24}>
                         <Col span={8}>
-                            <FormItem name="rangeTime" label="时间段" >
+                            <FormItem name="rangeTime" label="时间段" rules={[{required: true}]}>
                                 <RangePicker />
                             </FormItem>
                         </Col>
@@ -83,8 +84,8 @@ export default ()=>{
                                 <Option value="0">全部</Option>
                                 <Option value="1">微信</Option>
                                 <Option value="2">支付宝</Option>
-                                <Option value="3">市医保</Option>
-                                <Option value="4">省医保</Option>
+                                <Option value="3">医保</Option>
+                                {/* <Option value="4">省医保</Option> */}
                                 <Option value="5">现金</Option>
                             </Select>
                             </FormItem>
@@ -109,19 +110,19 @@ export default ()=>{
             <Row gutter={16}>
                 <Col span={8}>
                     <Card title="最终收入" bordered={false}>
-                        <span style={{color:"green"}}>{(statisticsValue.income-statisticsValue.pay)/100}元</span>
+                        <span style={{color:"green"}}>{regFenToYuan(statisticsValue.income-statisticsValue.pay)}元</span>
                         
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card title="缴费收入" bordered={false}>
-                        <span style={{color:"blue"}}>{statisticsValue.income/100}元</span>
+                        <span style={{color:"blue"}}>{regFenToYuan(statisticsValue.income)}元</span>
                         
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card title="退款支出" bordered={false}>
-                        <span style={{color:"red"}}>{statisticsValue.pay/100}元</span>
+                        <span style={{color:"red"}}>{regFenToYuan(statisticsValue.pay)}元</span>
                     </Card>
                 </Col>
             </Row>

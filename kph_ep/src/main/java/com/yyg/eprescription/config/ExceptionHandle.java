@@ -58,7 +58,7 @@ public class ExceptionHandle {
 			return new ResponseEntity<>(errorbody, HttpStatus.INTERNAL_SERVER_ERROR);
 		} else if( e instanceof AuthenticationException) {
 			AuthenticationException methodE = (AuthenticationException) e;
-			Throwable throwalbe = e.getCause();
+			Throwable throwalbe = methodE.getCause();
 			Response errorbody = Response.Error(ErrorCode.LOGIN_ERROR, throwalbe.getMessage());			
 			return new ResponseEntity<>(errorbody, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

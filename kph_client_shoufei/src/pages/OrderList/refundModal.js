@@ -1,5 +1,5 @@
 import { checkTwoPointNum, regFenToYuan } from '@/utils/money';
-import { Button, Col, Descriptions, Divider, Input, Modal, Row, Select, Space } from 'antd';
+import { Button, Col, Descriptions, Divider, Input, message, Modal, Row, Select, Space } from 'antd';
 import Form from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import React, { useRef, useState } from "react";
@@ -51,7 +51,10 @@ const RefundModal = (props) => {
                     setLoading(true)
                     try{
                         handleCommit(payload)
-                    }finally{
+                        message.success('提交成功')
+                    } catch(e){
+                        message.error(e.message, 3)
+                    } finally{
                         setLoading(false)
                     }
                 }
@@ -88,7 +91,7 @@ const RefundModal = (props) => {
                             return (
                             <Row gutter={16} key={`record${index}`}>
                                 <Col span={8}><span style={{lineHeight:"32px"}}>{record.drugname+" "+record.standard}</span></Col>
-                                <Col span={3}><span style={{lineHeight:"32px"}}>{"单价:"+record.price/100+"元"}</span></Col>
+                                <Col span={3}><span style={{lineHeight:"32px"}}>{"单价:"+regFenToYuan(record.price)+"元"}</span></Col>
                                 <Col span={4}><span style={{lineHeight:"32px"}}>可退数量:</span><span style={{color:"red",lineHeight:"32px"}}>{(record.num-record.refundnum)+record.drugunit}</span></Col>
                                 <Col span={9}>
                                     <FormItem name={record.id} label="退药数量"

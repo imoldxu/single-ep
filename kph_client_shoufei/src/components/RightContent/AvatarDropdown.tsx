@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { KeyOutlined, LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
@@ -43,6 +43,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       if (key === 'logout' && initialState) {
         setInitialState({ ...initialState, currentUser: undefined });
         loginOut();
+        return;
+      }           
+      if(key === 'modifyPassword'){
+        history.push(`/changePassword`);
         return;
       }
       history.push(`/account/${key}`);
@@ -88,6 +92,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       )}
       {menu && <Menu.Divider />}
 
+      <Menu.Item key="modifyPassword">
+        <KeyOutlined />
+        修改密码
+      </Menu.Item>
       <Menu.Item key="logout">
         <LogoutOutlined />
         退出登录

@@ -1,10 +1,15 @@
 
 define([], function(){
 
-    return ['$scope', '$http', '$cookieStore','$location','$rootScope','dataVer' ,'$state', function($scope, $http, $cookieStore,$location,$rootScope,dataVer,$state){
+    return ['$scope', '$http', '$window', '$cookieStore','$location','$rootScope','dataVer' ,'$state', function($scope, $http, $window, $cookieStore,$location,$rootScope,dataVer,$state){
 
         //默认值
-
+        $scope.enterEvent = function(e, cardNo) {
+			var keycode = window.event?e.keyCode:e.which;
+			if(keycode==13){//回车
+				$scope.login(cardNo);
+			}
+		};
 
         $scope.login = function(cardNo){
 

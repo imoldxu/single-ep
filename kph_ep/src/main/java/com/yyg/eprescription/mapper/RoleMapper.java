@@ -5,4 +5,6 @@ import com.yyg.eprescription.entity.Role;
 
 public interface RoleMapper extends BaseMapper<Role>{
 
+	Role getRoleByName(String roleName);
+
 }

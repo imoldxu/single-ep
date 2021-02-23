@@ -4,8 +4,33 @@
 	<resultMap id="statisticDto" type="com.yyg.eprescription.dto.BillStatisticDTO" autoMapping="true">		
   	</resultMap>
 
-	<select id="queryBill" resultType="Bill">
-	    select * from t_bill
+	<resultMap type="com.yyg.eprescription.entity.Bill" id="billMap" autoMapping="true">
+		<id column="id" property="id"></id>
+	</resultMap>
+	
+	<resultMap type="com.yyg.eprescription.dto.BillDTO" id="billDto" autoMapping="true">
+		<id column="id" property="id"></id>
+	</resultMap>
+	
+	<select id="queryBillWithTotal" resultMap="billMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
+	    select * from t_bill 
+	    <where>
+		   <if test="query.orderno != null and query.orderno !=''">
+		        t_bill.orderno = #{query.orderno} 
+		   </if>
+		   <if test="query.payid != null and query.payid !=''">
+		       AND  t_bill.payid = #{query.payid} 
+		   </if>
+		   <if test="query.payway != null">
+		       AND t_bill.payway = #{query.payway} 
+		   </if>
+		   <if test="query.startTime != null and query.endTime != null">
+		       AND t_bill.createtime BETWEEN #{query.startTime} AND #{query.endTime} 
+		   </if>
+		</where>
+		order by t_bill.id DESC 
+		limit ${(query.current-1) * query.pageSize}, ${query.pageSize};
+		SELECT FOUND_ROWS() as total;
 	</select>
 
 	<select id="statistic" resultMap="statisticDto">
@@ -14,6 +39,25 @@
 			AND payway = #{query.payway}
 		</if>
 		GROUP BY type
+	</select>
+	
+	<select id="jxfyQueryBill" resultMap="billDto">
+		SELECT t_bill.*, t_prescription.patient_reg_no AS regNo, t_prescription.patientname FROM t_bill LEFT JOIN t_order ON t_bill.orderno = t_order.orderno LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id
+		<where>
+			<if test="query.payway != null">
+				t_bill.payway in
+				  <foreach item="item" index="index" collection="query.payway"
+				      open="(" separator="," close=")">
+				        #{item}
+				  </foreach>		
+			</if>
+			<if test="query.type != null">
+				AND t_bill.type = #{query.type}
+			</if>
+			<if test="query.startTime != null and query.endTime != null">
+				AND t_bill.createtime BETWEEN #{query.startTime} AND #{query.endTime}
+			</if>
+		</where>
 	</select>
 
 </mapper>

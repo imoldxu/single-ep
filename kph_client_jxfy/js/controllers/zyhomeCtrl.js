@@ -35,7 +35,7 @@ define(['app','angular'], function(app,angular){
 
         $scope.ipt ={
 
-            "num":$scope.userArry.num,
+            "prescriptionno":$scope.userArry.prescriptionno,
             "doctorname":$scope.userArry.doctorname == null ? $scope.docArray == null ? '' :  $scope.docArray.doctorname : $scope.userArry.doctorname,
             "department":$scope.userArry.department == null ? $scope.docArray == null ? '' :  $scope.docArray.department : $scope.userArry.department,
             "diagnosis":$scope.userArry.diagnosis,

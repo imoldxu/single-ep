@@ -7,6 +7,7 @@ import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from '
 import { queryOrder, deliver, refundDrug } from '@/services/ant-design-pro/order';
 import { querySaleRecord } from '@/services/ant-design-pro/saleRecord';
 import RefundModal from './refundModal'
+import { regFenToYuan } from "@/utils/money";
 
 export default ()=>{
 
@@ -64,10 +65,27 @@ export default ()=>{
     {
       title: '处方号',
       dataIndex: 'prescriptionno',
+      fieldProps: {
+        onKeyUp: (e)=>{
+          var keycode = window.event?e.keyCode:e.which;
+          if(keycode==13){//回车
+              actionRef.current.reload();
+          }
+        }
+    }
     },
     {
-      title: '登记号',
+      title: '患者登记号',
       dataIndex: 'regNo',
+      order:2,
+      fieldProps: {
+        onKeyUp: (e)=>{
+          var keycode = window.event?e.keyCode:e.which;
+          if(keycode==13){//回车
+              actionRef.current.reload();
+          }
+        }
+    }
     },
     {
       title: '患者姓名',
@@ -86,7 +104,7 @@ export default ()=>{
       title: '订单金额',
       dataIndex: 'amount',
       search: false,
-      render: (_,record)=> (<span>{record.amount/100}元</span>)
+      render: (_,record)=> (<span>{regFenToYuan(record.amount)}元</span>)
     },
     {
         title: '支付方式',
@@ -108,6 +126,16 @@ export default ()=>{
                 text: '现金',
             }
         }
+    },
+    {
+        title: '创建时间',
+        dataIndex: 'createTime',
+        search: false,
+    },
+    {
+        title: '失效时间',
+        dataIndex: 'invalidTime',
+        search: false,
     },
     {
         title: '状态',
@@ -136,12 +164,7 @@ export default ()=>{
         }
     },
     {
-      title: '开具时间',
-      dataIndex: 'createTime',
-      search: false,
-    },
-    {
-      title:'时间范围',
+      title:'创建时间',
       dataIndex:'dateRange',
       hideInTable:true,
       valueType:"dateRange"
@@ -187,12 +210,16 @@ export default ()=>{
         headerTitle="交易列表"
         actionRef={actionRef}
         rowKey="key"
-        request={(params) => {
-            if(params.dateRange){
-              params.startTime = params.dateRange[0] + "00:00:00";
-              params.endTime = params.dateRange[1] + "23:59:59";
+        request={async (params) => {
+            try{
+                if(params.dateRange && params.dateRange.length>1){
+                params.startTime = params.dateRange + " 00:00:00";
+                params.endTime = params.dateRange + " 23:59:59";
+                }
+                return await queryOrder(params)
+            }catch(e){
+                message.error(e.message, 3)
             }
-            return queryOrder(params)
           }
         }
         columns={columns}

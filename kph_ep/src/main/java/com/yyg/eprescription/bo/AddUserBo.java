@@ -1,9 +1,7 @@
 package com.yyg.eprescription.bo;
 
-import java.util.List;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 
 public class AddUserBo {
@@ -12,13 +10,14 @@ public class AddUserBo {
 	private String name;
 	
 	@NotBlank
+	@Pattern(regexp="^[1](([3|5|8][\\d])|([4][4,5,6,7,8,9])|([6][2,5,6,7])|([7][^9])|([9][1,8,9]))[\\d]{8}$", message="请输入正确的手机号")
 	private String phone;
 	
 	@NotBlank
-	private String password;
+	private String role;
 	
-	@NotEmpty
-	private List<Integer> roleIds;
+//	@NotEmpty
+//	private List<Integer> roleIds;
 	
 	public String getName() {
 		return name;
@@ -32,17 +31,18 @@ public class AddUserBo {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getPassword() {
-		return password;
+	public String getRole() {
+		return role;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setRole(String role) {
+		this.role = role;
 	}
-	public List<Integer> getRoleIds() {
-		return roleIds;
-	}
-	public void setRoleIds(List<Integer> roleIds) {
-		this.roleIds = roleIds;
-	}
+	
+//	public List<Integer> getRoleIds() {
+//		return roleIds;
+//	}
+//	public void setRoleIds(List<Integer> roleIds) {
+//		this.roleIds = roleIds;
+//	}
 	
 }

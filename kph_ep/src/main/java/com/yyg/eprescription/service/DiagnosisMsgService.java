@@ -3,6 +3,8 @@ package com.yyg.eprescription.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.yyg.eprescription.entity.DiagnosisMsg;
@@ -15,12 +17,14 @@ public class DiagnosisMsgService {
 	@Autowired
 	DiagnosisMsgMapper msgMapper;
 	
+	@Cacheable(cacheNames="diagnosisList")
 	public List<String> getDiagnosis(String keys){
 		keys = keys.toUpperCase();
 		List<String> ret = msgMapper.getMsgByKeys(keys+"%");
 		return ret;
 	}
 	
+	@CacheEvict(cacheNames="diagnosisList")
 	public void add(String dmsg) {
 		List<String> msgList = msgMapper.getMsgByKeys(dmsg);	
 		if(msgList.isEmpty()){

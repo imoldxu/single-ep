@@ -48,7 +48,7 @@ public class Bill {
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	private String payid;//第三方支付编号
 	
-	@JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",timezone="GMT+8")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	@Column(name = "createtime")
 	@ColumnType(jdbcType = JdbcType.TIMESTAMP)
 	private Date createtime;//交易的时间

@@ -40,5 +40,32 @@
 		LEFT JOIN t_permission ON t_role_permission.pid = t_permission.id
 		WHERE t_user.id = #{uid, jdbcType=INTEGER}
 	</select>
+	
+	<select id="queryUser" resultMap="UserMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
+		SELECT t_user.*,
+		t_role.id as rid, t_role.name as rname, t_permission.id as pid,
+		t_permission.name as pname
+		FROM t_user LEFT JOIN t_user_role ON t_user.id = t_user_role.uid
+		LEFT JOIN t_role ON t_user_role.rid = t_role.id
+		LEFT JOIN t_role_permission ON t_role_permission.rid = t_role.id
+		LEFT JOIN t_permission ON t_role_permission.pid = t_permission.id
+		<where>
+			<if test="query.phone != null and query.phone != ''">
+				t_user.phone = #{query.phone}
+			</if>
+			<if test="query.name != null and query.name !=''">
+				AND t_user.name = #{query.name}
+			</if>
+			<if test="query.state != null">
+				AND t_user.state = #{query.state}
+			</if>
+			<if test="query.role != null and query.role !=''">
+				AND t_role.name = #{query.role}
+			</if>
+		</where>
+		order by t_user.id DESC 
+		limit ${(query.current-1)*query.pageSize}, ${query.pageSize};
+		SELECT FOUND_ROWS() as total;
+	</select>
 
 </mapper>

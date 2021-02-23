@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 import org.apache.ibatis.type.JdbcType;
 
@@ -30,46 +32,55 @@ public class Drug implements Serializable{
 	@ApiModelProperty(value = "id")
 	private Integer id;
 	
+	@NotBlank
 	@Column(name = "drugname")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "名称")
 	private String drugname;//名称
 	
+	@NotBlank
 	@Column(name = "shortname")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "简称")
 	private String shortname;//简称
 	
+	@NotBlank
 	@Column(name = "standard")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "规格")
 	private String standard;//规格
 	
+	@NotBlank
 	@Column(name = "category")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "类别")
 	private String category;//分类：OTC、处方药、饮片、耗材、保健品、特殊膳食
 	
+	@NotBlank
 	@Column(name = "subcategory")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "子类")
 	private String subcategory;//子类：抗生素、输液、心血管、呼吸、消化、神经、内分泌、解热镇痛、维生素激素、外用、中成药、滋补
 	
+	@Positive
 	@Column(name = "price")
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "单价")
 	private Integer price;//单价
 	
+	@NotBlank
 	@Column(name = "unit")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "单位")
 	private String unit;//单位：盒、瓶
 	
+	@NotBlank
 	@Column(name = "form")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "剂型")
 	private String form;//剂型,片剂,粉剂,搽剂
 	
+	@NotBlank
 	@Column(name = "singledose")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "单次剂量")
@@ -80,16 +91,19 @@ public class Drug implements Serializable{
 //	@ApiModelProperty(value = "剂量单位")
 //	private String doseunit;//剂量单位
 	
+	@NotBlank
 	@Column(name = "defaultusage")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "用法")
 	private String defaultusage;//用法
 	
+	@NotBlank
 	@Column(name = "company")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "药厂")
 	private String company;//药厂
 	
+	@NotBlank
 	@Column(name = "frequency")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "频次")
@@ -119,13 +133,13 @@ public class Drug implements Serializable{
 	@Column(name = "state")
 	@ColumnType(jdbcType = JdbcType.INTEGER)
 	@ApiModelProperty(value = "药品状态，1表示有货，0表示缺货")
-	private int state;//药品拼音首字母索引
+	private Integer state;//药品拼音首字母索引
 	
-	public int getState() {
+	public Integer getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 

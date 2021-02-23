@@ -21,6 +21,24 @@ export async function querySaleRecord(
   });
 }
 
+export async function statistic(
+    params: {
+      /** 当前的页码 */
+      current?: number;
+      /** 页面的容量 */
+      pageSize?: number;
+    },
+    options?: { [key: string]: any },
+  ) {
+    return request<API.PageResult>('/api/saleRecord/statistic', {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    });
+  }
+
 export async function refund(
   body: any,
   options?: { [key: string]: any },

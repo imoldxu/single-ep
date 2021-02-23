@@ -1,5 +1,7 @@
 package com.yyg.eprescription.bo;
 
+import javax.validation.constraints.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class JXPayOverBo {
@@ -9,10 +11,12 @@ public class JXPayOverBo {
 	
 	@JsonProperty("TPTradeNo")
 	private String TPTradeNo; //	第三方系统交易号	是	[string]		
-	
+
+	@Pattern(regexp="^CSYT")
 	@JsonProperty("ClientType")
 	private String ClientType; //	客户端	是	[string]	CSYT	查看
 	
+	@Pattern(regexp="^jxfyhpk")
 	@JsonProperty("PharmacyCode")
 	private String PharmacyCode; //	药店唯一标识	是	[string]	jxfyhpk	查看
 	

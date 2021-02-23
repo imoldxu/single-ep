@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.x.commons.mybatis.BaseMapper;
+import com.yyg.eprescription.bo.DrugQuery;
 import com.yyg.eprescription.entity.Drug;
 import com.yyg.eprescription.vo.ShortDrugInfo;
 
@@ -29,4 +30,5 @@ public interface DrugMapper extends BaseMapper<Drug> {
 
     List<ShortDrugInfo> getZyDrugBySubCategory(@Param(value="category")String category);
 
+    List<List<?>> queryDrugWithTotal(@Param("query") DrugQuery query);
 }

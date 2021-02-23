@@ -30,10 +30,10 @@ public class Prescription implements Serializable{
 	@ApiModelProperty(value = "id")
 	private Long id;
 	
-	@Column(name = "num")
+	@Column(name = "prescriptionno")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "门诊号")
-	private String num;//门诊号
+	private String prescriptionno;//门诊号
 	
 	public static final int TYPE_XY = 1;//西药处方
 	public static final int TYPE_ZY = 2;//中药处方
@@ -158,12 +158,12 @@ public class Prescription implements Serializable{
 		this.id = id;
 	}
 
-	public String getNum() {
-		return num;
+	public String getPrescriptionno() {
+		return prescriptionno;
 	}
 
-	public void setNum(String num) {
-		this.num = num;
+	public void setPrescriptionno(String prescriptionno) {
+		this.prescriptionno = prescriptionno;
 	}
 
 	public String getDepartment() {

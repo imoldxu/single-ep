@@ -2,6 +2,7 @@ package com.yyg.eprescription.service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.JXOrderQuery;
+import com.yyg.eprescription.bo.JXUnpayOrderQuery;
 import com.yyg.eprescription.bo.OrderQuery;
 import com.yyg.eprescription.bo.RefundDrugBo;
 import com.yyg.eprescription.context.ErrorCode;
@@ -25,7 +27,7 @@ import com.yyg.eprescription.entity.Order;
 import com.yyg.eprescription.entity.PrescriptionDrugs;
 import com.yyg.eprescription.entity.SalesRecord;
 import com.yyg.eprescription.mapper.OrderMapper;
-import com.yyg.eprescription.vo.DrugItem;
+import com.yyg.eprescription.vo.JXDrugItem;
 import com.yyg.eprescription.vo.IOrderVo;
 import com.yyg.eprescription.vo.JXOrderVo;
 
@@ -53,7 +55,12 @@ public class OrderService {
 			amount += subPrice;
 		}
 		order.setAmount(amount);
-		order.setCreatetime(new Date());
+		Date now = new Date();
+		order.setCreatetime(now);
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(now);
+		calendar.add(Calendar.DAY_OF_YEAR, 3);
+		order.setInvalidtime(calendar.getTime());
 		order.setState(Order.STATE_NEW);
 		orderMapper.insertUseGeneratedKeys(order);
 		return order;
@@ -115,7 +122,7 @@ public class OrderService {
 		order.setPrescriptionid(oldOrder.getPrescriptionid());
 		order.setAmount(amount);
 		order.setCreatetime(new Date());
-		if (oldOrder.getPayway() == Bill.CASH) {
+		if (oldOrder.getPayway() == Bill.CASH || oldOrder.getPayway() == Bill.SHIYIBAO || oldOrder.getPayway() == Bill.SHENGYIBAO) {
 			// 现金退款需要收费处点击退款才认为是已退款
 			order.setState(Order.STATE_REFUNDIND);
 		} else {
@@ -156,126 +163,128 @@ public class OrderService {
 		return sn;
 	}
 
-	public PageResult<IOrderVo> queryPatientOrder(OrderQuery query) {
-		List<IOrderVo> totalList = orderMapper.queryOrder(query.getRegNo(), null, null, null, 1, 10000);
+	public List<JXOrderVo> queryUnpayOrderForWX(@Valid JXUnpayOrderQuery query) {
 
-		List<IOrderVo> pageList = orderMapper.queryOrder(query.getRegNo(), null, null, null, query.getCurrent(),
-				query.getPageSize());
-		// List<IOrderVo> list= ( List<IOrderVo>) pageList.get(0);
-		// Integer total = (Integer) pageList.get(1).get(0);
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date now = new Date();
+		String nowTime = formater.format(now);
+		
+		List<IOrderVo> ret = orderMapper.queryPatientUnpayOrder(query.getPatientNo(), nowTime);
 
-		PageResult<IOrderVo> result = new PageResult<IOrderVo>();
-		result.setData(pageList);
-		result.setSuccess(true);
-		result.setTotal(totalList.size());
-		return result;
-	}
-
-	public List<JXOrderVo> queryUnpayOrderForWX(@Valid JXOrderQuery query) {
-
-		List<IOrderVo> ret = orderMapper.queryPatientOrder(query.getPatientNo(), Order.STATE_NEW);
-
-		List<JXOrderVo> result = toJxOrder(ret);
+		List<JXOrderVo> result = toJxOrderVoList(ret);
 
 		return result;
 	}
 
-	public List<JXOrderVo> queryRefundOrderForWX(@Valid JXOrderQuery query) {
-
-		// List<IOrderVo> ret = orderMapper.queryPatientOrder(query.getPatientNo(),
-		// Order.STATE_NEW);
-		// List<OrderVo> result = toJxOrder(ret);
-		// return result;
-		return null;
+	public JXOrderVo getOrderByNo(JXOrderQuery orderQuery) {
+	
+		IOrderVo ret = orderMapper.getOrderByNo(orderQuery.getOrderno());
+		
+		JXOrderVo result = toJXOrderVo(ret);
+		
+		return result;
 	}
-
-	private List<JXOrderVo> toJxOrder(List<IOrderVo> ret) {
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+	
+	private List<JXOrderVo> toJxOrderVoList(List<IOrderVo> ret) {
 
 		List<JXOrderVo> result = ret.stream().map(o -> {
-			JXOrderVo jxo = new JXOrderVo();
-			jxo.setAdm(o.getRegNo());
-			String tradeInfo = o.getTradeInfo();
-			List<PrescriptionDrugs> druglist = JSON.parseArray(tradeInfo, PrescriptionDrugs.class);
-
-			List<DrugItem> items = druglist.stream().map(drug -> {
-				DrugItem item = new DrugItem();
-				item.setArcmiDesc(drug.getMyusage());
-				item.setArcmiRemark(drug.getFrequency());
-				item.setDiscAmount("0");
-				item.setOEOrdId(drug.getId().toString());
-				item.setOEOrdRecDeptAddr("便民药房");
-				item.setPrice(drug.getPrice().toString());
-				item.setQty(drug.getNumber().toString());
-				item.setTotalAmount(String.valueOf(drug.getPrice() * drug.getNumber()));
-				item.setUOM(drug.getUnit());
-				return item;
-			}).collect(Collectors.toList());
-			jxo.setItems(items);
-			jxo.setOEOrdDate(dateFormat.format(o.getCreateTime()));
-			jxo.setOEOrdTime(timeFormat.format(o.getCreateTime()));
-			jxo.setOEOrdDeptDesc(o.getDepartment());
-			jxo.setOEOrdDocDesc(o.getDoctorname());
-			jxo.setPhTradeNo(o.getOrderno());
-			return jxo;
+			return toJXOrderVo(o);
 		}).collect(Collectors.toList());
 		return result;
 	}
 
+	private JXOrderVo toJXOrderVo(IOrderVo o) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		
+		JXOrderVo jxo = new JXOrderVo();
+		jxo.setAdm(o.getRegNo());
+		String tradeInfo = o.getTradeInfo();
+		List<PrescriptionDrugs> druglist = JSON.parseArray(tradeInfo, PrescriptionDrugs.class);
+
+		List<JXDrugItem> items = druglist.stream().map(drug -> {
+			JXDrugItem item = new JXDrugItem();
+			item.setArcmiDesc(drug.getMyusage());
+			item.setArcmiRemark(drug.getFrequency());
+			item.setDiscAmount("0");
+			item.setOEOrdId(drug.getId().toString());
+			item.setOEOrdRecDeptAddr("一楼母婴店旁药房取药");
+			item.setPrice(drug.getPrice().toString());
+			item.setQty(drug.getNumber().toString());
+			item.setTotalAmount(String.valueOf(drug.getPrice() * drug.getNumber()));
+			item.setUOM(drug.getUnit());
+			return item;
+		}).collect(Collectors.toList());
+		jxo.setOEOrdState(o.getState().toString());
+		jxo.setItems(items);
+		jxo.setOEOrdDate(dateFormat.format(o.getCreateTime()));
+		jxo.setOEOrdTime(timeFormat.format(o.getCreateTime()));
+		jxo.setOEOrdDeptDesc(o.getDepartment());
+		jxo.setOEOrdDocDesc(o.getDoctorname());
+		jxo.setPhTradeNo(o.getOrderno());
+		return jxo;
+	}
+
 	public PageResult<IOrderVo> queryOrder(OrderQuery orderQuery) {
 
-		List<IOrderVo> pageList = orderMapper.queryOrder(orderQuery.getRegNo(), orderQuery.getState(),
-				orderQuery.getStartTime(), orderQuery.getEndTime(), orderQuery.getCurrent(), orderQuery.getPageSize());
-		// List<IOrderVo> list= ( List<IOrderVo>) pageList.get(0);
-		List<IOrderVo> totalList = orderMapper.queryOrder(orderQuery.getRegNo(), orderQuery.getState(),
-				orderQuery.getStartTime(), orderQuery.getEndTime(), 1, 100000); // (Integer) pageList.get(1).get(0);
-
-		PageResult<IOrderVo> result = new PageResult<IOrderVo>();
-		result.setData(pageList);
-		result.setSuccess(true);
-		result.setTotal(totalList.size());
+		List<List<?>> sqlResult = orderMapper.queryOrderWithTotal(orderQuery);
+				
+		PageResult<IOrderVo> result = PageResult.buildPageResult(sqlResult, IOrderVo.class);
 		return result;
 	}
 
 	// 现金支付完成
 	@Transactional
-	public void cashOver(String orderno) {
+	public void offlinePayOver(String orderno, String userName, String payMode) {
 
 		Order order = orderMapper.selectOrderForUpdate(orderno);
-
+		if (order.getState() >= Order.STATE_PAYED) {
+			// 若是已经支付过的订单，则不处理
+			Bill bill = billService.getPayBillByOrderno(orderno);
+			String billPayMode = billService.payWay2PayMode(bill.getPayway());
+			if(billPayMode.equalsIgnoreCase(payMode)) {
+				//相同的渠道已经正常支付，重复的提交
+				return;	
+			}else {
+				throw new HandleException(ErrorCode.OTHERPAY, "其他渠道已经支付");
+			}
+		}
 		if (order.getState() != Order.STATE_NEW) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "订单状态异常");
 		}
 
 		order.setState(Order.STATE_PAYED);
-		order.setPayway(Bill.CASH);
+		Integer payway = billService.payMode2Payway(payMode);
+		order.setPayway(payway);
 		orderMapper.updateByPrimaryKey(order);
 
-		billService.create(order, Bill.TYPE_PAY, "cash", "");
+		billService.create(order, Bill.TYPE_PAY, payMode, userName);
 
 		return;
 	}
 
-	// 现金退款完成
+	//线下退款完成
 	@Transactional
-	public void cashRefund(String orderno) {
+	public void offlineRefund(String orderno, String userName ) {
 
 		Order order = orderMapper.selectOrderForUpdate(orderno);
 		if (order.getState() == Order.STATE_REFUNDED) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "订单已退款，无需重复退款");
 		}
-
 		if (order.getState() != Order.STATE_PAYED && order.getState() != Order.STATE_REFUNDIND) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "订单状态异常");
+		}
+		if (order.getPayway() != Bill.CASH && order.getPayway() != Bill.SHIYIBAO && order.getPayway() != Bill.SHENGYIBAO) {
+			throw new HandleException(ErrorCode.NORMAL_ERROR, "线上支付,请到便民药房发起退款");
 		}
 
 		order.setState(Order.STATE_REFUNDED);
 
 		orderMapper.updateByPrimaryKey(order);
 
-		billService.create(order, Bill.TYPE_REFUND, "cash", "");
+		String paymode = billService.payWay2PayMode(order.getPayway());
+		
+		billService.create(order, Bill.TYPE_REFUND, paymode, userName);
 		return;
 	}
 
@@ -284,15 +293,15 @@ public class OrderService {
 	public Order payOver(String orderno, int amount, String payMode, String payid) {
 		// 获取order以便更新，避免重复创建
 		Order order = orderMapper.selectOrderForUpdate(orderno);
-		if (order.getState() == Order.STATE_PAYED) {
+		if (order.getState() >= Order.STATE_PAYED) {
 			// 若是已经支付过的订单，则不处理
-			Bill bill = billService.getBillByOrder(order.getId());
+			Bill bill = billService.getPayBillByOrderno(orderno);
 			String billPayMode = billService.payWay2PayMode(bill.getPayway());
 			if(bill.getPayid().equalsIgnoreCase(payid) && billPayMode.equalsIgnoreCase(payMode)) {
 				//正常支付
 				return order;	
 			}else {
-				throw new HandleException(ErrorCode.NORMAL_ERROR, "其他渠道已经支付");
+				throw new HandleException(ErrorCode.OTHERPAY, "其他渠道已经支付");
 			}
 		}
 		if (order.getAmount() != amount) {
@@ -336,5 +345,7 @@ public class OrderService {
 
 		billService.create(order, Bill.TYPE_REFUND, payMode, payid);
 	}
+
+	
 
 }
