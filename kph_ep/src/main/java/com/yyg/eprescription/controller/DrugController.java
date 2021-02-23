@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,7 +131,7 @@ public class DrugController {
 		
 		Response resp = null;
 		if(drug==null){
-			resp = new Response(ErrorCode.ARG_ERROR, null, "请求的药品不存在或已下架");
+			resp = new Response(ErrorCode.ARG_ERROR, null, "请求的药品不存在");
 		}else{
 			resp = new Response(ErrorCode.OK, drug, "OK");
 		}
@@ -141,20 +142,14 @@ public class DrugController {
 	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/uploadByExcel", method = RequestMethod.POST)
 	@ApiOperation(value = "新增上传药品信息", notes = "新增上传药品信息")
-	public Response uploadByExcel(@RequestPart(value="file") MultipartFile file,HttpServletRequest request,HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "POST");
-		
-		if(file==null){
-			return new Response(ErrorCode.ARG_ERROR, null, "请求参数异常");
-		}
-		
+	public List<Drug> uploadByExcel(@RequestPart(value="file") @NotNull MultipartFile file,HttpServletRequest request,HttpServletResponse response) {
+			
 		//获取文件名
 	    String name=file.getOriginalFilename();
 	    //进一步判断文件是否为空（即判断其大小是否为0或其名称是否为null）
 	    long size=file.getSize();
 	    if(name == null || ("").equals(name) && size==0){
-	    	return new Response(ErrorCode.ARG_ERROR, null, "文件不存在或没有内容");
+	    	throw new HandleException(ErrorCode.ARG_ERROR, "文件不存在或没有内容");
 	    }
 	    //批量导入。参数：文件名，文件。
 	    ExcelUtils excelUtils = new ExcelUtils();
@@ -163,18 +158,11 @@ public class DrugController {
 	    
 	    try{
 	    	List<Drug> drugList = excelUtils.getExcelInfo(name, file);
-	    	//drugMapper.insertDrugs(drugList);
 			drugService.insertList(drugList);
-	    	
-	    	resp = new Response(ErrorCode.OK, drugList, "OK");    
+	    	return drugList;    
 	    }catch(IOException ioe){
-	    	 resp = new Response(ErrorCode.ARG_ERROR,null, ioe.getMessage());
-	    }catch (Exception e) {
-	    	e.printStackTrace();
-	        resp = new Response(ErrorCode.ARG_ERROR,null, "导入失败");
+	    	throw new HandleException(ErrorCode.ARG_ERROR, ioe.getMessage());
 	    }
-
-		return resp;
 	}
 	
 	@RequiresRoles({"manager"})
@@ -202,21 +190,14 @@ public class DrugController {
 		}
 	}
 	
+//	@RequiresRoles({"manager"})
 //	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-//	@RequestMapping(value = "/delDrug", method = RequestMethod.POST)
+//	@RequestMapping(value = "/delDrug", method = RequestMethod.DELETE)
 //	@ApiOperation(value = "删除药品信息", notes = "删除药品")
-//	public Response delDrug(@ApiParam(name="drugid", value="drugid") @RequestParam(value="drugid") int drugid, HttpServletRequest request,HttpServletResponse response) {
-//		response.setHeader("Access-Control-Allow-Origin", "*");
-//		response.setHeader("Access-Control-Allow-Methods", "POST");
+//	public void delDrug(@ApiParam(name="drugid", value="drugid") @RequestParam(value="drugid") int drugid, HttpServletRequest request,HttpServletResponse response) {
 //		
 //		Response resp = null;			
-//		int optRet = drugService.deleteDrug(drugid);
-//	
-//		if(optRet!=0){	
-//			resp = new Response(ErrorCode.OK, null, "删除成功");
-//		}else{
-//			resp = new Response(ErrorCode.ARG_ERROR, null, "药品不存在");
-//		}
+//		drugService.deleteDrug(drugid);
 //		return resp;
 //	}
 	

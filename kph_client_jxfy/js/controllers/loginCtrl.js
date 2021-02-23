@@ -63,7 +63,7 @@ define([], function(){
 
                 }else{
 
-					alert(data.msg);
+					alert(data.message);
 
 					console.log(data)
 				}

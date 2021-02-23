@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yyg.eprescription.entity.PrescriptionDrugs;
@@ -35,6 +36,7 @@ public class OpenPrescriptionBo {
 	@NotBlank
 	private String patientname;//患者姓名
 	
+	@NotBlank
 	private String patientage;//患者年龄
 	
 	@JsonFormat(pattern="yyyy-MM-dd")
@@ -45,6 +47,7 @@ public class OpenPrescriptionBo {
 	
 	private String patientphone;//患者电话
 	
+	@NotEmpty(message="至少有一种药品")
 	List<PrescriptionDrugs> drugs;
 
 	public String getPrescriptionno() {

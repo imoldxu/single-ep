@@ -71,8 +71,6 @@ define(['angular','layer'], function(angular,layer){
 				data: {
 					...$scope.userArry,
 					drugs: $scope.drugArry
-					//prescriptionInfo: JSON.stringify($scope.userArry),
-					//drugList: JSON.stringify($scope.drugArry)
 				},
 				headers: {
 					'Content-Type': 'application/json'
@@ -117,7 +115,7 @@ define(['angular','layer'], function(angular,layer){
 					
 				}else{
 				
-					alert(data.msg);
+					alert(data.message);
 
 					console.log(data)
 				}

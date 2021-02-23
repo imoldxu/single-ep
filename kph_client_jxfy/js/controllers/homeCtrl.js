@@ -136,7 +136,7 @@ define(['app','angular'], function(app,angular){
 
                     $scope.optArry = data.data;
                 }else{
-					alert(data.msg);
+					alert(data.message);
 				}
 
             })
@@ -165,7 +165,7 @@ define(['app','angular'], function(app,angular){
 
                     $scope.optArry = data.data;
                 }else{
-					alert(data.msg);
+					alert(data.message);
 				}
 
             })
@@ -209,7 +209,7 @@ define(['app','angular'], function(app,angular){
                         $scope.diagnosisMod = true;
 				}else{
 					
-					alert(data.msg);
+					alert(data.message);
 				}
 
 			})
@@ -244,7 +244,7 @@ define(['app','angular'], function(app,angular){
 
                     $scope.optArry = data.data;
                 }else{
-					alert(data.msg);
+					alert(data.message);
 				}
 
             })
@@ -383,7 +383,7 @@ define(['app','angular'], function(app,angular){
 
                         //$scope.modSel = false;
 				}else{
-					alert(data.msg);
+					alert(data.message);
 				}
 			})
 			.error(function(data){

@@ -96,81 +96,17 @@ public class PrescriptionController {
 		respons.setHeader("Access-Control-Allow-Methods", "POST");
 		
 		Response resp = null;
-		try{
-//			Prescription p = JSON.parseObject(prescriptionInfo, Prescription.class);
-//			if(p.getNum() == null || p.getNum().isEmpty()){
-//				System.out.println("num is miss ====>"+prescriptionInfo);
-//			}
-//			
-//			List<PrescriptionDrugs> drugs = JSON.parseArray(drugList, PrescriptionDrugs.class);
-//			if (p==null || drugs==null) {
-//				resp = new Response(ErrorCode.ARG_ERROR, null, "请求参数错误");
-//				return resp;
-//			}else if(drugs.isEmpty()){
-//				resp = new Response(ErrorCode.ARG_ERROR, null, "请选择至少一种药品");
-//				return resp;
-//			}
-			
-			//prescriptionService.open(p, drugs);
+		try{	
 			prescriptionService.open(openPrescriptionBo);
 			
 			resp = new Response(ErrorCode.OK, null, "OK");
 			return resp;
 		}catch (Exception e) {
-			//System.out.println("prescription is ====>"+prescriptionInfo);
-			//System.out.println("drugLis is ====>"+ drugList);
 			e.printStackTrace();
 			resp = new Response(ErrorCode.ARG_ERROR, null, "系统异常");
 			return resp;
 		}
 	}
-	
-//	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-//	@RequestMapping(value = "/over", method = RequestMethod.POST)
-//	@ApiOperation(value = "已领药", notes = "已领药")
-//	public Response over(
-//			@ApiParam(name = "id", value = "处方id") @RequestParam(name = "id") Integer id,
-//			HttpServletRequest request, HttpServletResponse respons) {
-//		respons.setHeader("Access-Control-Allow-Origin", "*");
-//		respons.setHeader("Access-Control-Allow-Methods", "POST");
-//		
-//		Response resp = null;
-//		
-//		Prescription p = prescriptionMapper.selectByPrimaryKey(id);
-//		if (p==null) {
-//			resp = new Response(ErrorCode.ARG_ERROR, null, "请求参数错误");
-//			return resp;
-//		}
-//		p.setState(Prescription.STATE_OVER);
-//		prescriptionMapper.updateByPrimaryKey(p);
-//		
-//		resp = new Response(ErrorCode.OK, p, ErrorCode.OK_MSG);
-//		return resp;
-//	}
-	
-//	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-//	@RequestMapping(value = "/rollback", method = RequestMethod.POST)
-//	@ApiOperation(value = "回退成未领药", notes = "回退成未领药")
-//	public Response rollback(
-//			@ApiParam(name = "id", value = "处方id") @RequestParam(name = "id") Integer id,
-//			HttpServletRequest request, HttpServletResponse respons) {
-//		respons.setHeader("Access-Control-Allow-Origin", "*");
-//		respons.setHeader("Access-Control-Allow-Methods", "POST");
-//		
-//		Response resp = null;
-//		
-//		Prescription p = prescriptionMapper.selectByPrimaryKey(id);
-//		if (p==null) {
-//			resp = new Response(ErrorCode.ARG_ERROR, null, "请求参数错误");
-//			return resp;
-//		}
-//		p.setState(Prescription.STATE_NEW);
-//		prescriptionMapper.updateByPrimaryKey(p);
-//		
-//		resp = new Response(ErrorCode.OK, p, ErrorCode.OK_MSG);
-//		return resp;
-//	}
-	
 	
 	//中医处方统计要和西医分开
 //	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
