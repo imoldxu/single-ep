@@ -15,7 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yyg.pzrmyy.context.Response;
 import com.yyg.pzrmyy.context.TestBo;
-import com.yyg.pzrmyy.entity.User;
+import com.yyg.pzrmyy.entity.Patient;
 import com.yyg.pzrmyy.service.PatientService;
 
 import io.swagger.annotations.Api;
@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @Api("医院诊断信息接口")
-public class DiagnosisController {
+public class PatientController {
 	
 	@Autowired
 	PatientService patientService;
@@ -38,7 +38,7 @@ public class DiagnosisController {
 		respons.setHeader("Access-Control-Allow-Origin", "*");
 		respons.setHeader("Access-Control-Allow-Methods", "GET");
 		Response resp = null;
-		User diagnosis = null;
+		Patient diagnosis = null;
 		try{
 		    diagnosis = patientService.getDiagnosisByCardNo(cardNo);
 		    resp = new Response(Response.SUCCESS, diagnosis, "成功");
@@ -50,19 +50,4 @@ public class DiagnosisController {
 		return resp;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-	@RequestMapping(value = "/msg/pharmacy_f", method = RequestMethod.POST)
-	@ApiOperation(value = "根据就诊卡获取患者信息", notes = "根据就诊卡获取患者信息")
-	public Response test(
-			@ApiParam(name = "testBo", value = "就诊卡号") @RequestBody TestBo testBo,
-			HttpServletRequest request, HttpServletResponse respons) {
-		respons.setHeader("Access-Control-Allow-Origin", "*");
-		respons.setHeader("Access-Control-Allow-Methods", "GET");
-		Response resp = new Response(1, "", "ok");
-		
-		System.out.println(JSON.toJSONString(testBo));
-		
-		return resp;
-	}
-		
 }

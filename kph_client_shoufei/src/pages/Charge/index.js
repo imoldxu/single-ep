@@ -4,13 +4,17 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 //import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
-import { queryPatientOrder, cashOver, offlineRefund, yibaoOver } from '@/services/ant-design-pro/order';
+import { queryPatientOrder, cashOver, offlineRefund, yibaoOver, yidiYibaoOver } from '@/services/ant-design-pro/order';
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { regFenToYuan } from "@/utils/money";
+import PayModal from "./PayModal";
 
 export default ()=>{
 
   const actionRef = useRef();
+
+  const [modalVisible, setModalVisible] = useState(false)
+  const [modalValue, setModalValue] = useState({amount:0})
 
   const handleCashOver = async (orderno) => {
     const hide = message.loading('现金支付确认提交中')
@@ -22,6 +26,23 @@ export default ()=>{
     }finally{
         hide()
     }
+    setModalVisible(false)
+    setModalValue({amount:0})
+    actionRef.current.reload();
+  };
+
+  const handleYidiYibaoOver = async (orderno) => {
+    const hide = message.loading('医保支付确认提交中')
+    try{
+        await yidiYibaoOver({orderno:orderno})
+        message.success("提交成功", 3)
+    }catch(e){
+        message.error(e.msg, 3)
+    }finally{
+        hide()
+    }
+    setModalVisible(false)
+    setModalValue({amount:0})
     actionRef.current.reload();
   };
 
@@ -35,6 +56,8 @@ export default ()=>{
     }finally{
         hide()
     }
+    setModalVisible(false)
+    setModalValue({amount:0})
     actionRef.current.reload();
   };
 
@@ -52,7 +75,6 @@ export default ()=>{
   };
 
   const columns = [
-        
         
         {
             title: '处方号',
@@ -112,7 +134,7 @@ export default ()=>{
                     text: '支付宝',
                 }, 
                 3: {
-                    text: '医保',
+                    text: '市医保',
                 },
                 5: {
                     text: '现金',
@@ -147,7 +169,7 @@ export default ()=>{
             }
         },
         {
-          title: '开具时间',
+          title: '创建时间',
           dataIndex: 'createTime',
           search: false,
         },
@@ -156,35 +178,54 @@ export default ()=>{
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
-        const {state, payway} = record
+        const {orderno, state, payway, amount} = record
         if (state === 1){
             return (
-                <Space size="large">
-                     <Popconfirm
-                        title="确认是否现金已收费?"
-                        okText="确认"
-                        cancelText="取消"
-                        onConfirm={() => {
-                            handleCashOver(record.orderno);
-                        }}>
-                        <a>
-                            现金缴费
-                        </a>
-                    </Popconfirm>
-                    <Popconfirm
-                        title="确认是否医保已收费?"
-                        okText="确认"
-                        cancelText="取消"
-                        onConfirm={() => {
-                            handleYibaoOver(record.orderno);
-                        }}>
-                        <a>
-                            医保缴费
-                        </a>
-                    </Popconfirm>
+                <Space>
+                    <a onClick={()=>{
+                        setModalValue({orderno: orderno,amount:amount})
+                        setModalVisible(true)
+                    }}>
+                        确认缴费方式
+                    </a>
                 </Space>
+                // <Space size="large">
+                //      <Popconfirm
+                //         title="确认是否现金已收费?"
+                //         okText="确认"
+                //         cancelText="取消"
+                //         onConfirm={() => {
+                //             handleCashOver(record.orderno);
+                //         }}>
+                //         <a>
+                //             现金缴费
+                //         </a>
+                //     </Popconfirm>
+                //     <Popconfirm
+                //         title="确认是否市医保已收费?"
+                //         okText="确认"
+                //         cancelText="取消"
+                //         onConfirm={() => {
+                //             handleYibaoOver(record.orderno);
+                //         }}>
+                //         <a>
+                //             市医保缴费
+                //         </a>
+                //     </Popconfirm>
+                //     <Popconfirm
+                //         title="确认是否异地医保已收费?"
+                //         okText="确认"
+                //         cancelText="取消"
+                //         onConfirm={() => {
+                //             handleYidiYibaoOver(record.orderno);
+                //         }}>
+                //         <a>
+                //             市医保缴费
+                //         </a>
+                //     </Popconfirm>
+                // </Space>
             )
-        }else if((state === 2 || state === 4) && (payway === 5 || payway===3)){//cash shiyibao
+        }else if((state == 2 || state == 4) && (payway == 5 || payway==3 || payway==4)){//cash shiyibao
             return (
                 <Space>
                     <Popconfirm
@@ -211,7 +252,7 @@ export default ()=>{
       <ProTable
         headerTitle="缴/退费订单"
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="rowKey"
         request={async (params) => {  
             try{
                 return await queryPatientOrder(params)
@@ -223,6 +264,17 @@ export default ()=>{
         columns={columns}
         manualRequest={true}
       />
+      <PayModal key="modal"
+        handleCashPay={handleCashOver}
+        handleYibaoPay={handleYibaoOver}
+        handleYidiYibaoPay={handleYidiYibaoOver}
+        handleCancel={()=>{
+            setModalVisible(false)
+            setModalValue({amount:0})
+        }}
+        visible={modalVisible}
+        values={modalValue}
+      ></PayModal>
     </PageContainer>
   );
 

@@ -102,4 +102,11 @@ export async function yibaoOver(data: { orderno: string }, options?: { [key: str
     });
 }
 
-
+/** 医保支付完成 */
+export async function yidiYibaoOver(data: { orderno: string }, options?: { [key: string]: any }) {
+    return request<any>('/api/order/yidiYibaoOver', {
+        method: 'PUT',
+        data: data,
+        ...(options || {}),
+    });
+}

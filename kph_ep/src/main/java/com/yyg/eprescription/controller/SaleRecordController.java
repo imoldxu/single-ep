@@ -30,7 +30,7 @@ public class SaleRecordController {
 	SalesRecordService salesRecordService;
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/querySaleRecord", method = RequestMethod.GET)
 	@ApiOperation(value = "查询销售记录", notes = "查询销售记录")
 	public PageResult<SalesRecordVo> queryBill(
@@ -43,7 +43,7 @@ public class SaleRecordController {
 	}
 	
 	@RequiresRoles({"admin"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/statistic", method = RequestMethod.GET)
 	@ApiOperation(value = "查询销售记录", notes = "查询销售记录")
 	public PageResult<SalesRecordStatisticVo> statistic(

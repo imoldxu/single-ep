@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
-import { notification } from 'antd';
+import { message, notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
@@ -127,6 +127,7 @@ const errorHandler = (error: ResponseError) => {
     // });
     if(data.code===4 || data.code===15 ){
       history.push('/user/login')
+      return;
     }
     throw data;
   }

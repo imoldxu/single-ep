@@ -41,15 +41,18 @@ export default ()=>{
     {
       title: '药品名称',
       dataIndex: 'drugname',
+      ellipsis: true,
     },
     {
       title: '厂商',
       dataIndex: 'drugcompany',
+      ellipsis: true,
     },
     {
       title: '规格',
       dataIndex: 'standard',
       search: false,
+      ellipsis: true,
     },
     {
       title: '医生姓名',

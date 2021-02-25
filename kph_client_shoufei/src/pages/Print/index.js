@@ -55,7 +55,7 @@ export default ()=>{
     function urlSateBase64Encode(base64Str) {
         if (!base64Str) 
             return;
-        let safeStr = base64Str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '’');
+        let safeStr = base64Str.replace(/\+/g, '-').replace(/\//g, '_');//.replace(/\=/g, '’');不要求替换=号
         return safeStr;
     }
 
@@ -128,7 +128,7 @@ export default ()=>{
 
                     {detail.drugList.map((drug, index)=>{
                         return(
-                        <div className={styles.infoList}>
+                        <div className={styles.infoList} key={`drug${index}`}>
                             <div style={{display: "inline-block", marginRight: "20px"}}>{index+1}</div>
                             <div style={{display: "inline-block"}}>{drug.drugname}</div>
                             <div style={{display: "inline-block"}}>{'('+drug.standard+') '+' X ' +drug.number + drug.unit}</div>
@@ -156,7 +156,7 @@ export default ()=>{
                 </div>
 
                 <div className={styles.payQrCode}>
-                    <QRCode value={`http://xxxx/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="Q" size={100}></QRCode>
+                    <QRCode value={`https://m.cdjx.kemeimei.cn/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="Q" size={100}></QRCode>
                 </div>
             </div>
             }

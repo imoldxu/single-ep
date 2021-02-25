@@ -10,6 +10,12 @@ public class OrderQuery {
 	
 	private String endTime;
 	
+	private String doctorname;
+	
+	private String patientname;
+	
+	private Integer payway;
+	
 	private Integer state;
 	
 	private Integer current;
@@ -70,6 +76,30 @@ public class OrderQuery {
 
 	public void setPrescriptionno(String prescriptionno) {
 		this.prescriptionno = prescriptionno;
+	}
+
+	public Integer getPayway() {
+		return payway;
+	}
+
+	public void setPayway(Integer payway) {
+		this.payway = payway;
+	}
+
+	public String getDoctorname() {
+		return doctorname;
+	}
+
+	public void setDoctorname(String doctorname) {
+		this.doctorname = doctorname;
+	}
+
+	public String getPatientname() {
+		return patientname;
+	}
+
+	public void setPatientname(String patientname) {
+		this.patientname = patientname;
 	}
 	
 }

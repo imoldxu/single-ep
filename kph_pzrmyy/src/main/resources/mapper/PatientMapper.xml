@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yyg.pzrmyy.mapper.UserMapper" >
+<mapper namespace="com.yyg.pzrmyy.mapper.PatientMapper" >
 
-	<resultMap type="com.yyg.pzrmyy.entity.User" id="userMap" autoMapping="true">
+	<resultMap type="com.yyg.pzrmyy.entity.Patient" id="patientMap" autoMapping="true">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="reg_no" property="regNo" jdbcType="VARCHAR" />
 		<result column="card_no" property="cardNo" jdbcType="VARCHAR" />
@@ -13,8 +13,8 @@
 		<result column="creat_card_date" property="createTime" jdbcType="DATE" />
 	</resultMap>
 
-	<select id="getUserByCardNo" resultMap="userMap">
-		SELECT * FROM user_creat_card_info WHERE card_no = #{cardNo,jdbcType=VARCHAR}
+	<select id="getPatientByCardNo" resultMap="patientMap">
+		SELECT * FROM user_creat_card_info WHERE card_no = #{cardNo,jdbcType=VARCHAR} LIMIT 1;
 	</select>
 	
 

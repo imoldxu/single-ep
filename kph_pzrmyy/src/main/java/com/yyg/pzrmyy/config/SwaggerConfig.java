@@ -37,7 +37,7 @@ public class SwaggerConfig {
                 "0.1",//版本
                 "惠普康",
                 "HPK",//作者
-                "康普惠",//链接显示文字
+                "惠普康",//链接显示文字
                 "http://www.xxx.com"//网站链接
         );
 

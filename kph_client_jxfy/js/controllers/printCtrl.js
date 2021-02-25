@@ -144,7 +144,7 @@ define(['angular','layer'], function(angular,layer){
 		function urlSateBase64Encode(base64Str) {
 			if (!base64Str) 
 				return;
-			let safeStr = base64Str.replace(/\+/g, '-').replace(/\//g, '_').replace(/\=/g, '’');
+			let safeStr = base64Str.replace(/\+/g, '-').replace(/\//g, '_'); //.replace(/\=/g, '’');不替换=
 			return safeStr;
 		}
     }];

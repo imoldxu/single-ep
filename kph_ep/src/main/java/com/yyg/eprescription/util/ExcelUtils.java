@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -193,11 +194,11 @@ public class ExcelUtils {
 			}
 			drug.setSubcategory(subcategory);
 			
-			if(priceCell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC){
-				drug.setPrice(new Double(priceCell.getNumericCellValue()*100).intValue());
-			}else if(priceCell.getCellType() == XSSFCell.CELL_TYPE_STRING){
+			if(priceCell.getCellType() == CellType.NUMERIC){
+				drug.setPrice(Double.valueOf(priceCell.getNumericCellValue()*100).intValue());
+			}else if(priceCell.getCellType() == CellType.STRING){
 				double price = Double.valueOf(priceCell.getStringCellValue()).doubleValue()*100;
-				drug.setPrice(new Double(price).intValue());
+				drug.setPrice(Double.valueOf(price).intValue());
 			}
 			String unit = unitCell.getStringCellValue();
 			if(unit!= null){
@@ -209,13 +210,13 @@ public class ExcelUtils {
 				form = form.trim();
 			}
 			drug.setForm(form);
-			if(singledoseCell.getCellType() == XSSFCell.CELL_TYPE_STRING){
+			if(singledoseCell.getCellType() == CellType.STRING){
 				String singledose = singledoseCell.getStringCellValue();
 				if(singledose!=null){
 					singledose = singledose.trim();
 				}
 				drug.setSingledose(singledose);				
-			}else if(singledoseCell.getCellType() == XSSFCell.CELL_TYPE_NUMERIC){
+			}else if(singledoseCell.getCellType() == CellType.NUMERIC){
 				drug.setSingledose(String.valueOf(singledoseCell.getNumericCellValue()));
 			}
 			//drug.setDoseunit(doseunitCell.getStringCellValue());

@@ -39,7 +39,7 @@ const goto = (role) => {
     } else if(role.admin){
       history.push('/saleStatistic')
     } else{
-      history.push('/dashboard');
+      history.push('/OrderList');
     }
   }, 10);
 };
@@ -150,6 +150,7 @@ const Login: React.FC = () => {
               name="phone"
               fieldProps={{
                 size: 'large',
+                maxLength: 11,
                 prefix: <UserOutlined className={styles.prefixIcon} />,
               }}
               placeholder={intl.formatMessage({

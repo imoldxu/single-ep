@@ -45,15 +45,15 @@ public class DrugController {
 	@Autowired
 	DoctorDrugService doctorDrugService;
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getDrugsByKeys", method = RequestMethod.GET)
 	@ApiOperation(value = "根据药品的拼音首字母缩写或药品名称搜索药品", notes = "根据药品的拼音首字母缩写或药品名称搜索药品")
 	public Response getDrugsByKeys(
 			@ApiParam(name = "keys", value = "拼音首字母索引或药品名称") @RequestParam(name = "keys") String keys,
 			@ApiParam(name = "type", value = "西药为1，中药为2") @RequestParam(name = "type", defaultValue="1") int type,
 			HttpServletRequest request, HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "GET");
+		//response.setHeader("Access-Control-Allow-Origin", "*");
+		//response.setHeader("Access-Control-Allow-Methods", "GET");
 		
 		List<ShortDrugInfo> ret = drugService.queryDrugsByKeys(type, keys);
 		
@@ -61,29 +61,30 @@ public class DrugController {
 		return resp;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	@RequiresRoles({"manager"})
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getDrugInfoListByKeys", method = RequestMethod.GET)
 	@ApiOperation(value = "根据药品的拼音缩写搜索药品", notes = "根据药品的拼音缩写搜索药品")
 	public PageResult<Drug> getDrugInfoListByKeys(
 			@ApiParam(name = "query", value = "查询条件") @Valid DrugQuery query,
 			HttpServletRequest request, HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "GET");
+		//response.setHeader("Access-Control-Allow-Origin", "*");
+		//response.setHeader("Access-Control-Allow-Methods", "GET");
 		
 		PageResult<Drug> resp = drugService.queryDrugInfoByKeys(query);
 		
 		return resp;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getDrugInfoListByCategory", method = RequestMethod.GET)
 	@ApiOperation(value = "根据分类搜索药品", notes = "根据分类搜索药品")
 	public Response getDrugBySubCategory(
 			@ApiParam(name = "category", value = "分类") @RequestParam(name = "category") String category,
-			@ApiParam(name = "type", value = "西药为1，中药为2") @RequestParam(name = "type") int type,
+			@ApiParam(name = "type", value = "西药为1，中药为2") @RequestParam(name = "type", defaultValue="1") int type,
 			HttpServletRequest request, HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "GET");
+		//response.setHeader("Access-Control-Allow-Origin", "*");
+		//response.setHeader("Access-Control-Allow-Methods", "GET");
 		
 		List<ShortDrugInfo> ret = drugService.queryDrugByCategory(type, category);
 		
@@ -91,7 +92,7 @@ public class DrugController {
 		return resp;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getMyDrugInfoList", method = RequestMethod.GET)
 	@ApiOperation(value = "获得我的常用药品", notes = "获得我的常用药品")
 	public Response getMyDrugInfoList(
@@ -118,7 +119,7 @@ public class DrugController {
 		return resp;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getDrugByID", method = RequestMethod.GET)
 	@ApiOperation(value = "获取药品信息", notes = "获取药品信息")
 	public Response getDrugByID(
@@ -139,7 +140,7 @@ public class DrugController {
 	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/uploadByExcel", method = RequestMethod.POST)
 	@ApiOperation(value = "新增上传药品信息", notes = "新增上传药品信息")
 	public List<Drug> uploadByExcel(@RequestPart(value="file") @NotNull MultipartFile file,HttpServletRequest request,HttpServletResponse response) {
@@ -166,7 +167,7 @@ public class DrugController {
 	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/addDrug", method = RequestMethod.POST)
 	@ApiOperation(value = "添加药品信息", notes = "")
 	public Drug addDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
@@ -177,7 +178,7 @@ public class DrugController {
 	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/modifyDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "修改药品信息", notes = "")
 	public Drug modifyDrug(@ApiParam(name = "drug", value = "drug") @RequestBody @Valid Drug drug,
@@ -202,7 +203,7 @@ public class DrugController {
 //	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/downDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "下架药品", notes = "")
 	public void downDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
@@ -211,7 +212,7 @@ public class DrugController {
 	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/upDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "上架药品信息", notes = "上架药品信息")
 	public void upDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {

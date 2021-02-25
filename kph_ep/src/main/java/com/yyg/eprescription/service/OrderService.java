@@ -100,6 +100,7 @@ public class OrderService {
 	 * @param transactionList
 	 * @return
 	 */
+	@Transactional
 	public Order createRefundOrder(RefundDrugBo refundDrugBo) {
 
 		Long oid = refundDrugBo.getOrderid();
@@ -121,14 +122,19 @@ public class OrderService {
 		}
 		order.setPrescriptionid(oldOrder.getPrescriptionid());
 		order.setAmount(amount);
-		order.setCreatetime(new Date());
-		if (oldOrder.getPayway() == Bill.CASH || oldOrder.getPayway() == Bill.SHIYIBAO || oldOrder.getPayway() == Bill.SHENGYIBAO) {
+		Date now = new Date();
+		order.setCreatetime(now);
+		if (oldOrder.getPayway() == Bill.CASH || oldOrder.getPayway() == Bill.SHIYIBAO || oldOrder.getPayway() == Bill.YIDIYIBAO) {
 			// 现金退款需要收费处点击退款才认为是已退款
 			order.setState(Order.STATE_REFUNDIND);
 		} else {
 			order.setState(Order.STATE_REFUNDED);
 		}
 		order.setPayway(oldOrder.getPayway());
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(now);
+		calendar.add(Calendar.DAY_OF_YEAR, 3);
+		order.setInvalidtime(calendar.getTime());
 		orderMapper.insertUseGeneratedKeys(order);
 
 		String payMode = billService.payWay2PayMode(oldOrder.getPayway());
@@ -274,7 +280,7 @@ public class OrderService {
 		if (order.getState() != Order.STATE_PAYED && order.getState() != Order.STATE_REFUNDIND) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "订单状态异常");
 		}
-		if (order.getPayway() != Bill.CASH && order.getPayway() != Bill.SHIYIBAO && order.getPayway() != Bill.SHENGYIBAO) {
+		if (order.getPayway() != Bill.CASH && order.getPayway() != Bill.SHIYIBAO && order.getPayway() != Bill.YIDIYIBAO) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "线上支付,请到便民药房发起退款");
 		}
 

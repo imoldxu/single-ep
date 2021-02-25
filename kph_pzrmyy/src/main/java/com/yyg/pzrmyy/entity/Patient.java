@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
 import tk.mybatis.mapper.annotation.ColumnType;
 
 @Table(name="user_creat_card_info")
-public class User implements Serializable{
+public class Patient implements Serializable{
 
 	/**
 	 * 

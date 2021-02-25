@@ -36,14 +36,14 @@ public class PrescriptionController {
 	@Autowired
 	PrescriptionService prescriptionService;
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	@ApiOperation(value = "初始化处方基本信息", notes = "初始化处方基本信息")
 	public Response init(
 			@ApiParam(name = "cardNo", value = "患者卡号") @RequestParam(name = "cardNo") String cardNo,
 			HttpServletRequest request, HttpServletResponse respons) throws Exception {
-		respons.setHeader("Access-Control-Allow-Origin", "*");
-		respons.setHeader("Access-Control-Allow-Methods", "GET");
+		//respons.setHeader("Access-Control-Allow-Origin", "*");
+		//respons.setHeader("Access-Control-Allow-Methods", "GET");
 		
 		PrescriptionInitVo diagnosis = prescriptionService.init(cardNo);
 		if(diagnosis != null){
@@ -54,28 +54,28 @@ public class PrescriptionController {
 		}
 	}	
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getPrescriptionList", method = RequestMethod.GET)
 	@ApiOperation(value = "获取处方列表", notes = "获取处方列表")
 	public PageResult<Prescription> getPrescriptionList(
 			@ApiParam(name = "option", value = "查询条件") @Valid PrescriptionQuery searchOption,
 			HttpServletRequest request, HttpServletResponse respons) {
-		respons.setHeader("Access-Control-Allow-Origin", "*");
-		respons.setHeader("Access-Control-Allow-Methods", "GET");
+		//respons.setHeader("Access-Control-Allow-Origin", "*");
+		//respons.setHeader("Access-Control-Allow-Methods", "GET");
 		
 		PageResult<Prescription> ret = prescriptionService.queryPrescription(searchOption);
 			
 		return ret;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getPrescriptionByID", method = RequestMethod.GET)
 	@ApiOperation(value = "获取处方详情", notes = "获取处方详情")
 	public Response getPrescriptionByID(
 			@ApiParam(name = "id", value = "处方id") @RequestParam(name = "id") Integer id,
 			HttpServletRequest request, HttpServletResponse respons) {
-		respons.setHeader("Access-Control-Allow-Origin", "*");
-		respons.setHeader("Access-Control-Allow-Methods", "GET");
+		//respons.setHeader("Access-Control-Allow-Origin", "*");
+		//respons.setHeader("Access-Control-Allow-Methods", "GET");
 		Response resp = null;
 		
 		PrescriptionInfo info = prescriptionService.getPrescriptionById(id);
@@ -84,7 +84,7 @@ public class PrescriptionController {
 		return resp;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/open", method = RequestMethod.POST)
 	@ApiOperation(value = "开处方", notes = "开处方")
 	public Response open(
@@ -92,8 +92,8 @@ public class PrescriptionController {
 			//@ApiParam(name = "drugList", value = "处方药列表") @RequestParam(name = "drugList") String drugList,
 			@ApiParam(name="openPrescriptionBo",value="开处方")  @RequestBody @Valid OpenPrescriptionBo openPrescriptionBo,
 			HttpServletRequest request, HttpServletResponse respons) {
-		respons.setHeader("Access-Control-Allow-Origin", "*");
-		respons.setHeader("Access-Control-Allow-Methods", "POST");
+		//respons.setHeader("Access-Control-Allow-Origin", "*");
+		//respons.setHeader("Access-Control-Allow-Methods", "POST");
 		
 		Response resp = null;
 		try{	

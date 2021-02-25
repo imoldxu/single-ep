@@ -159,6 +159,7 @@ export default ()=>{
         handleCommit={async (values)=>{
           await register(values)
           setModalVisible(false)
+          actionRef.current.reload()
         }}
         handleCancel={()=>{
           setModalVisible(false)

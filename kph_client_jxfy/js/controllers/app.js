@@ -9,7 +9,7 @@ define(['angular','ng-route','ng-cookies','io-barcode','angular-qrcode'], functi
 
     .run(function($rootScope,$location,$window,$state,$http) {
 
-        $rootScope.cssVer = '1.0.30';
+        $rootScope.cssVer = '1.0.01';
 
     });
 

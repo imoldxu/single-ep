@@ -1,25 +1,23 @@
 package com.yyg.pzrmyy.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yyg.pzrmyy.entity.User;
-import com.yyg.pzrmyy.mapper.UserMapper;
+import com.yyg.pzrmyy.entity.Patient;
+import com.yyg.pzrmyy.mapper.PatientMapper;
 
 @Service
 public class PatientService {
 
 	@Autowired
-	UserMapper userMapper;
+	PatientMapper patientMapper;
 	
-	public User getDiagnosisByCardNo(String cardNo) throws Exception {
-		List<User> ret = userMapper.getUserByCardNo(cardNo);
-		if(ret.isEmpty()) {
+	public Patient getDiagnosisByCardNo(String cardNo) throws Exception {
+		Patient ret = patientMapper.getPatientByCardNo(cardNo);
+		if(ret==null) {
 			throw new Exception("卡号没有对应的患者");
 		}else {
-			return ret.get(0);
+			return ret;
 		}
 	}
 	

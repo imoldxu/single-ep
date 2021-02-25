@@ -1,7 +1,12 @@
 package com.yyg.eprescription.util;
 
-import org.apache.poi.hssf.util.CellRangeAddress;
-import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -57,26 +62,26 @@ public class ExportUtil
         // 创建单元格样式  
         XSSFCellStyle cellStyle = wb.createCellStyle();  
         // 设置单元格的背景颜色为淡蓝色  
-        cellStyle.setFillForegroundColor(HSSFColor.PALE_BLUE.index);  
-        cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);  
+        cellStyle.setFillForegroundColor(IndexedColors.BLUE_GREY.getIndex());  
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);  
         // 设置单元格居中对齐  
-        cellStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);  
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);  
         // 设置单元格垂直居中对齐  
-        cellStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);  
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);  
         // 创建单元格内容显示不下时自动换行  
         cellStyle.setWrapText(true);  
         // 设置单元格字体样式  
         XSSFFont font = wb.createFont();  
         // 设置字体加粗  
-        font.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);  
+        font.setBold(true);
         font.setFontName("宋体");  
         font.setFontHeight((short) 200);  
         cellStyle.setFont(font);  
-        // 设置单元格边框为细线条  
-        cellStyle.setBorderLeft(XSSFCellStyle.BORDER_THIN);  
-        cellStyle.setBorderBottom(XSSFCellStyle.BORDER_THIN);  
-        cellStyle.setBorderRight(XSSFCellStyle.BORDER_THIN);  
-        cellStyle.setBorderTop(XSSFCellStyle.BORDER_THIN);  
+        // 设置单元格边框为细线条 
+        cellStyle.setBorderLeft(BorderStyle.THIN);  
+        cellStyle.setBorderBottom(BorderStyle.THIN);  
+        cellStyle.setBorderRight(BorderStyle.THIN);  
+        cellStyle.setBorderTop(BorderStyle.THIN);  
         return cellStyle;  
     }  
   
@@ -90,23 +95,23 @@ public class ExportUtil
         // 创建单元格样式  
         XSSFCellStyle cellStyle = wb.createCellStyle();  
         // 设置单元格居中对齐  
-        cellStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);  
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);  
         // 设置单元格垂直居中对齐  
-        cellStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);  
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);  
         // 创建单元格内容显示不下时自动换行  
         cellStyle.setWrapText(true);  
         // 设置单元格字体样式  
         XSSFFont font = wb.createFont();  
         // 设置字体加粗  
-        font.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);  
+        font.setBold(true);  
         font.setFontName("宋体");  
         font.setFontHeight((short) 200);  
         cellStyle.setFont(font);  
         // 设置单元格边框为细线条  
-        cellStyle.setBorderLeft(XSSFCellStyle.BORDER_THIN);  
-        cellStyle.setBorderBottom(XSSFCellStyle.BORDER_THIN);  
-        cellStyle.setBorderRight(XSSFCellStyle.BORDER_THIN);  
-        cellStyle.setBorderTop(XSSFCellStyle.BORDER_THIN);  
+        cellStyle.setBorderLeft(BorderStyle.THIN);  
+        cellStyle.setBorderBottom(BorderStyle.THIN);  
+        cellStyle.setBorderRight(BorderStyle.THIN);  
+        cellStyle.setBorderTop(BorderStyle.THIN);  
         return cellStyle;  
     }  
     

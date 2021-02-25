@@ -34,6 +34,8 @@ public class SalesRecordVo {
 	
 	private Integer price;//销售价格
 	
+	private String drugcompany;
+	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	private Date createtime;//创建时间
 	
@@ -165,6 +167,14 @@ public class SalesRecordVo {
 
 	public void setDepartment(String department) {
 		this.department = department;
+	}
+
+	public String getDrugcompany() {
+		return drugcompany;
+	}
+
+	public void setDrugcompany(String drugcompany) {
+		this.drugcompany = drugcompany;
 	}
 	
 }

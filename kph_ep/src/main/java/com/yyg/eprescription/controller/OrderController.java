@@ -47,7 +47,7 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/queryOrder", method = RequestMethod.GET)
 	@ApiOperation(value = "管理平台查询的订单", notes = "管理平台查询的订单")
 	public PageResult<IOrderVo> queryOrder(
@@ -60,7 +60,7 @@ public class OrderController {
 	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/deliver", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认领药", notes = "确认领药")
 	public void deliver(
@@ -73,7 +73,7 @@ public class OrderController {
 	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/refundDrug", method = RequestMethod.POST)
 	@ApiOperation(value = "退药", notes = "退药")
 	public void refundDrug(
@@ -86,7 +86,7 @@ public class OrderController {
 	}
 	
 	@RequiresRoles({"tollman"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/queryPatientOrder", method = RequestMethod.GET)
 	@ApiOperation(value = "医院收费处查询订单", notes = "医院收费处查询订单")
 	public PageResult<IOrderVo> queryPatientOrder(
@@ -99,13 +99,32 @@ public class OrderController {
 		query.setEndTime(null);
 		query.setStartTime(null);
 		query.setState(null);
+		query.setPayway(null);
+		query.setDoctorname(null);
+		query.setPatientname(null);
 		PageResult<IOrderVo> result = orderService.queryOrder(query);
 		
 		return result;
 	}
 	
 	@RequiresRoles({"tollman"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	@RequestMapping(value = "/yidiYibaoOver", method = RequestMethod.PUT)
+	@ApiOperation(value = "确认异地医保支付", notes = "确认异地医保支付")
+	public void yidiYibaoOver(
+			@ApiParam(name = "orderStateBo", value = "订单状态修改") @RequestBody @Valid OrderStateBo orderStateBo,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		Subject subject = SecurityUtils.getSubject();
+		User user = (User) subject.getPrincipal();
+		
+		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getName(),"yidiyibao");
+		
+		return;
+	}
+	
+	@RequiresRoles({"tollman"})
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/yibaoOver", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医保支付", notes = "确认医保支付")
 	public void yibaoOver(
@@ -121,7 +140,7 @@ public class OrderController {
 	}
 	
 	@RequiresRoles({"tollman"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/cashOver", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认现金支付", notes = "确认现金支付")
 	public void cashOver(
@@ -137,7 +156,7 @@ public class OrderController {
 	}
 	
 	@RequiresRoles({"tollman"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/offlinePayRefund", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医院现金退款", notes = "确认医院现金退款")
 	public void cashRefund(

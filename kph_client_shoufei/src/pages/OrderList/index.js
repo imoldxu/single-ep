@@ -120,7 +120,7 @@ export default ()=>{
                 text: '市医保',
             },
             4: {
-                text: '省医保',
+                text: '异地医保',
             },
             5: {
                 text: '现金',

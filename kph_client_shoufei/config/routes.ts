@@ -94,7 +94,7 @@
   },
   {
     path: '/',
-    redirect: '/dashboard',
+    redirect: '/OrderList',
   },
   {
     component: './404',

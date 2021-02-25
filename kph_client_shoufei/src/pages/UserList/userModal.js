@@ -28,12 +28,12 @@ const UserModal = (props) => {
     const onOk = () => {
         formRef.current
             .validateFields()
-            .then(values => {
+            .then(async (values) => {
 
                 if (handleCommit) {
                     setLoading(true)
                     try {
-                        handleCommit(values)
+                        await handleCommit(values)
                         message.success('提交成功')
                     } catch(e){
                         message.error(e.message, 3)
@@ -69,7 +69,7 @@ const UserModal = (props) => {
                     rules={[{ required: true }]}
                     hasFeedback
                 >
-                    <Input placeholder="请输入手机号"></Input>
+                    <Input placeholder="请输入手机号" maxLength="11"></Input>
                 </FormItem>
                 <FormItem name="role" label="角色"
                     rules={[{ required: true }]}

@@ -28,7 +28,7 @@ public class DiagnosisController {
 	@Autowired
 	DiagnosisMsgService diagnosisMsgService;
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getDiagnosisByKeys", method = RequestMethod.GET)
 	@ApiOperation(value = "获取诊断信息", notes = "获取诊断信息")
 	public Response getDiagnosisByKeys(

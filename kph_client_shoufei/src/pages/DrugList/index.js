@@ -13,6 +13,7 @@ export default () => {
 
     const [infoModalVisible, handleInfoModalVisible] = useState(false);
     const [infoFormValues, setInfoFormValues] = useState({});
+    const [uploadFile, setUploadFile] = useState([]);
 
     const actionRef = useRef();
 
@@ -67,11 +68,15 @@ export default () => {
             title: '药品名称',
             dataIndex: 'drugname',
             search: false,
+            ellipsis: true,
+            colSize: 2,
         },
         {
             title: '药品规格',
             dataIndex: 'standard',
             search: false,
+            colSize: 2,
+            ellipsis: true,
         },
         {
             title: '剂型',
@@ -79,20 +84,25 @@ export default () => {
             search: false,
         },
         {
-            title: '处方药',
+            title: '厂商',
+            dataIndex: 'company',
+            search: false,
+        },
+        {
+            title: '分类',
             dataIndex: 'category',
             search: false,
         },
         {
-            title: '计价单位',
-            dataIndex: 'unit',
+            title: '子类',
+            dataIndex: 'subcategory',
             search: false,
         },
         {
             title: '单价',
             dataIndex: 'price',
             search: false,
-            render: (_, record) => { return (<span>{regFenToYuan(record.price)}元</span>) }
+            render: (_, record) => { return (<span>{`${regFenToYuan(record.price)}元/${record.unit}`}</span>) }
         },
         {
             title: '状态',
@@ -163,13 +173,16 @@ export default () => {
                 toolBarRender={() => [
                     <Upload
                         name="file"
+                        fileList={uploadFile}
                         action='/api/drug/uploadByExcel'
                         onChange={(info) => {
                             if (info.file.status !== 'uploading') {
                                 console.log(info.file, info.fileList);
                             }
                             if (info.file.status === 'done') {
+                                setUploadFile([])
                                 message.success(`${info.file.name} 上传成功`);
+                                actionRef.current.reload()
                             } else if (info.file.status === 'error') {
                                 message.error(`${info.file.name} 上传失败`);
                             }

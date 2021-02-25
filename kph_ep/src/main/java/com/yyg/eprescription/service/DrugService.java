@@ -25,7 +25,6 @@ public class DrugService {
 	DrugMapper drugMapper;
 	@Autowired
 	DoctorDrugService doctorDrugService;
-	//DoctorDrugsMapper doctorDrugsMapper;
 	
 	@Cacheable(cacheNames="simpleDrugListByKey")
 	public List<ShortDrugInfo> queryDrugsByKeys(int type, String keys) {
@@ -57,7 +56,6 @@ public class DrugService {
 		return ret;
 	}
 	
-	@Cacheable(cacheNames="drugList")
 	public PageResult<Drug> queryDrugInfoByKeys(DrugQuery query) {
 		
 		if(!StringUtils.isEmpty(query.getKeys())) {
@@ -88,7 +86,7 @@ public class DrugService {
 		return drug;
 	}
 
-	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})
+	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})
 	public void insertList(List<Drug> drugList) {
 		drugMapper.insertList(drugList);	
 	}
@@ -98,7 +96,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug", key="#result.id")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})	
         }
     )
 	public Drug addDrug(Drug drug) {
@@ -115,7 +113,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug", key="#drug.id")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","drugList"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory"})	
         }
     )
 	public Drug updateDrug(Drug drug) {
@@ -139,7 +137,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})	
         }
     )
 	public Drug downDrug(Integer drugid) {
@@ -154,7 +152,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor","drugList"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})	
         }
     )
 	public Drug upDrug(Integer drugid) {

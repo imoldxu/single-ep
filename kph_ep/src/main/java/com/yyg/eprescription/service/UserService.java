@@ -74,7 +74,7 @@ public class UserService {
 		ex.createCriteria().andEqualTo("phone", phone);
 		User user = userMapper.selectOneByExample(ex);
 		if(user != null){
-			throw new HandleException(ErrorCode.NORMAL_ERROR, "用户已存在");
+			throw new HandleException(ErrorCode.NORMAL_ERROR, "手机号重复、用户已存在");
 		}else{
 			user = new User();
 			user.setName(name);

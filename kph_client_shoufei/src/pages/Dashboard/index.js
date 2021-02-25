@@ -85,7 +85,7 @@ export default ()=>{
                                 <Option value="1">微信</Option>
                                 <Option value="2">支付宝</Option>
                                 <Option value="3">医保</Option>
-                                {/* <Option value="4">省医保</Option> */}
+                                <Option value="4">异地医保</Option>
                                 <Option value="5">现金</Option>
                             </Select>
                             </FormItem>

@@ -16,14 +16,14 @@ import io.swagger.annotations.ApiOperation;
 @Api("错误接口")
 public class ErrorController {
 
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/unlogin")
 	@ApiOperation(value = "未登陆", notes = "未登陆")
 	public Response unlogin() {
 		throw new HandleException(ErrorCode.UNLOGIN, "未登陆");
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/unAuth")
 	@ApiOperation(value = "权限不足", notes = "权限不足")
 	public Response unAuth() {

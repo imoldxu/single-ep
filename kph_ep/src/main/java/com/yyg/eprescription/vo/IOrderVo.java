@@ -32,6 +32,9 @@ public class IOrderVo {
 	
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	private Date createTime;
+	
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+	private Date invalidTime;
 
 	public Long getId() {
 		return id;
@@ -135,6 +138,14 @@ public class IOrderVo {
 
 	public void setPrescriptionid(Long prescriptionid) {
 		this.prescriptionid = prescriptionid;
+	}
+
+	public Date getInvalidTime() {
+		return invalidTime;
+	}
+
+	public void setInvalidTime(Date invalidTime) {
+		this.invalidTime = invalidTime;
 	}
 	
 }

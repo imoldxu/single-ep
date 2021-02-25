@@ -7,9 +7,9 @@
  */
 
 
-var URL = 'http://127.0.0.1:8866/';  // 请求地址;
-
-var ver = '1.0.30';
+//var URL = 'http://127.0.0.1:8866/';  // 请求地址;
+var URL = '/api/'; //请求地址
+var ver = '1.0.01';
 
 
 require.config({

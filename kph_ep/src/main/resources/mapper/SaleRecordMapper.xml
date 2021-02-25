@@ -20,6 +20,18 @@
 			<if test="query.prescriptionno != null and query.prescriptionno !=''">
 				AND t_prescription.prescriptionno = #{query.prescriptionno}
 			</if>
+			<if test="query.drugname != null and query.drugname !=''">
+				AND t_sales_record.drugname = #{query.drugname}
+			</if>
+			<if test="query.drugcompany != null and query.drugcompany !=''">
+				AND t_sales_record.drugcompany = #{query.drugcompany}
+			</if>
+			<if test="query.department != null and query.department !=''">
+				AND t_prescription.department = #{query.department}
+			</if>
+			<if test="query.doctorname != null and query.doctorname !=''">
+				AND t_prescription.doctorname = #{query.doctorname}
+			</if>
 		</where>
 		order by t_sales_record.id DESC 
 		limit ${(query.current-1)*query.pageSize}, ${query.pageSize};

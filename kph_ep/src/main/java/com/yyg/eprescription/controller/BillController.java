@@ -36,7 +36,7 @@ public class BillController {
 	BillService billService;
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/queryBill", method = RequestMethod.GET)
 	@ApiOperation(value = "查询账单", notes = "对账")
 	public PageResult<Bill> queryBill(
@@ -49,7 +49,7 @@ public class BillController {
 	}
 	
 	@RequiresRoles({"manager"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/statistic", method = RequestMethod.GET)
 	@ApiOperation(value = "统计账单", notes = "统计账单")
 	public BillStatisticVo statistic(

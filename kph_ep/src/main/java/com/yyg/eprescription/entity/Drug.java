@@ -84,12 +84,7 @@ public class Drug implements Serializable{
 	@Column(name = "singledose")
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "单次剂量")
-	private String singledose; //单次剂量
-	
-//	@Column(name = "doseunit")
-//	@ColumnType(jdbcType = JdbcType.VARCHAR)
-//	@ApiModelProperty(value = "剂量单位")
-//	private String doseunit;//剂量单位
+	private String singledose; //单次剂量 0.5mg
 	
 	@NotBlank
 	@Column(name = "defaultusage")

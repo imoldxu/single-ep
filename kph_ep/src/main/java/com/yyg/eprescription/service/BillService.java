@@ -58,8 +58,8 @@ public class BillService {
 		case Bill.SHIYIBAO:
 			paymode = "shiyibao";
 			break;
-		case Bill.SHENGYIBAO:
-			paymode = "shengyibao";
+		case Bill.YIDIYIBAO:
+			paymode = "yidiyibao";
 			break;
 		case Bill.CASH:
 			paymode = "cash";
@@ -77,8 +77,8 @@ public class BillService {
 			return Bill.ZFB;
 		} else if(payMode.equalsIgnoreCase("shiyibao")) {
 			return Bill.SHIYIBAO;
-		} else if(payMode.equalsIgnoreCase("shengyibao")) {
-			return Bill.SHENGYIBAO;
+		} else if(payMode.equalsIgnoreCase("yidiyibao")) {
+			return Bill.YIDIYIBAO;
 		} else if(payMode.equalsIgnoreCase("cash")){
 			return Bill.CASH;
 		} else {

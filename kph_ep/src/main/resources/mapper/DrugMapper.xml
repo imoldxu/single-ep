@@ -43,6 +43,9 @@
 			<if test="query.keys != null and query.keys !=''">
 				t_drug.drugname like #{query.keys} Or t_drug.fullkeys like #{query.keys} Or t_drug.shortnamekeys like #{query.keys}
 			</if>
+			<if test="query.state != null">
+				AND t_drug.state = #{query.state}
+			</if>
 		</where>
 		order by t_drug.id DESC 
 		limit ${(query.current-1) * query.pageSize}, ${query.pageSize};

@@ -15,31 +15,40 @@ export default ()=>{
     {
       title: '处方号',
       dataIndex: 'prescriptionno',
+      ellipsis: true,
     },
-    {
-      title: '登记号',
-      dataIndex: 'regNo',
-    },
-    {
-        title: '医生姓名',
-        dataIndex: 'doctorname',
-    },
-    {
-        title: '科室',
-        dataIndex: 'department',
-    },
+    // {
+    //   title: '登记号',
+    //   dataIndex: 'regNo',
+    // },
     {
       title: '药品名称',
       dataIndex: 'drugname',
+      ellipsis: true,
     },
     {
       title: '规格',
       dataIndex: 'standard',
+      ellipsis: true,
+      search: false,
     },
     {
       title: '厂商',
       dataIndex: 'drugcompany',
+      ellipsis: true,
     },
+    // {
+    //   title: '医生姓名',
+    //   dataIndex: 'doctorname',
+    //   ellipsis: true,
+    //   search: false,
+    // },
+    // {
+    //   title: '科室',
+    //   dataIndex: 'department',
+    //   ellipsis: true,
+    //   search: false,
+    // },
     {
       title: '单价',
       dataIndex: 'price',
@@ -60,6 +69,7 @@ export default ()=>{
       title: '领药时间',
       dataIndex: 'createtime',
       search: false,
+      ellipsis: true,
     },
     {
       title:'时间范围',

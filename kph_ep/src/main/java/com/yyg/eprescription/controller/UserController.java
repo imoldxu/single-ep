@@ -42,7 +42,7 @@ public class UserController {
 	UserService userService;
 	
 	@RequiresRoles({"admin"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(method = RequestMethod.POST)
 	@ApiOperation(value = "用户注册账户", notes = "用户注册接口")
 	public void register(@ApiParam(name="addUserBo",value="添加用户信息") @Valid @RequestBody AddUserBo addUserBo) {
@@ -51,7 +51,7 @@ public class UserController {
 	}
 	
 	@RequiresRoles({"admin"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(path="/queryUser", method = RequestMethod.GET)
 	@ApiOperation(value = "查询用户", notes = "查询用户")
 	public PageResult<User> query(@ApiParam(name="query",value="查询") @Valid UserQuery query) {
@@ -62,7 +62,7 @@ public class UserController {
 	}
 	
 	@RequiresRoles(value={"admin","manager","tollman"}, logical = Logical.OR)
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(path="/password", method = RequestMethod.PUT)
 	@ApiOperation(value = "修改密码", notes = "修改密码")
 	public void modify(@ApiParam(name="addUserBo",value="添加用户信息") @Valid @RequestBody ModifyPasswordBo modifyPasswordBo) {
@@ -75,7 +75,7 @@ public class UserController {
 	}
 	
 	@RequiresRoles({"admin"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ApiOperation(value = "更新用户信息", notes = "更新用户信息")
 	public User updateUser(@ApiParam(name="user",value="用户") @RequestBody User user) {	
@@ -84,7 +84,7 @@ public class UserController {
 	}
 	
 	@RequiresRoles({"admin"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(path="/validUser", method = RequestMethod.PUT)
 	@ApiOperation(value = "启用用户", notes = "启用用户")
 	public void validUser(@ApiParam(name="modifyUserbo",value="用户") @RequestBody ModifyUserBo modifyUserbo) {	
@@ -93,7 +93,7 @@ public class UserController {
 	}
 	
 	@RequiresRoles({"admin"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(path="/invalidUser", method = RequestMethod.PUT)
 	@ApiOperation(value = "停用用户", notes = "停用用户")
 	public void invalidUser(@ApiParam(name="modifyUserbo",value="用户") @RequestBody ModifyUserBo modifyUserbo) {	
@@ -102,7 +102,7 @@ public class UserController {
 	}
 	
 	@RequiresRoles({"admin"})
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(path="/resetPassword", method = RequestMethod.PUT)
 	@ApiOperation(value = "重置用户密码", notes = "重置用户密码")
 	public void resetPassword(@ApiParam(name="modifyUserbo",value="重置用户密码") @RequestBody ModifyUserBo modifyUserbo) {	
@@ -110,7 +110,7 @@ public class UserController {
 		return;	
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(method = RequestMethod.GET)
 	@ApiOperation(value = "用户信息", notes = "用户信息")
 	public User get() {
@@ -131,7 +131,7 @@ public class UserController {
 //		return;
 //	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/role", method = RequestMethod.GET)
 	@ApiOperation(value = "查询角色", notes = "查询角色")
 	public List<Role> listRole() {
@@ -139,7 +139,7 @@ public class UserController {
 		return roleList;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/session", method = RequestMethod.POST)
 	@ApiOperation(value = "用户登陆", notes = "用户登陆接口")
 	public User login(@ApiParam(name="loginBo",value="登陆信息") @Valid @RequestBody LoginBo loginBo) {
@@ -151,7 +151,7 @@ public class UserController {
 		return user;
 	}
 	
-	@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
+	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/session", method = RequestMethod.DELETE)
 	@ApiOperation(value = "用户登出", notes = "用户登出接口")
 	public void logout() {
