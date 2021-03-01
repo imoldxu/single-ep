@@ -68,13 +68,14 @@ public class PrescriptionService {
 		Patient patient = patientService.getPatientByCardNo(cardNo);
 		PrescriptionInitVo initInfo = new PrescriptionInitVo();
 		initInfo.setCardNo(patient.getCardNo());
-		if(patient.getPatientAge()==0) {
+		//if(patient.getPatientAge()==0) {
+		//年龄必须根据出生日期动态计算
 			Date birthday = patient.getPatientBirthday();
 			String age = getAge(birthday);
 			initInfo.setPatientage(age);
-		}else {
-			initInfo.setPatientage(patient.getPatientAge()+"岁");
-		}
+		//		}else {
+		//			initInfo.setPatientage(patient.getPatientAge()+"岁");
+		//		}
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		initInfo.setPatientBirthday(format.format(patient.getPatientBirthday()));
 		initInfo.setPatientId(patient.getPatientId());
@@ -252,7 +253,7 @@ public class PrescriptionService {
 		}
 	}
 	
-	private static final String STR_FORMAT = "0000"; 
+	private static final String STR_FORMAT = "00000"; 
 
 	private String formatNumber(Integer intHao){
 	    DecimalFormat df = new DecimalFormat(STR_FORMAT);

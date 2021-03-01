@@ -157,8 +157,8 @@ public class OrderController {
 	
 	@RequiresRoles({"tollman"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
-	@RequestMapping(value = "/offlinePayRefund", method = RequestMethod.PUT)
-	@ApiOperation(value = "确认医院现金退款", notes = "确认医院现金退款")
+	@RequestMapping(value = "/offlineRefund", method = RequestMethod.PUT)
+	@ApiOperation(value = "确认医院线下退款", notes = "确认医院线下退款")
 	public void cashRefund(
 			@ApiParam(name = "orderStateBo", value = "订单状态修改")  @RequestBody @Valid OrderStateBo orderStateBo,
 			HttpServletRequest request, HttpServletResponse response) {

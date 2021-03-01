@@ -9,9 +9,9 @@ spring:
     name: eprescription
   datasource:
     name: hpk
-    url: jdbc:mysql://127.0.0.1:3306/eprescription?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useUnicode=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://127.0.0.1:3306/ep?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useUnicode=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: 150331
+    password: jxfy0125
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     filters: stat
@@ -31,7 +31,7 @@ spring:
     name: jxfy
     url: jdbc:mysql://192.168.99.86:3306/yxdl_app_db?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useUnicode=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
-    password: 123456
+    password: RkcLVZx7rY
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     filters: stat
@@ -57,6 +57,10 @@ mybatis:
  
 #log
 logging:
+  path:
+    name: ./logs
+#  file:
+#    name: logs/mylog.log
   level:
     root: INFO
     

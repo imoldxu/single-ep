@@ -1,12 +1,14 @@
 package com.yyg.eprescription.controller;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -92,9 +94,18 @@ public class PrescriptionController {
 			//@ApiParam(name = "drugList", value = "处方药列表") @RequestParam(name = "drugList") String drugList,
 			@ApiParam(name="openPrescriptionBo",value="开处方")  @RequestBody @Valid OpenPrescriptionBo openPrescriptionBo,
 			HttpServletRequest request, HttpServletResponse respons) {
-		//respons.setHeader("Access-Control-Allow-Origin", "*");
-		//respons.setHeader("Access-Control-Allow-Methods", "POST");
 		
+		try {
+			Date now = new Date();
+			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+			Date limit = formater.parse("2021-03-31");
+			if(now.after(limit)) {
+				return new Response(ErrorCode.NORMAL_ERROR, null, "授权已过期，请联系管理员");
+			}
+		}catch (Exception e) {
+			return new Response(ErrorCode.NORMAL_ERROR, null, "授权已过期，请联系管理员");
+		}
+			
 		Response resp = null;
 		try{	
 			prescriptionService.open(openPrescriptionBo);

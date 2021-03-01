@@ -1,3 +1,20 @@
+
 java -server -Xmx2048m -Xms2048m -jar ep.jar --spring.profiles.active=prod
 
 chrome.exe --app=http://www.baidu.com
+
+锦欣妇幼系统目录
+client，客户端
+   doctor，医生端
+   manager，管理端
+server，系统
+jdk---环境
+nginx----服务代理
+mysql---数据存储
+init.sql---初始化sql
+
+
+固定IP：192.168.34.167
+
+
+添加用户的时候报了系统异常，但是用户添加是成功的
