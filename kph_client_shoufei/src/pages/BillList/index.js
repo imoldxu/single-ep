@@ -48,7 +48,7 @@ export default ()=>{
               )
           }else{
               return (
-                  <span style={{color:"red"}}>{regFenToYuan(0-record.amount/100)}元</span>
+                  <span style={{color:"red"}}>{regFenToYuan(0-record.amount)}元</span>
               )  
           }
           }

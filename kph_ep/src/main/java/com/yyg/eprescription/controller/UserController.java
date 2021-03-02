@@ -144,7 +144,7 @@ public class UserController {
 	@ApiOperation(value = "用户登陆", notes = "用户登陆接口")
 	public User login(@ApiParam(name="loginBo",value="登陆信息") @Valid @RequestBody LoginBo loginBo) {
 		Subject subject = SecurityUtils.getSubject();
-		subject.getSession().setTimeout(8*3600*1000);//8个小时过期,避免收费处重复登录
+		subject.getSession().setTimeout(4*3600*1000);//8个小时过期,避免收费处重复登录
 		AuthenticationToken token = new UsernamePasswordToken(loginBo.getPhone(), loginBo.getPassword());
 		subject.login(token);
 		User user = (User) subject.getPrincipal();
