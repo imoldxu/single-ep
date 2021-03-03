@@ -58,6 +58,10 @@
 				AND t_bill.createtime BETWEEN #{query.startTime} AND #{query.endTime}
 			</if>
 		</where>
+		<if test="query.current != null and query.pageSize != null">
+			order by t_bill.id DESC 
+			limit ${(query.current-1) * query.pageSize}, ${query.pageSize};
+		</if>
 	</select>
 
 </mapper>

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.BillQuery;
 import com.yyg.eprescription.bo.HospitalBillQuery;
+import com.yyg.eprescription.bo.JXBillPageQuery;
 import com.yyg.eprescription.bo.JXBillQuery;
 import com.yyg.eprescription.context.ErrorCode;
 import com.yyg.eprescription.context.HandleException;
@@ -131,7 +132,7 @@ public class BillService {
 	}
 	
 	//获取对账明细
-	public List<JXBillVo> reconcile(JXBillQuery billQuery) {
+	public List<JXBillVo> reconcile(JXBillPageQuery billQuery) {
 		HospitalBillQuery query = new HospitalBillQuery();
 		
 		try {
@@ -155,7 +156,8 @@ public class BillService {
 			query.setStartTime(sdf.format(start));
 			query.setEndTime(sdf.format(end));
 			query.setType(type);
-		
+			query.setCurrent(billQuery.getPage());
+			query.setPageSize(billQuery.getCount());
 		}catch (ParseException e) {
 			throw new HandleException(ErrorCode.ARG_ERROR, "时间参数错误");
 		}

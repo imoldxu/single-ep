@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.BillQuery;
+import com.yyg.eprescription.bo.JXBillPageQuery;
 import com.yyg.eprescription.bo.JXBillQuery;
 import com.yyg.eprescription.context.JXResp;
 import com.yyg.eprescription.entity.Bill;
@@ -84,7 +85,7 @@ public class BillController {
 	@RequestMapping(value = "/reconcile", method = RequestMethod.POST)
 	@ApiOperation(value = "对账", notes = "对账")
 	public JXResp reconcile(
-			@ApiParam(name = "billQuery", value = "查询信息") @RequestBody @Valid JXBillQuery billQuery,
+			@ApiParam(name = "billQuery", value = "查询信息") @RequestBody @Valid JXBillPageQuery billQuery,
 			HttpServletRequest request, HttpServletResponse response) {
 	
 		try {

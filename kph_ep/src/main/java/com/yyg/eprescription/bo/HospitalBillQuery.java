@@ -11,6 +11,10 @@ public class HospitalBillQuery {
 	private String startTime;
 	
 	private String endTime;
+	
+	private Integer pageSize;
+	
+	private Integer current;
 
 	public List<Integer> getPayway() {
 		return payway;
@@ -42,6 +46,22 @@ public class HospitalBillQuery {
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Integer getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(Integer current) {
+		this.current = current;
 	}
 	
 }
