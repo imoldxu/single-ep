@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +108,7 @@ public class OrderController {
 		return result;
 	}
 	
-	@RequiresRoles({"tollman"})
+	@RequiresRoles({"manager"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/yidiYibaoOver", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认异地医保支付", notes = "确认异地医保支付")
@@ -123,7 +124,7 @@ public class OrderController {
 		return;
 	}
 	
-	@RequiresRoles({"tollman"})
+	@RequiresRoles({"manager"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/yibaoOver", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医保支付", notes = "确认医保支付")
@@ -155,7 +156,7 @@ public class OrderController {
 		return;
 	}
 	
-	@RequiresRoles({"tollman"})
+	@RequiresRoles(value={"manager","tollman"}, logical = Logical.OR)
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/offlineRefund", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医院线下退款", notes = "确认医院线下退款")
