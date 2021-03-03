@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 public class LoginBo {
 
 	@NotBlank
-	@Pattern(regexp="^1[3456789]d{9}", message="请输入正确的手机号")
+	//@Pattern(regexp="^1[3456789]d{9}", message="请输入正确的手机号")
 	private String phone;
 	
 	@NotBlank
