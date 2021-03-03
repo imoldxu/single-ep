@@ -92,7 +92,7 @@ export default ()=>{
                 onClick={async () => {
                   const hide = message.loading('处理中')
                   try{
-                    invalidUser({phone: record.phone});
+                    await invalidUser({phone: record.phone});
                     actionRef.current.reload()
                   }catch(e){
                     message.error(e.message,3)

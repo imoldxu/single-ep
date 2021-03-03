@@ -48,6 +48,7 @@ export default () => {
             } else {
                 await addDrug(values)
             }
+            message.success('提交成功')
             handleInfoModalVisible(false)
             actionRef.current.reload()
         } catch (e) {

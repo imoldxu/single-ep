@@ -1,4 +1,4 @@
-import { Space, Statistic } from "antd";
+import { message, Space, Statistic } from "antd";
 import { useRef, useState } from "react";
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 //import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -76,12 +76,16 @@ export default ()=>{
         headerTitle="账单明细"
         actionRef={actionRef}
         rowKey="key"
-        request={(params) => {
-            if(params.dateRange && params.dateRange.length>1){
-              params.startTime = params.dateRange[0] + " 00:00:00";
-              params.endTime = params.dateRange[1] + " 23:59:59";
+        request={async (params) => {
+            try{
+              if(params.dateRange && params.dateRange.length>1){
+                params.startTime = params.dateRange[0] + " 00:00:00";
+                params.endTime = params.dateRange[1] + " 23:59:59";
+              }
+              return await queryBill(params)
+            }catch(e){
+              message.error(e.message,3)
             }
-            return queryBill(params)
           }
         }
         columns={columns}

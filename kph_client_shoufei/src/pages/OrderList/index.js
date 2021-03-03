@@ -24,6 +24,7 @@ export default ()=>{
         await refundDrug(values)
         setRefundModalValue(null)
         setRefundModalVisible(false)
+        message.success('提交成功')
       }catch(e){
         message.error(e.message, 3)
       }finally{
