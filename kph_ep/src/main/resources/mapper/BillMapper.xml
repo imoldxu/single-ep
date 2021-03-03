@@ -59,7 +59,7 @@
 			</if>
 		</where>
 		<if test="query.current != null and query.pageSize != null">
-			order by t_bill.id DESC 
+			order by t_bill.id ASC 
 			limit ${(query.current-1) * query.pageSize}, ${query.pageSize};
 		</if>
 	</select>
