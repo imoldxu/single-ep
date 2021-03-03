@@ -44,9 +44,9 @@ export default () => {
     async function handleCommit(values) {
         try {
             if (values.id) {
-                modifyDrug(values)
+                await modifyDrug(values)
             } else {
-                addDrug(values)
+                await addDrug(values)
             }
             handleInfoModalVisible(false)
             actionRef.current.reload()
