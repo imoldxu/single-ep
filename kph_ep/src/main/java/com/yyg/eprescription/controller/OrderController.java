@@ -209,7 +209,7 @@ public class OrderController {
 	public JXResp payOver(
 			@ApiParam(name = "payOverBo", value = "查询信息") @RequestBody @Valid JXPayOverBo payOverBo,
 			HttpServletRequest request, HttpServletResponse response) {
-	
+			
 		int amount = Integer.valueOf(payOverBo.getPayAmt()).intValue();
 		try {
 			Order order = orderService.payOver(payOverBo.getPhTradeNo(), amount, payOverBo.getPayMode(), payOverBo.getTPTradeNo());

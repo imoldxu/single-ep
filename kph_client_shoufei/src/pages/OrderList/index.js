@@ -4,15 +4,18 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 //import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
-import { queryOrder, deliver, refundDrug } from '@/services/ant-design-pro/order';
+import { queryOrder, deliver, refundDrug, yidiYibaoOver, yibaoOver } from '@/services/ant-design-pro/order';
 import { querySaleRecord } from '@/services/ant-design-pro/saleRecord';
 import RefundModal from './refundModal'
+import PayModal from './payModal'
 import { regFenToYuan } from "@/utils/money";
 
 export default ()=>{
 
-    const [refundModalVisible, setRefundModalVisible] = useState(false)
-    const [modalValue, setRefundModalValue] = useState()
+  const [refundModalVisible, setRefundModalVisible] = useState(false)
+  const [refundModalValue, setRefundModalValue] = useState()
+  const [payModalVisible, setPayModalVisible] = useState(false)
+  const [payModalValue, setPayModalValue] = useState({amount:0})
 
   const actionRef = useRef();
 
@@ -24,22 +27,66 @@ export default ()=>{
       }catch(e){
         message.error(e.message, 3)
       }finally{
-
+        actionRef.current.reload()
       }
   }
 
-    const handleRefund = async (order) =>{
-        const hide = message.loading('')
-        try{
-            const pageResult = await querySaleRecord({prescriptionno: order.prescriptionno, current:1, pageSize: 100})
-            setRefundModalValue({order:order, records:pageResult.data})
-            setRefundModalVisible(true)
-        }catch(e){
-            message.error(e.message, 3)
-        }finally{
-            hide()
-        }
+  const handleYidiYibaoOver = async (orderno) => {
+    const hide = message.loading('医保支付确认提交中')
+    try{
+        await yidiYibaoOver({orderno:orderno})
+        message.success("提交成功", 3)
+    }catch(e){
+        message.error(e.msg, 3)
+    }finally{
+        hide()
     }
+    setPayModalVisible(false)
+    setPayModalValue({amount:0})
+    actionRef.current.reload();
+  };
+
+  const handleYibaoOver = async (orderno) => {
+    const hide = message.loading('医保支付确认提交中')
+    try{
+        await yibaoOver({orderno:orderno})
+        message.success("提交成功", 3)
+    }catch(e){
+        message.error(e.msg, 3)
+    }finally{
+        hide()
+    }
+    setPayModalVisible(false)
+    setPayModalValue({amount:0})
+    actionRef.current.reload();
+  };
+
+  const handleOfflineRefund = async (orderno) => {
+    const hide = message.loading('退款提交中')
+    try{
+        await offlineRefund({orderno:orderno})
+        message.success("退款成功", 3)
+    }catch(e){
+        message.error(e.msg, 3)
+    }finally{
+        hide()
+    }
+    actionRef.current.reload();
+  };
+
+  //打开退货modal
+  const handleRefund = async (order) =>{
+      const hide = message.loading('加载中')
+      try{
+          const pageResult = await querySaleRecord({prescriptionno: order.prescriptionno, current:1, pageSize: 100})
+          setRefundModalValue({order:order, records:pageResult.data})
+          setRefundModalVisible(true)
+      }catch(e){
+          message.error(e.message, 3)
+      }finally{
+          hide()
+      }
+  }
 
   const gotoPrint = async (pid) => {
     if (!history) return;
@@ -174,33 +221,71 @@ export default ()=>{
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
-        const {state} = record
-        if (state === 2){
-            return (
-                <Space>
-                  <a
-                    onClick={() => {
-                        handleDeliver(record.orderno, record.prescriptionid);
-                    }}
-                  >
-                    确认领药
-                  </a>
-                </Space>
-             ) 
-            }else if(state === 3){
-                return (
-                <Space>
-                  <a
-                    onClick={() => {
-                        handleRefund(record);
-                    }}
-                  >
-                    退药
-                  </a>
-                </Space>
+        const {state, orderno, amount, payway} = record
+        if(state === 1){
+          <Space>
+              <a onClick={()=>{
+                  setPayModalValue({orderno: orderno,amount:amount})
+                  setPayModalVisible(true)
+              }}>
+                  确认缴费方式
+              </a>
+          </Space>
+        } else if (state === 2){
+          return (
+            <Space>
+              <a
+                onClick={() => {
+                    handleDeliver(record.orderno, record.prescriptionid);
+                }}
+              >
+                确认领药
+              </a>
+              {
+                (payway === 3 || pay ===4) && (
+                  <Popconfirm
+                        title="确认是否要退款?"
+                        okText="确认"
+                        cancelText="取消"
+                        onConfirm={() => {
+                            handleOfflineRefund(record.orderno);
+                        }}>
+                        <a>
+                            确认退款
+                        </a>
+                  </Popconfirm>
                 )
-            }
+              }
+            </Space>
+          ) 
+        }else if(state === 3){
+            return (
+            <Space>
+              <a
+                onClick={() => {
+                    handleRefund(record);
+                }}
+              >
+                退药
+              </a>
+            </Space>
+            )
+        } else if(state === 4 && (payway === 3 || pay ===4)){
+            return (
+              <Popconfirm
+                  title="确认是否要退款?"
+                  okText="确认"
+                  cancelText="取消"
+                  onConfirm={() => {
+                      handleOfflineRefund(record.orderno);
+                  }}>
+                  <a>
+                      确认退款
+                  </a>
+              </Popconfirm>
+            )
         }
+      }
     },
   ];
 
@@ -226,16 +311,25 @@ export default ()=>{
         manualRequest={true}
       />
       {
-          modalValue && (
+          refundModalValue && (
             <RefundModal 
             handleCommit={commitRefund}
             handleCancel={()=>setRefundModalVisible(false)}
             visible={refundModalVisible}
-            values={modalValue}>
+            values={refundModalValue}>
             </RefundModal>
           )
       }
-      
+      <PayModal key="modal"
+        handleYibaoPay={handleYibaoOver}
+        handleYidiYibaoPay={handleYidiYibaoOver}
+        handleCancel={()=>{
+            setPayModalVisible(false)
+            setPayModalValue({amount:0})
+        }}
+        visible={payModalVisible}
+        values={payModalValue}
+      ></PayModal>
     </PageContainer>
   );
 

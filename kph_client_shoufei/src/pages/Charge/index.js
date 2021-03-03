@@ -7,14 +7,14 @@ import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from '
 import { queryPatientOrder, cashOver, offlineRefund, yibaoOver, yidiYibaoOver } from '@/services/ant-design-pro/order';
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { regFenToYuan } from "@/utils/money";
-import PayModal from "./PayModal";
+// import PayModal from "./PayModal";
 
 export default ()=>{
 
   const actionRef = useRef();
 
-  const [modalVisible, setModalVisible] = useState(false)
-  const [modalValue, setModalValue] = useState({amount:0})
+  //const [modalVisible, setModalVisible] = useState(false)
+  //const [modalValue, setModalValue] = useState({amount:0})
 
   const handleCashOver = async (orderno) => {
     const hide = message.loading('现金支付确认提交中')
@@ -31,35 +31,35 @@ export default ()=>{
     actionRef.current.reload();
   };
 
-  const handleYidiYibaoOver = async (orderno) => {
-    const hide = message.loading('医保支付确认提交中')
-    try{
-        await yidiYibaoOver({orderno:orderno})
-        message.success("提交成功", 3)
-    }catch(e){
-        message.error(e.msg, 3)
-    }finally{
-        hide()
-    }
-    setModalVisible(false)
-    setModalValue({amount:0})
-    actionRef.current.reload();
-  };
+//   const handleYidiYibaoOver = async (orderno) => {
+//     const hide = message.loading('医保支付确认提交中')
+//     try{
+//         await yidiYibaoOver({orderno:orderno})
+//         message.success("提交成功", 3)
+//     }catch(e){
+//         message.error(e.msg, 3)
+//     }finally{
+//         hide()
+//     }
+//     setModalVisible(false)
+//     setModalValue({amount:0})
+//     actionRef.current.reload();
+//   };
 
-  const handleYibaoOver = async (orderno) => {
-    const hide = message.loading('医保支付确认提交中')
-    try{
-        await yibaoOver({orderno:orderno})
-        message.success("提交成功", 3)
-    }catch(e){
-        message.error(e.msg, 3)
-    }finally{
-        hide()
-    }
-    setModalVisible(false)
-    setModalValue({amount:0})
-    actionRef.current.reload();
-  };
+//   const handleYibaoOver = async (orderno) => {
+//     const hide = message.loading('医保支付确认提交中')
+//     try{
+//         await yibaoOver({orderno:orderno})
+//         message.success("提交成功", 3)
+//     }catch(e){
+//         message.error(e.msg, 3)
+//     }finally{
+//         hide()
+//     }
+//     setModalVisible(false)
+//     setModalValue({amount:0})
+//     actionRef.current.reload();
+//   };
 
   const handleOfflineRefund = async (orderno) => {
     const hide = message.loading('退款提交中')
@@ -136,6 +136,9 @@ export default ()=>{
                 3: {
                     text: '市医保',
                 },
+                4: {
+                    text: '异地医保',
+                },
                 5: {
                     text: '现金',
                 }
@@ -148,11 +151,11 @@ export default ()=>{
             valueEnum: {
                 1: {
                     text: '待支付',
-                    status: 'Error',
+                    status: 'Processing',
                 },
                 2: {
                     text: '已支付',
-                    status: 'Success',
+                    status: 'Warning',
                 }, 
                 3: {
                     text: '已领药',
@@ -160,11 +163,11 @@ export default ()=>{
                 },
                 4: {
                     text: '待退款',
-                    status: 'Error',
+                    status: 'Processing',
                 },
                 5: {
                     text: '已退款',
-                    status: 'Warning',
+                    status: 'Error',
                 }
             }
         },
@@ -181,26 +184,27 @@ export default ()=>{
         const {orderno, state, payway, amount} = record
         if (state === 1){
             return (
-                <Space>
-                    <a onClick={()=>{
-                        setModalValue({orderno: orderno,amount:amount})
-                        setModalVisible(true)
-                    }}>
-                        确认缴费方式
-                    </a>
-                </Space>
-                // <Space size="large">
-                //      <Popconfirm
-                //         title="确认是否现金已收费?"
-                //         okText="确认"
-                //         cancelText="取消"
-                //         onConfirm={() => {
-                //             handleCashOver(record.orderno);
-                //         }}>
-                //         <a>
-                //             现金缴费
-                //         </a>
-                //     </Popconfirm>
+                // <Space>
+                //     <a onClick={()=>{
+                //         setModalValue({orderno: orderno,amount:amount})
+                //         setModalVisible(true)
+                //     }}>
+                //         确认缴费方式
+                //     </a>
+                // </Space>
+                <Space size="large">
+                     <Popconfirm
+                        title={`确认是否已收现金：${regFenToYuan(record.amount)}元?`}
+                        okText="确认"
+                        cancelText="取消"
+                        onConfirm={() => {
+                            handleCashOver(record.orderno);
+                        }}>
+                        <a>
+                            现金缴费
+                        </a>
+                    </Popconfirm>
+                </Space>    
                 //     <Popconfirm
                 //         title="确认是否市医保已收费?"
                 //         okText="确认"
@@ -223,9 +227,8 @@ export default ()=>{
                 //             市医保缴费
                 //         </a>
                 //     </Popconfirm>
-                // </Space>
             )
-        }else if((state == 2 || state == 4) && (payway == 5 || payway==3 || payway==4)){//cash shiyibao
+        }else if((state == 2 || state == 4) && (payway == 5)){//cash shiyibao
             return (
                 <Space>
                     <Popconfirm
@@ -264,7 +267,7 @@ export default ()=>{
         columns={columns}
         manualRequest={true}
       />
-      <PayModal key="modal"
+      {/* <PayModal key="modal"
         handleCashPay={handleCashOver}
         handleYibaoPay={handleYibaoOver}
         handleYidiYibaoPay={handleYidiYibaoOver}
@@ -274,7 +277,7 @@ export default ()=>{
         }}
         visible={modalVisible}
         values={modalValue}
-      ></PayModal>
+      ></PayModal> */}
     </PageContainer>
   );
 

@@ -5,7 +5,6 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import { register, validUser, invalidUser, queryUser, resetPassword } from '@/services/ant-design-pro/users';
-import { regFenToYuan } from "@/utils/money";
 import UserModal from "./userModal";
 import { PlusOutlined } from "@ant-design/icons";
 

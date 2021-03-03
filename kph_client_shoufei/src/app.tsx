@@ -119,28 +119,32 @@ const errorHandler = (error: ResponseError) => {
   const { response, data } = error;
   if (response && response.status) {
     const errorText = data.message || codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
+    // const { status, url } = response;
 
+    
+    if(data.code){
+      if(data.code===4 || data.code===15 ){
+        history.push('/user/login')
+        return;
+      }
+      //将后台返回的{code,message}抛出给外面处理
+      throw data;
+    }
     // notification.error({
     //   message: `请求错误 ${status}: ${url}`,
     //   description: errorText,
     // });
-    if(data.code===4 || data.code===15 ){
-      history.push('/user/login')
-      return;
-    }
-    throw data;
+    throw {message: errorText}
   }
 
-  if (!response) {
-    notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
-    });
-  }
+  // if (!response) {
+    // notification.error({
+    //   description: '您的网络发生异常，无法连接服务器',
+    //   message: '网络异常',
+    // });
+  // }
   
-  //将后台返回的{code,message}抛出给外面处理
-  throw error
+  throw {message:"网络异常"}
 };
 
 // https://umijs.org/zh-CN/plugins/plugin-request

@@ -152,7 +152,8 @@ export default ()=>{
                         <div className={styles.label} style={{letterSpacing: "10px"}}>调配:</div><div className={styles.valueInput} style={{width: "120px"}}></div>
                     </div>
                     <div style={{margin: "5 0px"}}>处方用量超过七天’请医生再次确认签字。</div>
-                    <div>药品属特殊商品’一经发出概不退换。</div>
+                    <div style={{margin: "5 0px"}}>药品属特殊商品’一经发出概不退换。</div>
+                    <div>社保刷卡及取药请到一楼母婴店旁药房</div>
                 </div>
 
                 <div className={styles.payQrCode}>

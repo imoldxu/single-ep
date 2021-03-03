@@ -108,6 +108,7 @@ public class OrderService {
 		Order oldOrder = getOrderById(oid);
 		oldOrder.getPrescriptionid();
 
+		//退药记录
 		List<SalesRecord> list = salesRecordService.refund(refundDrugBo.getRefundRecords());
 
 		Order order = new Order();
@@ -137,11 +138,12 @@ public class OrderService {
 		order.setInvalidtime(calendar.getTime());
 		orderMapper.insertUseGeneratedKeys(order);
 
-		String payMode = billService.payWay2PayMode(oldOrder.getPayway());
+		Bill payBill = billService.getPayBillByOrderno(oldOrder.getOrderno());
+		String payMode = billService.payWay2PayMode(payBill.getPayway());
 
 		if (order.getState() == Order.STATE_REFUNDED) {
 			// 若是非现金的退款，默认为已退款
-			billService.create(order, Bill.TYPE_REFUND, payMode, "");
+			billService.create(order, Bill.TYPE_REFUND, payMode, payBill.getPayid());
 		}
 
 		return order;
@@ -328,29 +330,29 @@ public class OrderService {
 	}
 
 	/**
-	 * 退款完成
+	 * 退款通知完成，不需要，默认线上就是退成功的
 	 * 
 	 * @param huid
 	 * @param amount
 	 * @param transactionList
 	 * @return
 	 */
-	@Transactional
-	public void RefundOver(String orderno, String payMode, String payid) {
-		// 获取order以便更新，避免重复创建
-		Order order = orderMapper.selectOrderForUpdate(orderno);
-		if (order.getState() == Order.STATE_REFUNDED) {
-			// 若是已经支付过的订单，则不处理
-			return;
-		}
-		if (order.getState() != Order.STATE_PAYED && order.getState() != Order.STATE_REFUNDIND) {
-			throw new RuntimeException("订单状态异常");
-		}
-		order.setState(Order.STATE_REFUNDED);
-		orderMapper.updateByPrimaryKey(order);
-
-		billService.create(order, Bill.TYPE_REFUND, payMode, payid);
-	}
+//	@Transactional
+//	public void RefundOver(String orderno, String payMode, String payid) {
+//		// 获取order以便更新，避免重复创建
+//		Order order = orderMapper.selectOrderForUpdate(orderno);
+//		if (order.getState() == Order.STATE_REFUNDED) {
+//			// 若是已经支付过的订单，则不处理
+//			return;
+//		}
+//		if (order.getState() != Order.STATE_PAYED && order.getState() != Order.STATE_REFUNDIND) {
+//			throw new RuntimeException("订单状态异常");
+//		}
+//		order.setState(Order.STATE_REFUNDED);
+//		orderMapper.updateByPrimaryKey(order);
+//
+//		billService.create(order, Bill.TYPE_REFUND, payMode, payid);
+//	}
 
 	
 
