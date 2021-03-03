@@ -112,7 +112,7 @@ public class SalesRecordService {
 			refundRecord.setPrescriptionid(record.getPrescriptionid());
 			refundRecord.setPrice(record.getPrice());
 			refundRecord.setStandard(record.getStandard());
-			refundList.add(record);
+			refundList.add(refundRecord);
 		});
 		
 		return refundList;
