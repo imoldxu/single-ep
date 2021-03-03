@@ -212,8 +212,8 @@ public class OrderService {
 
 		List<JXDrugItem> items = druglist.stream().map(drug -> {
 			JXDrugItem item = new JXDrugItem();
-			item.setArcmiDesc(drug.getMyusage());
-			item.setArcmiRemark(drug.getFrequency());
+			item.setArcmiDesc(drug.getDrugname());
+			item.setArcmiRemark(drug.getMyusage()+" "+drug.getFrequency()+" "+drug.getSingledose());
 			item.setDiscAmount("0");
 			item.setOEOrdId(drug.getId().toString());
 			item.setOEOrdRecDeptAddr("一楼母婴店旁药房取药");
