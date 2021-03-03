@@ -12,6 +12,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ import com.yyg.eprescription.context.JXResp;
 import com.yyg.eprescription.entity.Order;
 import com.yyg.eprescription.entity.User;
 import com.yyg.eprescription.service.OrderService;
+import com.yyg.eprescription.util.IPUtils;
 import com.yyg.eprescription.vo.IOrderVo;
 import com.yyg.eprescription.vo.JXOrderVo;
 
@@ -46,6 +48,8 @@ public class OrderController {
 
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	Environment env;
 	
 	@RequiresRoles({"manager"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
@@ -180,6 +184,12 @@ public class OrderController {
 			@ApiParam(name = "orderQuery", value = "查询信息") @RequestBody @Valid JXUnpayOrderQuery query,
 			HttpServletRequest request, HttpServletResponse response) {
 	
+		String host = env.getProperty("hospital.host");
+		String ip = IPUtils.getRealIp(request);
+		if(!host.equals(ip)) {
+			return new JXResp("-1", "非授权的IP访问");
+		}
+		
 		List<JXOrderVo> list = orderService.queryUnpayOrderForWX(query);
 		
 		JXResp ret = new JXResp(list);
@@ -193,6 +203,12 @@ public class OrderController {
 			@ApiParam(name = "orderQuery", value = "查询信息") @RequestBody @Valid JXOrderQuery orderQuery,
 			HttpServletRequest request, HttpServletResponse response) {
 	
+		String host = env.getProperty("hospital.host");
+		String ip = IPUtils.getRealIp(request);
+		if(!host.equals(ip)) {
+			return new JXResp("-1", "非授权的IP访问");
+		}
+		
 		try {
 			JXOrderVo jxOrderVo = orderService.getOrderByNo(orderQuery);
 			
@@ -210,7 +226,14 @@ public class OrderController {
 	public JXResp payOver(
 			@ApiParam(name = "payOverBo", value = "查询信息") @RequestBody @Valid JXPayOverBo payOverBo,
 			HttpServletRequest request, HttpServletResponse response) {
-			
+		
+		String host = env.getProperty("hospital.host");
+		String ip = IPUtils.getRealIp(request);
+		System.out.println(ip);
+		if(!host.equals(ip)) {
+			return new JXResp("-1", "非授权的IP访问");
+		}
+		
 		int amount = Integer.valueOf(payOverBo.getPayAmt()).intValue();
 		try {
 			Order order = orderService.payOver(payOverBo.getPhTradeNo(), amount, payOverBo.getPayMode(), payOverBo.getTPTradeNo());

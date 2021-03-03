@@ -27,14 +27,15 @@ public class PayService {
 	private Environment env;
 
 	public boolean noticePay(Prescription prescription) throws Exception {
-		String host = env.getProperty("pay.host", "http://127.0.0.1");
+		String host = env.getProperty("hospital.host");
+		String port = env.getProperty("hospital.port");
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 		
 		Date orderDate = prescription.getCreatedate();
 		
-		HttpPost httpMethod = new HttpPost(host + "/msg/pharmacy_f");
+		HttpPost httpMethod = new HttpPost("http://"+host+":"+port+ "/msg/pharmacy_f");
 
 		httpMethod.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
 

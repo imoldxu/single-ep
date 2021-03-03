@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import com.yyg.eprescription.bo.JXBillQuery;
 import com.yyg.eprescription.context.JXResp;
 import com.yyg.eprescription.entity.Bill;
 import com.yyg.eprescription.service.BillService;
+import com.yyg.eprescription.util.IPUtils;
 import com.yyg.eprescription.vo.BillStatisticVo;
 import com.yyg.eprescription.vo.JXBillVo;
 
@@ -35,6 +37,8 @@ public class BillController {
 
 	@Autowired
 	BillService billService;
+	@Autowired
+	private Environment env;
 	
 	@RequiresRoles({"manager"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
@@ -70,6 +74,12 @@ public class BillController {
 			@ApiParam(name = "billQuery", value = "查询信息") @RequestBody @Valid JXBillQuery billQuery,
 			HttpServletRequest request, HttpServletResponse response) {
 	
+		String host = env.getProperty("hospital.host");
+		String ip = IPUtils.getRealIp(request);
+		if(!host.equals(ip)) {
+			return new JXResp("-1", "非授权的IP访问");
+		}
+		
 		try {
 			List<JXBillVo> list = billService.queryRefundBill(billQuery);
 	
@@ -88,6 +98,12 @@ public class BillController {
 			@ApiParam(name = "billQuery", value = "查询信息") @RequestBody @Valid JXBillPageQuery billQuery,
 			HttpServletRequest request, HttpServletResponse response) {
 	
+		String host = env.getProperty("hospital.host");
+		String ip = IPUtils.getRealIp(request);
+		if(!host.equals(ip)) {
+			return new JXResp("-1", "非授权的IP访问");
+		}
+		
 		try {
 			List<JXBillVo> list = billService.reconcile(billQuery);
 	

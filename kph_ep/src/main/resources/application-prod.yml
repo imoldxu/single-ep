@@ -63,5 +63,6 @@ logging:
     root: INFO
     
 #医院系统配置
-pay:
-  host: http://192.168.99.154:8505
+hospital:
+  host: 192.168.99.154
+  port: 8505
