@@ -86,7 +86,7 @@ public class DrugService {
 		return drug;
 	}
 
-	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})
+	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory"}, allEntries=true)
 	public void insertList(List<Drug> drugList) {
 		drugMapper.insertList(drugList);	
 	}
@@ -96,7 +96,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug", key="#result.id")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory"}, allEntries=true)	
         }
     )
 	public Drug addDrug(Drug drug) {
@@ -113,7 +113,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug", key="#drug.id")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"}, allEntries=true)	
         }
     )
 	public Drug updateDrug(Drug drug) {
@@ -137,7 +137,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"}, allEntries=true)	
         }
     )
 	public Drug downDrug(Integer drugid) {
@@ -152,7 +152,7 @@ public class DrugService {
         	@CachePut(cacheNames="drug")
         },
         evict = {
-        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"})	
+        	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"}, allEntries=true)	
         }
     )
 	public Drug upDrug(Integer drugid) {

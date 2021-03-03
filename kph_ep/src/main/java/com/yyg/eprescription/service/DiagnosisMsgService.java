@@ -24,7 +24,7 @@ public class DiagnosisMsgService {
 		return ret;
 	}
 	
-	@CacheEvict(cacheNames="diagnosisList")
+	@CacheEvict(cacheNames="diagnosisList", allEntries=true)
 	public void add(String dmsg) {
 		List<String> msgList = msgMapper.getMsgByKeys(dmsg);	
 		if(msgList.isEmpty()){
