@@ -110,19 +110,19 @@ export default ()=>{
             <Row gutter={16}>
                 <Col span={8}>
                     <Card title="最终收入" bordered={false}>
-                        <span style={{color:"green"}}>{regFenToYuan(statisticsValue.income-statisticsValue.pay)}元</span>
+                        <span style={{color:"green",fontSize:"50px"}}>{regFenToYuan(statisticsValue.income-statisticsValue.pay)}元</span>
                         
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card title="缴费收入" bordered={false}>
-                        <span style={{color:"blue"}}>{regFenToYuan(statisticsValue.income)}元</span>
+                        <span style={{color:"blue",fontSize:"50px"}}>{regFenToYuan(statisticsValue.income)}元</span>
                         
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card title="退款支出" bordered={false}>
-                        <span style={{color:"red"}}>{regFenToYuan(statisticsValue.pay)}元</span>
+                        <span style={{color:"red",fontSize:"50px"}}>{regFenToYuan(statisticsValue.pay)}元</span>
                     </Card>
                 </Col>
             </Row>
