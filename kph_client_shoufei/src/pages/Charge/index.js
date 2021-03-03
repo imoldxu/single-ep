@@ -22,13 +22,13 @@ export default ()=>{
         await cashOver({orderno:orderno})
         message.success("提交成功", 3)
     }catch(e){
-        message.error(e.msg, 3)
+        message.error(e.message, 3)
     }finally{
         hide()
     }
-    setModalVisible(false)
-    setModalValue({amount:0})
     actionRef.current.reload();
+    //setModalVisible(false)
+    //setModalValue({amount:0})
   };
 
 //   const handleYidiYibaoOver = async (orderno) => {
@@ -37,7 +37,7 @@ export default ()=>{
 //         await yidiYibaoOver({orderno:orderno})
 //         message.success("提交成功", 3)
 //     }catch(e){
-//         message.error(e.msg, 3)
+//         message.error(e.message, 3)
 //     }finally{
 //         hide()
 //     }
@@ -52,7 +52,7 @@ export default ()=>{
 //         await yibaoOver({orderno:orderno})
 //         message.success("提交成功", 3)
 //     }catch(e){
-//         message.error(e.msg, 3)
+//         message.error(e.message, 3)
 //     }finally{
 //         hide()
 //     }
@@ -67,7 +67,7 @@ export default ()=>{
         await offlineRefund({orderno:orderno})
         message.success("退款成功", 3)
     }catch(e){
-        message.error(e.msg, 3)
+        message.error(e.message, 3)
     }finally{
         hide()
     }

@@ -1,4 +1,4 @@
-import { message, Space } from "antd";
+import { message, Popconfirm, Space } from "antd";
 import { useRef, useState } from "react";
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 //import type { ProColumns, ActionType } from '@ant-design/pro-table';
@@ -37,7 +37,7 @@ export default ()=>{
         await yidiYibaoOver({orderno:orderno})
         message.success("提交成功", 3)
     }catch(e){
-        message.error(e.msg, 3)
+        message.error(e.message, 3)
     }finally{
         hide()
     }
@@ -52,7 +52,7 @@ export default ()=>{
         await yibaoOver({orderno:orderno})
         message.success("提交成功", 3)
     }catch(e){
-        message.error(e.msg, 3)
+        message.error(e.message, 3)
     }finally{
         hide()
     }
@@ -67,7 +67,7 @@ export default ()=>{
         await offlineRefund({orderno:orderno})
         message.success("退款成功", 3)
     }catch(e){
-        message.error(e.msg, 3)
+        message.error(e.message, 3)
     }finally{
         hide()
     }
@@ -223,6 +223,7 @@ export default ()=>{
       render: (_, record) => {
         const {state, orderno, amount, payway} = record
         if(state === 1){
+          return (
           <Space>
               <a onClick={()=>{
                   setPayModalValue({orderno: orderno,amount:amount})
@@ -230,7 +231,7 @@ export default ()=>{
               }}>
                   确认缴费方式
               </a>
-          </Space>
+          </Space>)
         } else if (state === 2){
           return (
             <Space>
@@ -242,7 +243,7 @@ export default ()=>{
                 确认领药
               </a>
               {
-                (payway === 3 || pay ===4) && (
+                (payway === 3 || payway ===4) && (
                   <Popconfirm
                         title="确认是否要退款?"
                         okText="确认"
@@ -270,7 +271,7 @@ export default ()=>{
               </a>
             </Space>
             )
-        } else if(state === 4 && (payway === 3 || pay ===4)){
+        } else if(state === 4 && (payway === 3 || payway ===4)){
             return (
               <Popconfirm
                   title="确认是否要退款?"
