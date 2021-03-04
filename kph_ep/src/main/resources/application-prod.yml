@@ -58,7 +58,7 @@ mybatis:
 #log,path配置路径，file是日志文件名称
 logging:
   path: 
-    name: .logs/
+    name: ./logs
   level:
     root: INFO
     
