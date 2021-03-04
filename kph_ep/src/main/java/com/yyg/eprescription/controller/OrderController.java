@@ -181,7 +181,7 @@ public class OrderController {
 	@RequestMapping(value = "/queryUnpayOrder", method = RequestMethod.POST)
 	@ApiOperation(value = "微信查询待缴费订单", notes = "微信查询待缴费订单")
 	public JXResp queryUnpayOrder(
-			@ApiParam(name = "orderQuery", value = "查询信息") @RequestBody @Valid JXUnpayOrderQuery query,
+			@ApiParam(name = "query", value = "查询信息") @RequestBody @Valid JXUnpayOrderQuery query,
 			HttpServletRequest request, HttpServletResponse response) {
 	
 		String host = env.getProperty("hospital.host");

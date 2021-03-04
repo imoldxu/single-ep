@@ -89,6 +89,11 @@ export default ()=>{
     }
     },
     {
+      title: '订单号',
+      dataIndex: 'orderno',
+      hideInTable: true,
+    },
+    {
       title: '患者姓名',
       dataIndex: 'patientname',
     },

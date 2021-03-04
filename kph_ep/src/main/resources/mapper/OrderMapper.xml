@@ -36,6 +36,9 @@
 		   <if test="query.regNo != null and query.regNo !=''">
 		        t_order.reg_no = #{query.regNo} 
 		   </if>
+		   <if test="query.orderno != null and query.orderno !=''">
+		       AND  t_order.orderno = #{query.orderno} 
+		   </if>
 		   <if test="query.prescriptionno != null and query.prescriptionno !=''">
 		       AND  t_prescription.prescriptionno = #{query.prescriptionno} 
 		   </if>
