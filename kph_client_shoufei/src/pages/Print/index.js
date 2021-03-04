@@ -157,7 +157,7 @@ export default ()=>{
                 </div>
 
                 <div className={styles.payQrCode}>
-                    <QRCode value={`https://m.cdjx.kemeimei.cn/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="Q" size={100}></QRCode>
+                    <QRCode value={`https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="Q" size={100}></QRCode>
                 </div>
             </div>
             }
