@@ -112,7 +112,7 @@ public class OrderController {
 		return result;
 	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles({"tollman"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/yidiYibaoOver", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认异地医保支付", notes = "确认异地医保支付")
@@ -128,7 +128,7 @@ public class OrderController {
 		return;
 	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles({"tollman"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/yibaoOver", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医保支付", notes = "确认医保支付")
@@ -160,7 +160,7 @@ public class OrderController {
 		return;
 	}
 	
-	@RequiresRoles(value={"manager","tollman"}, logical = Logical.OR)
+	@RequiresRoles({"tollman"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/offlineRefund", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医院线下退款", notes = "确认医院线下退款")

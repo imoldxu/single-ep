@@ -1,22 +1,18 @@
 import { message, Popconfirm, Space } from "antd";
 import { useRef, useState } from "react";
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
-//import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
-import { queryOrder, deliver, refundDrug, yidiYibaoOver, yibaoOver, offlineRefund } from '@/services/ant-design-pro/order';
+import { queryOrder, deliver, refundDrug } from '@/services/ant-design-pro/order';
 import { querySaleRecord } from '@/services/ant-design-pro/saleRecord';
 import RefundModal from './refundModal'
-import PayModal from './payModal'
 import { regFenToYuan } from "@/utils/money";
 
 export default ()=>{
 
   const [refundModalVisible, setRefundModalVisible] = useState(false)
   const [refundModalValue, setRefundModalValue] = useState()
-  const [payModalVisible, setPayModalVisible] = useState(false)
-  const [payModalValue, setPayModalValue] = useState({amount:0})
-
+  
   const actionRef = useRef();
 
   async function commitRefund(values){
@@ -31,49 +27,6 @@ export default ()=>{
         actionRef.current.reload()
       }
   }
-
-  const handleYidiYibaoOver = async (orderno) => {
-    const hide = message.loading('医保支付确认提交中')
-    try{
-        await yidiYibaoOver({orderno:orderno})
-        message.success("提交成功", 3)
-    }catch(e){
-        message.error(e.message, 3)
-    }finally{
-        hide()
-    }
-    setPayModalVisible(false)
-    setPayModalValue({amount:0})
-    actionRef.current.reload();
-  };
-
-  const handleYibaoOver = async (orderno) => {
-    const hide = message.loading('医保支付确认提交中')
-    try{
-        await yibaoOver({orderno:orderno})
-        message.success("提交成功", 3)
-    }catch(e){
-        message.error(e.message, 3)
-    }finally{
-        hide()
-    }
-    setPayModalVisible(false)
-    setPayModalValue({amount:0})
-    actionRef.current.reload();
-  };
-
-  const handleOfflineRefund = async (orderno) => {
-    const hide = message.loading('退款提交中')
-    try{
-        await offlineRefund({orderno:orderno})
-        message.success("退款成功", 3)
-    }catch(e){
-        message.error(e.message, 3)
-    }finally{
-        hide()
-    }
-    actionRef.current.reload();
-  };
 
   //打开退货modal
   const handleRefund = async (order) =>{
@@ -100,13 +53,13 @@ export default ()=>{
     const hide = message.loading('确认领药中')
     try{
         await deliver({orderno:orderno})
+        actionRef.current.reload();
         gotoPrint(pid)
     }catch(e){
         message.error(e.message, 3)
     }finally{
         hide()
     }
-    actionRef.current.reload();
   };
 
   const columns = [
@@ -223,17 +176,7 @@ export default ()=>{
       valueType: 'option',
       render: (_, record) => {
         const {state, orderno, amount, payway} = record
-        if(state === 1){
-          return (
-          <Space>
-              <a onClick={()=>{
-                  setPayModalValue({orderno: orderno,amount:amount})
-                  setPayModalVisible(true)
-              }}>
-                  确认缴费方式
-              </a>
-          </Space>)
-        } else if (state === 2){
+        if (state === 2){
           return (
             <Space>
               <a
@@ -243,21 +186,6 @@ export default ()=>{
               >
                 确认领药
               </a>
-              {
-                (payway === 3 || payway ===4) && (
-                  <Popconfirm
-                        title="确认是否要退款?"
-                        okText="确认"
-                        cancelText="取消"
-                        onConfirm={() => {
-                            handleOfflineRefund(record.orderno);
-                        }}>
-                        <a>
-                            确认退款
-                        </a>
-                  </Popconfirm>
-                )
-              }
             </Space>
           ) 
         }else if(state === 3){
@@ -271,20 +199,6 @@ export default ()=>{
                 退药
               </a>
             </Space>
-            )
-        } else if(state === 4 && (payway === 3 || payway ===4)){
-            return (
-              <Popconfirm
-                  title="确认是否要退款?"
-                  okText="确认"
-                  cancelText="取消"
-                  onConfirm={() => {
-                      handleOfflineRefund(record.orderno);
-                  }}>
-                  <a>
-                      确认退款
-                  </a>
-              </Popconfirm>
             )
         }
       }
@@ -322,16 +236,6 @@ export default ()=>{
             </RefundModal>
           )
       }
-      <PayModal key="modal"
-        handleYibaoPay={handleYibaoOver}
-        handleYidiYibaoPay={handleYidiYibaoOver}
-        handleCancel={()=>{
-            setPayModalVisible(false)
-            setPayModalValue({amount:0})
-        }}
-        visible={payModalVisible}
-        values={payModalValue}
-      ></PayModal>
     </PageContainer>
   );
 
