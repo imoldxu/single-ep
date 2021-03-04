@@ -25,6 +25,7 @@ require.config({
         'data':'services/data',
         'layer':'libs/layer/layer',
 		'loader':'directives/loader',
+        'set-focus':'directives/setFocus',
 	    'encrypt':'libs/encrypt',
 		'qrcode':'libs/qrcode',
 		'utf8-qrcode':'libs/qrcode_UTF8',
@@ -61,7 +62,7 @@ require.config({
 
 
 
-require(['jquery','angular','ng-route','app','fn-route','angularAMD','data','loader','encrypt','io-barcode','qrcode','utf8-qrcode','angular-qrcode'],function($,angular){
+require(['jquery','angular','ng-route','app','fn-route','angularAMD','data','loader','set-focus','encrypt','io-barcode','qrcode','utf8-qrcode','angular-qrcode'],function($,angular){
     $(function () {
         angular.bootstrap(document,["fnApp"]);
 
