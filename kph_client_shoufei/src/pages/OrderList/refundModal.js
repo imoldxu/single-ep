@@ -51,7 +51,6 @@ const RefundModal = (props) => {
                     setLoading(true)
                     try{
                         handleCommit(payload)
-                        message.success('提交成功')
                     } catch(e){
                         message.error(e.message, 3)
                     } finally{

@@ -23,7 +23,7 @@ export default ()=>{
                 text: '支付宝',
             }, 
             3: {
-                text: '医保',
+                text: '市医保',
             },
             4: {
                 text: '异地医保',

@@ -56,7 +56,7 @@ export default ()=>{
       render: (_,record)=> (<span>{regFenToYuan(record.price)}元</span>)
     },
     {
-        title: '数量',
+        title: '销售数量',
         dataIndex: 'num',
         search: false,
     },
@@ -64,6 +64,12 @@ export default ()=>{
         title: '退货数量',
         dataIndex: 'refundnum',
         search: false,
+      },
+      {
+        title: '实际销量',
+        dataIndex: 'realnum',
+        search: false,
+        render: (_, record)=> (<span>{record.num - record.refundnum}</span>)
       },
     {
       title: '领药时间',

@@ -43,7 +43,6 @@ const DrugModal = (props) => {
                     setLoading(true)
                     try{
                         handleCommit(values)
-                        message.success('提交成功')
                     } catch(e){
                         message.error(e.message, 3)
                     } finally{
