@@ -4,17 +4,17 @@ define([], function(){
     return ['$scope', '$http', '$window', '$cookieStore','$location','$rootScope','dataVer' ,'$state', function($scope, $http, $window, $cookieStore,$location,$rootScope,dataVer,$state){
 
         //默认值
-        $scope.enterEvent = function(e, cardNo) {
+        $scope.enterEvent = function(e) {
 			var keycode = window.event?e.keyCode:e.which;
 			if(keycode==13){//回车
-				$scope.login(cardNo);
+				$scope.login();
 			}
 		};
 
-        $scope.login = function(cardNo){
+        $scope.login = function(){
 
-            if (cardNo == '' || cardNo == undefined){
-                alert('请输入就诊卡号')
+            if (($scope.cardNo == '' || $scope.cardNo == undefined) && ($scope.regNo == '' || $scope.regNo == undefined)){
+                alert('请至少输入卡号或登记号')
 				return false;
             }
 			$rootScope.myloader = true;
@@ -24,7 +24,8 @@ define([], function(){
                 url: URL+'prescription/init',
                 requestType: 'json',
                 params: {
-                    cardNo: cardNo
+                    cardNo: $scope.cardNo,
+                    regNo: $scope.regNo
                 }
             })
             .success(function(resp){

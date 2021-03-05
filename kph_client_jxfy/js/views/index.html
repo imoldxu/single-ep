@@ -11,7 +11,9 @@
 <div class="group">
 
 	<div>
-    	<input type="text" set-focus placeholder="请扫描或输入就诊卡号" ng-model="cardNo" ng-keyup="enterEvent($event, cardNo)">
+    	<input type="text" set-focus maxlength="64" placeholder="请刷卡或输入卡号" ng-model="cardNo" ng-keyup="enterEvent($event)">
+		<span>或</span>
+		<input type="text" maxlength="10" placeholder="请输入登记号" ng-model="regNo" ng-keyup="enterEvent($event)">
 	</div>
 	<div>
     	<div class="submit" ng-click="login(cardNo)">立即开方</div>

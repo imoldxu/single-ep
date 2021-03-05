@@ -15,14 +15,14 @@
   bottom: 34px;
 }
 .group {
-  width: 590px;
+  /* width: 590px; */
   margin: 5px auto;
   height: auto;
   padding: 10 30px;
   text-align: -webkit-center;
 }
 .group input {
-  width: 580px;
+  /* width: 580px; */
   height: 46px;
   border: 1px solid #93d3ff;
   outline: none;
@@ -38,7 +38,7 @@
   color: #fff;
   border-radius: 3px;
   display: inline-block;
-  margin: 10 20px;
+  margin: 30 20px;
   cursor: pointer;
   background: -webkit-linear-gradient(left, #12b5fd, #00d8e4);
   /* Safari 5.1 - 6.0 */
