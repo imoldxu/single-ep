@@ -15,6 +15,14 @@ export default ()=>{
   
   const actionRef = useRef();
 
+  let defaultData
+  const sessionData = sessionStorage.getItem("orderList");
+  if(sessionData){
+    defaultData = JSON.parse(sessionData)
+  }else{
+    defaultData = []
+  }
+
   async function commitRefund(values){
       try{
         await refundDrug(values)
@@ -46,19 +54,19 @@ export default ()=>{
     if (!history) return;
     setTimeout(() => {
       history.push('/print?id='+pid);
-    }, 10);
+    }, 1500);
   };
 
   const handleDeliver = async (orderno, pid) => {
     const hide = message.loading('确认领药中')
     try{
         await deliver({orderno:orderno})
-        actionRef.current.reload();
         gotoPrint(pid)
     }catch(e){
         message.error(e.message, 3)
     }finally{
         hide()
+        actionRef.current.reload();
     }
   };
 
@@ -87,6 +95,11 @@ export default ()=>{
           }
         }
     }
+    },
+    {
+      title: '就诊卡号',
+      dataIndex: 'cardno',
+      hideInTable: true,
     },
     {
       title: '订单号',
@@ -215,6 +228,7 @@ export default ()=>{
       <ProTable
         headerTitle="交易列表"
         actionRef={actionRef}
+        defaultData={defaultData}
         rowKey="key"
         request={async (params) => {
             try{
@@ -222,7 +236,9 @@ export default ()=>{
                 params.startTime = params.dateRange + " 00:00:00";
                 params.endTime = params.dateRange + " 23:59:59";
                 }
-                return await queryOrder(params)
+                const response = await queryOrder(params)
+                sessionStorage.setItem("orderList", JSON.stringify(response.data))
+                return response
             }catch(e){
                 message.error(e.message, 3)
             }
