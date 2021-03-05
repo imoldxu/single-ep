@@ -207,6 +207,7 @@ public class OrderService {
 		
 		JXOrderVo jxo = new JXOrderVo();
 		jxo.setAdm(o.getRegNo());
+		jxo.setRecipelNo(o.getPrescriptionno());
 		String tradeInfo = o.getTradeInfo();
 		List<PrescriptionDrugs> druglist = JSON.parseArray(tradeInfo, PrescriptionDrugs.class);
 

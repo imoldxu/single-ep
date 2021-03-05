@@ -20,12 +20,12 @@
 	</select>
 	
 	<select id="getOrderByNo"  resultMap="pOrder">
-		SELECT t_order.*, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
+		SELECT t_order.*,t_prescription.prescriptionno, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
 		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id WHERE t_order.orderno = #{orderno} LIMIT 1;
 	</select>
 	
 	<select id="queryPatientUnpayOrder" resultMap="pOrder">
-		SELECT t_order.*, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
+		SELECT t_order.*, t_prescription.prescriptionno, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
 		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id WHERE t_order.reg_no = #{regNo,jdbcType=VARCHAR} AND t_order.state = 1 AND t_order.invalidtime > #{now}
 	</select>
 	

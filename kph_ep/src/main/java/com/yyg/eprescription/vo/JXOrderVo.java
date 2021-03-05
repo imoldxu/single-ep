@@ -9,18 +9,15 @@ public class JXOrderVo {
 	
 	private String Adm;    //处方系统的就诊号	是	[string]
 	
-
+	private String RecipelNo; //处方号
+	
 	private String PhTradeNo; //	处方订单号	是	[string]	
 	
-
 	private String OEOrdDate; //	开单日期	是	[string]	
 	
-
 	private String OEOrdTime; //开单时间	是	[string]	
 	
-
 	private String OEOrdDeptDesc; //	开单科室	是	[string]	
-	
 	
 	private String OEOrdDocDesc; //	开单医生	是	[string]	
 	
@@ -34,6 +31,14 @@ public class JXOrderVo {
 	}
 	public void setAdm(String adm) {
 		Adm = adm;
+	}
+	
+	@JsonProperty("RecipelNo")
+	public String getRecipelNo() {
+		return RecipelNo;
+	}
+	public void setRecipelNo(String recipelNo) {
+		RecipelNo = recipelNo;
 	}
 	
 	@JsonProperty("PhTradeNo")
