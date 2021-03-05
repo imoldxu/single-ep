@@ -1,5 +1,7 @@
 package com.yyg.eprescription.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,6 +17,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
+	@Value("${swagger.enable}")
+	private boolean swaggerEnable;
 	 /**
      * 可以定义多个组，比如本类中定义把test和demo区分开了
      * （访问页面就可以看到效果了）
@@ -22,6 +26,7 @@ public class SwaggerConfig {
     @Bean
     public Docket memberApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+        		.enable(swaggerEnable)
                 .groupName("member")
                 .select()  // 选择那些路径和api会生成document
                 .apis(RequestHandlerSelectors.basePackage("com.yyg.eprescription.controller"))

@@ -68,3 +68,6 @@ logging:
 hospital:
   host: 192.168.98.55
   port: 8505
+  
+swagger:
+  enable: true
