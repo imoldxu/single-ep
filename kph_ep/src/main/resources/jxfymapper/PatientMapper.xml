@@ -14,7 +14,16 @@
 	</resultMap>
 
 	<select id="getPatientByCardNo" resultMap="patientMap">
-		SELECT * FROM user_creat_card_info WHERE card_no = #{cardNo,jdbcType=VARCHAR} LIMIT 1;
+		SELECT * FROM user_creat_card_info 
+		<where>
+			<if test="cardNo !=null and cardNo !=''">
+				card_no = #{cardNo}
+			</if>
+			<if test="regNo !=null and regNo !=''">
+				AND reg_no = #{regNo}
+			</if>
+		</where>
+		LIMIT 1;
 	</select>
 	
 

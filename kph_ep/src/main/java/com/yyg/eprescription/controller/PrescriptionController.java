@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.druid.util.StringUtils;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.OpenPrescriptionBo;
 import com.yyg.eprescription.bo.PrescriptionQuery;
@@ -42,12 +43,16 @@ public class PrescriptionController {
 	@RequestMapping(value = "/init", method = RequestMethod.GET)
 	@ApiOperation(value = "初始化处方基本信息", notes = "初始化处方基本信息")
 	public Response init(
-			@ApiParam(name = "cardNo", value = "患者卡号") @RequestParam(name = "cardNo") String cardNo,
+			@ApiParam(name = "cardNo", value = "患者卡号") @RequestParam(name = "cardNo", required=false) String cardNo,
+			@ApiParam(name = "regNo", value = "患者登记号") @RequestParam(name = "regNo", required=false) String regNo,
 			HttpServletRequest request, HttpServletResponse respons) throws Exception {
 		//respons.setHeader("Access-Control-Allow-Origin", "*");
 		//respons.setHeader("Access-Control-Allow-Methods", "GET");
+		if(StringUtils.isEmpty(cardNo) && StringUtils.isEmpty(regNo)) {
+			throw new HandleException(ErrorCode.ARG_ERROR, "至少提供卡号或登记号");
+		}
 		
-		PrescriptionInitVo diagnosis = prescriptionService.init(cardNo);
+		PrescriptionInitVo diagnosis = prescriptionService.init(cardNo, regNo);
 		if(diagnosis != null){
 			Response resp = new Response(ErrorCode.OK, diagnosis, "OK");
 			return resp;

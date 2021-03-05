@@ -7,6 +7,6 @@ import com.yyg.eprescription.jxfy.entity.Patient;
 
 public interface PatientMapper extends BaseMapper<Patient> {
 
-	public Patient getPatientByCardNo(@Param(value="cardNo")String cardNo);
+	public Patient getPatientByCardNo(@Param(value="cardNo")String cardNo, @Param(value="regNo")String regNo);
 
 }

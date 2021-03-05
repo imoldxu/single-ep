@@ -15,8 +15,8 @@ public class PatientService {
 	@Autowired
 	PatientMapper patientMapper;
 	
-	public Patient getPatientByCardNo(String cardNo) {
-		Patient ret = patientMapper.getPatientByCardNo(cardNo);
+	public Patient getPatientByCardNo(String cardNo, String regNo) {
+		Patient ret = patientMapper.getPatientByCardNo(cardNo, regNo);
 		if(ret == null) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "卡号没有对应的患者");
 		}

@@ -63,9 +63,9 @@ public class PrescriptionService {
 	 * @return
 	 * @throws Exception
 	 */
-	public PrescriptionInitVo init(String cardNo) throws Exception {
+	public PrescriptionInitVo init(String cardNo, String regNo) throws Exception {
 		//PrescriptionInitVo initInfo = hospitalPatientService.getDiagnosisInfo(cardNo);
-		Patient patient = patientService.getPatientByCardNo(cardNo);
+		Patient patient = patientService.getPatientByCardNo(cardNo, regNo);
 		PrescriptionInitVo initInfo = new PrescriptionInitVo();
 		initInfo.setCardNo(patient.getCardNo());
 		//if(patient.getPatientAge()==0) {
