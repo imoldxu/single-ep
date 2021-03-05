@@ -64,7 +64,7 @@ logging:
     
 #医院系统配置
 hospital:
-  host: 192.168.31.186
+  host: 127.0.0.1
   port: 8867
 
 swagger:
