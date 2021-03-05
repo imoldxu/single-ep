@@ -39,6 +39,9 @@
 		   <if test="query.orderno != null and query.orderno !=''">
 		       AND  t_order.orderno = #{query.orderno} 
 		   </if>
+		   <if test="query.cardno != null and query.cardno !=''">
+		       AND  t_prescription.patient_card_no = #{query.cardno} 
+		   </if>
 		   <if test="query.prescriptionno != null and query.prescriptionno !=''">
 		       AND  t_prescription.prescriptionno = #{query.prescriptionno} 
 		   </if>

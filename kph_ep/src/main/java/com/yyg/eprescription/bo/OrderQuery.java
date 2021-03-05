@@ -2,6 +2,8 @@ package com.yyg.eprescription.bo;
 
 public class OrderQuery {
 
+	private String cardno;
+	
 	private String orderno;
 	
 	private String regNo; //	病人登记号	
@@ -110,6 +112,14 @@ public class OrderQuery {
 
 	public void setOrderno(String orderno) {
 		this.orderno = orderno;
+	}
+
+	public String getCardno() {
+		return cardno;
+	}
+
+	public void setCardno(String cardno) {
+		this.cardno = cardno;
 	}
 	
 }

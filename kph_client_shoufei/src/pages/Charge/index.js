@@ -92,6 +92,21 @@ export default ()=>{
             title: '患者登记号',
             dataIndex: 'regNo',
             order: 2,
+            hideInTable: true,
+            fieldProps: {
+                onKeyUp: (e)=>{
+                  var keycode = window.event?e.keyCode:e.which;
+                  if(keycode==13){//回车
+                      actionRef.current.reload();
+                  }
+                }
+            }
+          },
+          {
+            title: '就诊卡号',
+            dataIndex: 'cardno',
+            order: 1,
+            hideInTable: true,
             fieldProps: {
                 onKeyUp: (e)=>{
                   var keycode = window.event?e.keyCode:e.which;

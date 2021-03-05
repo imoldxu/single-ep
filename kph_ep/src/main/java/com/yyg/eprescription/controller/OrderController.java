@@ -98,8 +98,8 @@ public class OrderController {
 			@ApiParam(name = "orderQuery", value = "查询信息") @Valid OrderQuery query,
 			HttpServletRequest request, HttpServletResponse response) {
 	
-		if(StringUtils.isEmpty(query.getRegNo()) && StringUtils.isEmpty(query.getPrescriptionno())) {
-			throw new HandleException(ErrorCode.ARG_ERROR, "登记号或处方号不能为空");
+		if(StringUtils.isEmpty(query.getRegNo()) && StringUtils.isEmpty(query.getPrescriptionno()) && StringUtils.isEmpty(query.getCardno())) {
+			throw new HandleException(ErrorCode.ARG_ERROR, "至少输入患者登记号、就诊卡号或处方号的一种进行查询");
 		}
 		query.setEndTime(null);
 		query.setStartTime(null);
