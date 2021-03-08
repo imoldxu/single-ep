@@ -39,13 +39,16 @@ export async function statistic(
     });
   }
 
-export async function refund(
-  body: any,
+export async function downloadStatistics(
+  params: any,
   options?: { [key: string]: any },
 ) {
-  return request<any>('/api/saleRecord/getPrescriptionByID', {
-    method: 'POST',
-    data: body,
+  return request<any>('/api/saleRecord/downloadExcel', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    responseType: 'blob',
     ...(options || {}),
   });
 }
