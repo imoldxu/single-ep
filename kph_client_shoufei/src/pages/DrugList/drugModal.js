@@ -3,6 +3,7 @@ import { Button, Col, Descriptions, Divider, Input, message, Modal, Row, Select 
 import Form from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import React, { useRef, useState } from "react";
+import { useAccess } from 'umi';
 
 const { Option } = Select;
 
@@ -77,18 +78,32 @@ const DrugModal = (props) => {
                 }
                 <Row gutter={16}>
                     <Col span={12}>
+                        <FormItem name="drugno" label="药品编号" rules={[{ required: true }]} hasFeedback>
+                            <Input placeholder="药品编号" ></Input>
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                    <FormItem name="company" label="厂家"
+                        rules={[{ required: true }]}
+                        hasFeedback>
+                        <Input placeholder="请输入药品生成厂家"></Input>
+                    </FormItem>
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={12}>
                         <FormItem name="drugname" label="药品名称"
                             rules={[{ required: true }]}
                             hasFeedback
                         >
-                            <Input placeholder="药品名称"></Input>
+                            <Input placeholder="药品名称" ></Input>
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem name="shortname" label="药品简称"
                             rules={[{ required: true }]}
                             hasFeedback>
-                            <Input placeholder="药品简称"></Input>
+                            <Input placeholder="药品简称" ></Input>
                         </FormItem>
                     </Col>
 
@@ -101,7 +116,7 @@ const DrugModal = (props) => {
                                     rules={[{ required: true }]}
                                     hasFeedback
                                 >
-                                    <Input placeholder="药品名称"></Input>
+                                    <Input placeholder="药品名称" ></Input>
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -109,7 +124,7 @@ const DrugModal = (props) => {
                                     rules={[{ required: true }]}
                                     hasFeedback
                                 >
-                                    <Input placeholder="药品名称"></Input>
+                                    <Input placeholder="药品名称" ></Input>
                                 </FormItem>
                             </Col>
                         </Row>
@@ -120,14 +135,14 @@ const DrugModal = (props) => {
                         <FormItem name="standard" label="规格"
                             rules={[{ required: true }]}
                             hasFeedback>
-                            <Input placeholder="规格"></Input>
+                            <Input placeholder="规格" ></Input>
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem name="form" label="剂型"
                             rules={[{ required: true }]}
                             hasFeedback>
-                            <Select>
+                            <Select >
                                 <Option value="搽剂">搽剂</Option>
                                 <Option value="肠溶片">肠溶片</Option>
                                 <Option value="滴剂">滴剂</Option>
@@ -174,6 +189,8 @@ const DrugModal = (props) => {
                                 <Option value="中药饮片">中药饮片</Option>
                                 <Option value="注射剂">注射剂</Option>
                                 <Option value="注射液">注射液</Option>
+                                <Option value="微囊粉">微囊粉</Option>
+                                <Option value="其他">其他</Option>
                             </Select>
                         </FormItem>
                     </Col>
@@ -183,7 +200,7 @@ const DrugModal = (props) => {
                         <FormItem name="category" label="类别"
                             rules={[{ required: true }]}
                             hasFeedback>
-                            <Select>
+                            <Select >
                                 <Option value="OTC">OTC</Option>
                                 <Option value="处方药">处方药</Option>
                                 <Option value="耗材">耗材</Option>
@@ -205,17 +222,21 @@ const DrugModal = (props) => {
                             hasFeedback>
                             <Select>
                                 <Option value="抗生素">抗生素</Option>
-                                <Option value="输液">输液</Option>
+                                <Option value="耗材">耗材</Option>
                                 <Option value="心血管">心血管</Option>
                                 <Option value="呼吸">呼吸</Option>
                                 <Option value="消化">消化</Option>
                                 <Option value="神经">神经</Option>
                                 <Option value="内分泌">内分泌</Option>
                                 <Option value="解热镇痛">解热镇痛</Option>
-                                <Option value="维生素激素">维生素激素</Option>
+                                <Option value="矿物质类">矿物质类</Option>
+                                <Option value="激素">激素</Option>
                                 <Option value="外用">外用</Option>
                                 <Option value="中成药">中成药</Option>
-                                <Option value="滋补">滋补</Option>
+                                <Option value="特殊膳食">特殊膳食</Option>
+                                <Option value="营养膳食">营养膳食</Option>
+                                <Option value="保健品">保健品</Option>
+                                <Option value="保健食品">保健食品</Option>
                             </Select>
                         </FormItem>
                     </Col>
@@ -228,18 +249,19 @@ const DrugModal = (props) => {
                                     Promise.resolve() :  Promise.reject('请输入正确的金额')
                             }]}
                             hasFeedback>
-                            <Input placeholder="请输入单价"></Input>
+                            <Input placeholder="请输入单价" ></Input>
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem name="unit" label="销售单位"
                             rules={[{ required: true }]}
                             hasFeedback>
-                            <Select>
+                            <Select >
                                 <Option value="盒">盒</Option>
                                 <Option value="袋">袋</Option>
                                 <Option value="支">支</Option>
                                 <Option value="瓶">瓶</Option>
+                                <Option value="听">听</Option>
                                 <Option value="g">g</Option>
                                 <Option value="kg">kg</Option>
                             </Select>
@@ -247,13 +269,24 @@ const DrugModal = (props) => {
                     </Col>
                 </Row>
                 <Row gutter={16}>
-                    <Col span={12}>
-                    <FormItem name="company" label="厂家"
-                        rules={[{ required: true }]}
+                    {/* 新建才设置库存，修改时避免和领药与退药冲突，修改时不给库存 */}
+                    {id ? (<></>):
+                    (<Col span={12}>
+                    <FormItem name="stock" label="初始库存"
+                         rules={[{ required: true, validator: (_, value) => {
+                            if(value){
+                                return value % 1 === 0 ?
+                                Promise.resolve() :  Promise.reject('请输入正确的数量')
+                            }else{
+                                return Promise.resolve()
+                            }
+                        }
+                        }]}
                         hasFeedback>
-                        <Input placeholder="请输入药品生成厂家"></Input>
+                        <Input type="number" placeholder="请输入库存"></Input>
                     </FormItem>
-                    </Col>
+                    </Col>)
+                    }
                 </Row>
                 <Divider>医生开方默认设置</Divider>
                 <Row gutter={16}>
@@ -279,9 +312,6 @@ const DrugModal = (props) => {
                         </FormItem>
                     </Col>
                 </Row>
-
-
-
 
             </Form>
         </Modal>
