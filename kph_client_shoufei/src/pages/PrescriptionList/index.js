@@ -37,6 +37,12 @@ export default ()=>{
     {
       title: '登记号',
       dataIndex: 'regNo',
+      hideInTable: true,
+    },
+    {
+      title: '卡号',
+      dataIndex: 'cardNo',
+      hideInTable: true,
     },
     {
       title: '患者姓名',
