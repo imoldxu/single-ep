@@ -51,11 +51,11 @@
     component: './ChangePassword',
   },
   {
-    name: 'drug',
+    name: 'stock',
     icon: 'Link',
-    path: '/DrugList',
+    path: '/StockList',
     access: 'manager',
-    component: './DrugList',
+    component: './StockList',
   },
   {
     name: 'bill',
@@ -84,6 +84,13 @@
     access: 'admin',
     path: '/saleStatistic',
     component: './SaleStatistic',
+  },
+  {
+    name: 'drug',
+    icon: 'Link',
+    path: '/DrugList',
+    access: 'admin',
+    component: './DrugList',
   },
   {
     name: 'userList',

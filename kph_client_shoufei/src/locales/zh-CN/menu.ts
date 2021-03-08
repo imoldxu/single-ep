@@ -32,7 +32,7 @@ export default {
   'menu.charge': '处方收费',
   'menu.userList': '用户管理',
   'menu.saleStatistic': '销售统计',
-  'menu.list.table-list': '查询表格',
+  'menu.stock': '药品管理',
   'menu.list.basic-list': '标准列表',
   'menu.list.card-list': '卡片列表',
   'menu.list.search-list': '搜索列表',

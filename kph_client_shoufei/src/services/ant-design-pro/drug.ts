@@ -83,3 +83,11 @@ export async function upDrug(data:{drugid:number}, options?: { [key: string]: an
     });
   }
   
+  /** 修改库存 */
+export async function modifyStock(data:{id:number, stock: number}, options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/drug/modifyStock', {
+    method: 'PUT',
+    data: data,
+    ...(options || {}),
+  });
+}
