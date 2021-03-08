@@ -4,6 +4,8 @@ public class DrugQuery {
 
 	private String keys;
 	
+	private String drugno;
+	
 	private Integer state;
 	
 	private Integer current;
@@ -40,6 +42,14 @@ public class DrugQuery {
 
 	public void setState(Integer state) {
 		this.state = state;
+	}
+
+	public String getDrugno() {
+		return drugno;
+	}
+
+	public void setDrugno(String drugno) {
+		this.drugno = drugno;
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.yyg.eprescription.vo;
 
 public class SalesRecordStatisticVo {
 
+	private String drugno;
 	private Integer totalSale;
 	private Integer totalPrice;
 	private String doctorname;
@@ -50,6 +51,12 @@ public class SalesRecordStatisticVo {
 	}
 	public void setDrugcompany(String drugcompany) {
 		this.drugcompany = drugcompany;
+	}
+	public String getDrugno() {
+		return drugno;
+	}
+	public void setDrugno(String drugno) {
+		this.drugno = drugno;
 	}
 	
 }

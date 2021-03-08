@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.DrugQuery;
+import com.yyg.eprescription.bo.ModifyStockBo;
 import com.yyg.eprescription.bo.UpDownDrugBo;
 import com.yyg.eprescription.context.ErrorCode;
 import com.yyg.eprescription.context.HandleException;
@@ -61,7 +63,7 @@ public class DrugController {
 		return resp;
 	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles(value={"admin","manager"}, logical=Logical.OR)
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/getDrugInfoListByKeys", method = RequestMethod.GET)
 	@ApiOperation(value = "根据药品的拼音缩写搜索药品", notes = "根据药品的拼音缩写搜索药品")
@@ -139,7 +141,7 @@ public class DrugController {
 		return resp;
 	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles({"admin"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/uploadByExcel", method = RequestMethod.POST)
 	@ApiOperation(value = "新增上传药品信息", notes = "新增上传药品信息")
@@ -166,7 +168,7 @@ public class DrugController {
 	    }
 	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles({"admin"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/addDrug", method = RequestMethod.POST)
 	@ApiOperation(value = "添加药品信息", notes = "")
@@ -177,7 +179,7 @@ public class DrugController {
 		return ret;
 	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles({"admin"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/modifyDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "修改药品信息", notes = "")
@@ -202,22 +204,31 @@ public class DrugController {
 //		return resp;
 //	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles(value={"admin","manager"}, logical=Logical.OR)
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/downDrug", method = RequestMethod.PUT)
-	@ApiOperation(value = "下架药品", notes = "")
+	@ApiOperation(value = "停售药品", notes = "")
 	public void downDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
 		
 		Drug drug = drugService.downDrug(drugbo.getDrugid());
 	}
 	
-	@RequiresRoles({"manager"})
+	@RequiresRoles(value={"admin","manager"}, logical=Logical.OR)
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/upDrug", method = RequestMethod.PUT)
-	@ApiOperation(value = "上架药品信息", notes = "上架药品信息")
+	@ApiOperation(value = "在售药品信息", notes = "上架药品信息")
 	public void upDrug(@ApiParam(name="drugbo", value="drugbo") @RequestBody @Valid UpDownDrugBo drugbo, HttpServletRequest request,HttpServletResponse response) {
 			
 		Drug drug = drugService.upDrug(drugbo.getDrugid());
 		
+	}
+	
+	@RequiresRoles({"manager"})
+	@RequestMapping(value = "/modifyStock", method = RequestMethod.PUT)
+	@ApiOperation(value = "修改库存", notes = "修改库存信息")
+	public void modifyStock(@ApiParam(name="modifyStockBo", value="modifyStockBo") @RequestBody @Valid ModifyStockBo modifyStockBo, HttpServletRequest request,HttpServletResponse response) {
+
+		Drug drug = drugService.saveStock(modifyStockBo);
+		return;
 	}
 }

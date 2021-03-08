@@ -10,12 +10,8 @@ public class SaleRecordQuery {
 	
 	private String department;
 	
-	private String drugname;
-	
-	private String drugcompany;
-	
-	private Integer statisticOrderType;
-	
+	private String drugno;
+		
 	private String startTime;
 	
 	private String endTime;
@@ -88,28 +84,12 @@ public class SaleRecordQuery {
 		this.department = department;
 	}
 
-	public String getDrugname() {
-		return drugname;
+	public String getDrugno() {
+		return drugno;
 	}
 
-	public void setDrugname(String drugname) {
-		this.drugname = drugname;
-	}
-
-	public String getDrugcompany() {
-		return drugcompany;
-	}
-
-	public void setDrugcompany(String drugcompany) {
-		this.drugcompany = drugcompany;
-	}
-
-	public Integer getStatisticOrderType() {
-		return statisticOrderType;
-	}
-
-	public void setStatisticOrderType(Integer statisticOrderType) {
-		this.statisticOrderType = statisticOrderType;
+	public void setDrugno(String drugno) {
+		this.drugno = drugno;
 	}
 	
 }

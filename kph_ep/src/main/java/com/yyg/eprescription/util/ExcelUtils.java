@@ -144,25 +144,32 @@ public class ExcelUtils {
        
        List<Drug> drugList=new ArrayList<Drug>();
        Drug drug;
-       for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++){
+       int lastRowNum = sheet.getLastRowNum();
+       for (int rowIndex = 1; rowIndex <= lastRowNum; rowIndex++){
 			XSSFRow row = sheet.getRow(rowIndex);
 			if (row == null)
 			    continue;
 			
 			drug = new Drug();
-			XSSFCell nameCell = row.getCell(0); // 药品名列
-			XSSFCell shortnameCell = row.getCell(1); // 药品简列
-			XSSFCell standardCell = row.getCell(2); // 规格列
-			XSSFCell formCell = row.getCell(3);//剂型
-			XSSFCell priceCell = row.getCell(4); // 价格列
-			XSSFCell unitCell = row.getCell(5); // 计价单位
-			XSSFCell categoryCell = row.getCell(6); // 分类
-			XSSFCell subCategoryCell = row.getCell(7);//子类
-			XSSFCell singledoseCell = row.getCell(8);//默认单次剂量
-			XSSFCell usageCell = row.getCell(9);//默认用法
-			XSSFCell frequencyCell = row.getCell(10);//默认频次
-			XSSFCell companyCell = row.getCell(11);//厂商
-						
+			XSSFCell noCell = row.getCell(0);//编号		
+			XSSFCell nameCell = row.getCell(1); // 药品名列
+			XSSFCell shortnameCell = row.getCell(2); // 药品简列
+			XSSFCell standardCell = row.getCell(3); // 规格列
+			XSSFCell formCell = row.getCell(4);//剂型
+			XSSFCell priceCell = row.getCell(5); // 价格列
+			XSSFCell unitCell = row.getCell(6); // 计价单位
+			XSSFCell stockCell = row.getCell(7);//初始库存		
+			XSSFCell categoryCell = row.getCell(8); // 分类
+			XSSFCell singledoseCell = row.getCell(9);//默认单次剂量
+			XSSFCell usageCell = row.getCell(10);//默认用法
+			XSSFCell frequencyCell = row.getCell(11);//默认频次
+			XSSFCell companyCell = row.getCell(12);//厂商
+			XSSFCell subCategoryCell = row.getCell(13);//子类
+				
+			if(nameCell == null) {
+				totalRows = rowIndex-1;
+				break;
+			}
 			String drugname = nameCell.getStringCellValue();
 			if(drugname!=null){
 				drugname = drugname.trim();
@@ -172,9 +179,18 @@ public class ExcelUtils {
 				break;
 			}
 			drug.setDrugname(drugname);
+			
+			String drugno = noCell.getStringCellValue();
+			if(drugno!=null){
+				drugno = drugno.trim();
+			}
+			drug.setDrugno(drugno);
+			
 			String shortname = shortnameCell.getStringCellValue();
 			if(shortname!=null){
 				shortname = shortname.trim();
+			}else {
+				shortname = drugname;//简称为空时，将全称用到简称上
 			}
 			drug.setShortname(shortname);
 			String standard = standardCell.getStringCellValue();
@@ -230,9 +246,14 @@ public class ExcelUtils {
 				defaultUsage = defaultUsage.trim();
 			}
 			drug.setDefaultusage(defaultUsage);
-			//drug.setFullkeys(fullkeysCell.getStringCellValue());
+			
+			if(stockCell.getCellType() == CellType.NUMERIC){
+				drug.setStock(Double.valueOf(stockCell.getNumericCellValue()).intValue());
+			}else if(stockCell.getCellType() == CellType.STRING){
+				drug.setPrice(Double.valueOf(stockCell.getStringCellValue()).intValue());
+			}
+			
 			drug.setFullkeys(ChineseCharacterUtil.convertHanzi2Pinyin(drug.getDrugname(), false));
-			//drug.setShortnamekeys(shortNameKeysCell.getStringCellValue());
 			drug.setShortnamekeys(ChineseCharacterUtil.convertHanzi2Pinyin(drug.getShortname(), false));;
 			drug.setState(Drug.STATE_OK);//缺省上传之后药品可见
 			String company = companyCell.getStringCellValue();

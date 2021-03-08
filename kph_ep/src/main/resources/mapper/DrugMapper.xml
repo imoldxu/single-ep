@@ -13,6 +13,11 @@
   		<id column="id" property="id" />
   	</resultMap>
 
+	<select id="selectDrugForUpdate" resultMap="drugMap">
+		SELECT * FROM t_drug WHERE id = #{drugid} FOR UPDATE;	
+	</select>
+	
+
 	<select id="getDrugsByKeys" resultMap="ShortDrugInfo">
 		SELECT id ,CONCAT(drugname,'--',standard,'--',company) as showname FROM t_drug WHERE state = 1 and category not like '中药' and (drugname LIKE #{mykeys,jdbcType=VARCHAR} OR fullkeys LIKE #{mykeys,jdbcType=VARCHAR} OR shortnamekeys LIKE #{mykeys,jdbcType=VARCHAR}); 	
 	</select>
@@ -42,6 +47,9 @@
 		<where>
 			<if test="query.keys != null and query.keys !=''">
 				t_drug.drugname like #{query.keys} Or t_drug.fullkeys like #{query.keys} Or t_drug.shortnamekeys like #{query.keys}
+			</if>
+			<if test="query.drugno != null and query.drugno != ''">
+				AND t_drug.drugno = #{query.drugno}
 			</if>
 			<if test="query.state != null">
 				AND t_drug.state = #{query.state}

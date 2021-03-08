@@ -3,16 +3,22 @@ package com.yyg.eprescription.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.util.StringUtils;
 import com.x.commons.mybatis.PageResult;
 import com.yyg.eprescription.bo.DrugQuery;
+import com.yyg.eprescription.bo.ModifyStockBo;
+import com.yyg.eprescription.context.ErrorCode;
+import com.yyg.eprescription.context.HandleException;
 import com.yyg.eprescription.entity.Drug;
 import com.yyg.eprescription.mapper.DrugMapper;
 import com.yyg.eprescription.util.ChineseCharacterUtil;
@@ -102,7 +108,7 @@ public class DrugService {
 	public Drug addDrug(Drug drug) {
 		drug.setFullkeys(ChineseCharacterUtil.convertHanzi2Pinyin(drug.getDrugname(), false));
 		drug.setShortnamekeys(ChineseCharacterUtil.convertHanzi2Pinyin(drug.getShortname(), false));;
-		drug.setState(Drug.STATE_OK);//缺省上传之后药品可见
+		drug.setState(Drug.STATE_OK);//有库存药品可见
 		drugMapper.insertUseGeneratedKeys(drug);
 		return drug;
 	}
@@ -116,9 +122,11 @@ public class DrugService {
         	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"}, allEntries=true)	
         }
     )
+	@Transactional
 	public Drug updateDrug(Drug drug) {
-		Drug dbDrug = getDrugById(drug.getId());
-		drug.setState(dbDrug.getState());
+		Drug dbDrug = drugMapper.selectDrugForUpdate(drug.getId());
+		drug.setStock(dbDrug.getStock());
+		drug.setState(dbDrug.getState());//沿用原来数据库存储的药品状态
 		drugMapper.updateByPrimaryKey(drug);
 		return drug; 
 	}
@@ -140,8 +148,9 @@ public class DrugService {
         	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"}, allEntries=true)	
         }
     )
+	@Transactional
 	public Drug downDrug(Integer drugid) {
-		Drug drug = drugMapper.selectByPrimaryKey(drugid);
+		Drug drug = drugMapper.selectDrugForUpdate(drugid);
 		drug.setState(Drug.STATE_EMPTY);
 		drugMapper.updateByPrimaryKey(drug);
 		return drug;
@@ -155,9 +164,34 @@ public class DrugService {
         	@CacheEvict(cacheNames={"simpleDrugListByKey","simpleDrugListByCategory","simpleDrugListByDoctor"}, allEntries=true)	
         }
     )
+	@Transactional
 	public Drug upDrug(Integer drugid) {
-		Drug drug = drugMapper.selectByPrimaryKey(drugid);
+		Drug drug = drugMapper.selectDrugForUpdate(drugid);
 		drug.setState(Drug.STATE_OK);
+		drugMapper.updateByPrimaryKey(drug);
+		return drug;
+	}
+	
+	/**
+	   *  在领药或退药时修改库存，库存可以减少为负数，负数之后无法给患者药品，则需要走退货流程，退货会将库存又补回来
+	 * @param drugid
+	 * @param modifyNumber
+	 */
+	@CachePut(cacheNames="drug", key="#drugid")
+	@Transactional
+	public Drug modifyStock(Integer drugid, Integer modifyNumber) {
+		Drug drug = drugMapper.selectDrugForUpdate(drugid);
+		Integer stock = drug.getStock();
+		drug.setStock(stock-modifyNumber);//--相当于增加，正数为减少
+		drugMapper.updateByPrimaryKey(drug);
+		return drug;
+	}
+
+    @CachePut(cacheNames="drug", key="#modifyStockBo.id")
+    @Transactional
+	public Drug saveStock(ModifyStockBo modifyStockBo) {
+		Drug drug = drugMapper.selectDrugForUpdate(modifyStockBo.getId());
+		drug.setStock(modifyStockBo.getStock());
 		drugMapper.updateByPrimaryKey(drug);
 		return drug;
 	}

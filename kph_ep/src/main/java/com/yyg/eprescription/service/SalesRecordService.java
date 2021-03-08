@@ -55,12 +55,15 @@ public class SalesRecordService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		
+				
 		List<SalesRecord> recordList = new ArrayList<SalesRecord>();
 		for(PrescriptionDrugs transdrug : transactionList){
 			SalesRecord record = new SalesRecord();
 			
 			Drug drug = drugService.getDrugById(transdrug.getDrugid());
+			
+			//减少库存，求得实际减少的库存
+			drugService.modifyStock(transdrug.getDrugid(), transdrug.getNumber());
 			
 			record.setCreatetime(new Date());
 			record.setDrugid(transdrug.getDrugid());		
@@ -74,6 +77,7 @@ public class SalesRecordService {
 			record.setPrice(transdrug.getPrice());
 			record.setRefundnum(0);
 			recordList.add(record);
+						
 		}
 
 		recordMapper.insertList(recordList);
@@ -103,6 +107,8 @@ public class SalesRecordService {
 			record.setRefundnum(refundnum+toRefund);
 			recordMapper.updateByPrimaryKey(record);
 			
+			drugService.modifyStock(record.getDrugid(), (0-toRefund));
+			
 			SalesRecord refundRecord = new SalesRecord();
 			refundRecord.setDrugid(record.getDrugid());
 			refundRecord.setDrugname(record.getDrugname());
@@ -128,4 +134,9 @@ public class SalesRecordService {
 		return  result;
 	}
 	
+	public List<SalesRecordStatisticVo> statisticAll(SaleRecordQuery query){
+		
+		List<SalesRecordStatisticVo> result = recordMapper.statisticAll(query);
+		return  result;
+	}
 }

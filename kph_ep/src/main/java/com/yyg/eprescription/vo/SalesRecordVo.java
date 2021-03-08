@@ -24,6 +24,8 @@ public class SalesRecordVo {
 	
 	private Integer drugid;//药品编号
 	
+	private String drugno;//药品编号
+	
 	private String drugname;//药品编号
 	
 	private Integer num;//销售数量
@@ -176,5 +178,14 @@ public class SalesRecordVo {
 	public void setDrugcompany(String drugcompany) {
 		this.drugcompany = drugcompany;
 	}
+
+	public String getDrugno() {
+		return drugno;
+	}
+
+	public void setDrugno(String drugno) {
+		this.drugno = drugno;
+	}
+	
 	
 }

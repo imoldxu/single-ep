@@ -31,4 +31,6 @@ public interface DrugMapper extends BaseMapper<Drug> {
     List<ShortDrugInfo> getZyDrugBySubCategory(@Param(value="category")String category);
 
     List<List<?>> queryDrugWithTotal(@Param("query") DrugQuery query);
+
+	Drug selectDrugForUpdate(@Param("drugid")Integer drugid);
 }

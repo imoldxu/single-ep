@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.apache.ibatis.type.JdbcType;
 
@@ -37,6 +38,12 @@ public class Drug implements Serializable{
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "名称")
 	private String drugname;//名称
+	
+	@NotBlank
+	@Column(name = "drugno")
+	@ColumnType(jdbcType = JdbcType.VARCHAR)
+	@ApiModelProperty(value = "药品编号")
+	private String drugno;//药品编号
 	
 	@NotBlank
 	@Column(name = "shortname")
@@ -97,6 +104,12 @@ public class Drug implements Serializable{
 	@ColumnType(jdbcType = JdbcType.VARCHAR)
 	@ApiModelProperty(value = "药厂")
 	private String company;//药厂
+
+	@PositiveOrZero
+	@Column(name = "stock")
+	@ColumnType(jdbcType = JdbcType.INTEGER)
+	@ApiModelProperty(value = "库存")
+	private Integer stock;//库存
 	
 	@NotBlank
 	@Column(name = "frequency")
@@ -258,4 +271,20 @@ public class Drug implements Serializable{
 		this.subcategory = subcategory;
 	}
 
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
+	public String getDrugno() {
+		return drugno;
+	}
+
+	public void setDrugno(String drugno) {
+		this.drugno = drugno;
+	}
+	
 }
