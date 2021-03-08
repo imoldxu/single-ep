@@ -14,7 +14,7 @@
 
 	<select id="querySalesRecordWithTotal"
 		resultMap="record, com.yyg.eprescription.mapper.CommonMapper.totalResult">
-		SELECT t_sales_record.*, t_prescription.prescriptionno,
+		SELECT SQL_CALC_FOUND_ROWS t_sales_record.*, t_prescription.prescriptionno,
 		t_prescription.patient_reg_no as regNo, t_prescription.doctorname,
 		t_prescription.department, t_order.orderno, t_drug.drugno
 		FROM t_sales_record LEFT JOIN t_prescription ON t_sales_record.prescriptionid = t_prescription.id
@@ -51,7 +51,7 @@
 
 	<select id="statistic"
 		resultMap="statisticMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
-		SELECT SUM(t_sales_record.num-t_sales_record.refundnum) as totalSale,
+		SELECT SQL_CALC_FOUND_ROWS SUM(t_sales_record.num-t_sales_record.refundnum) as totalSale,
 		SUM((t_sales_record.num-t_sales_record.refundnum)*t_sales_record.price)
 		as totalPrice, t_prescription.doctorname, t_prescription.department,
 		t_drug.drugno, t_drug.drugname, t_drug.standard,
@@ -82,8 +82,7 @@
 		totalPrice DESC, totalSale DESC
 		limit
 		${(query.current-1)*query.pageSize}, ${query.pageSize};
-		SELECT
-		FOUND_ROWS() as total;
+		SELECT FOUND_ROWS() as total;
 	</select>
 
 	<select id="statisticAll" resultMap="statisticMap">

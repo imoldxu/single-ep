@@ -42,7 +42,7 @@
 	</select>
 	
 	<select id="queryUser" resultMap="UserMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
-		SELECT t_user.*,
+		SELECT SQL_CALC_FOUND_ROWS t_user.*,
 		t_role.id as rid, t_role.name as rname, t_permission.id as pid,
 		t_permission.name as pname
 		FROM t_user LEFT JOIN t_user_role ON t_user.id = t_user_role.uid

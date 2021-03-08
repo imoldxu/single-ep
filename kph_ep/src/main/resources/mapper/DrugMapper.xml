@@ -43,7 +43,7 @@
 	</select>
 	
 	<select id="queryDrugWithTotal" resultMap="drugMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
-		select * from t_drug
+		select SQL_CALC_FOUND_ROWS * from t_drug
 		<where>
 			<if test="query.keys != null and query.keys !=''">
 				t_drug.drugname like #{query.keys} Or t_drug.fullkeys like #{query.keys} Or t_drug.shortnamekeys like #{query.keys}

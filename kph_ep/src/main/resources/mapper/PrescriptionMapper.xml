@@ -12,7 +12,7 @@
 	</resultMap>
 
 	<select id="queryPrescriptionWithTotal" resultMap="prescriptionMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
-		select * from t_prescription
+		select SQL_CALC_FOUND_ROWS * from t_prescription
 		<where>
 			<if test="query.prescriptionno !=null and query.prescriptionno !=''">
 				t_prescription.prescriptionno = #{query.prescriptionno}

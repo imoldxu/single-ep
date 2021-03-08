@@ -13,7 +13,7 @@
 	</resultMap>
 	
 	<select id="queryBillWithTotal" resultMap="billMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
-	    select * from t_bill 
+	    select SQL_CALC_FOUND_ROWS * from t_bill 
 	    <where>
 		   <if test="query.orderno != null and query.orderno !=''">
 		        t_bill.orderno = #{query.orderno} 

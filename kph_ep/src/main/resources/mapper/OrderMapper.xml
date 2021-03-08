@@ -30,7 +30,7 @@
 	</select>
 	
 	<select id="queryOrderWithTotal" resultMap="pOrder, com.yyg.eprescription.mapper.CommonMapper.totalResult">
-		SELECT t_order.*, t_prescription.prescriptionno, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
+		SELECT SQL_CALC_FOUND_ROWS t_order.*, t_prescription.prescriptionno, t_prescription.doctorname, t_prescription.department, t_prescription.patientname
 		FROM `t_order` LEFT JOIN t_prescription ON t_order.prescriptionid = t_prescription.id 
 		<where>
 		   <if test="query.regNo != null and query.regNo !=''">
