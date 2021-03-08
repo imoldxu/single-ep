@@ -17,14 +17,16 @@ export default ()=>{
       dataIndex: 'prescriptionno',
       ellipsis: true,
     },
-    // {
-    //   title: '登记号',
-    //   dataIndex: 'regNo',
-    // },
+    {
+      title: '药品编号',
+      dataIndex: 'drugno',
+      ellipsis: true,
+    },
     {
       title: '药品名称',
       dataIndex: 'drugname',
       ellipsis: true,
+      search: false,
     },
     {
       title: '规格',
@@ -36,6 +38,7 @@ export default ()=>{
       title: '厂商',
       dataIndex: 'drugcompany',
       ellipsis: true,
+      search: false,
     },
     // {
     //   title: '医生姓名',
