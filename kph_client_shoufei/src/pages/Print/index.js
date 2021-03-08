@@ -93,7 +93,7 @@ export default ()=>{
                     <div className={styles.tip}>普通</div>
                     <div className={styles.qrtip}>登记号</div>
                     <div className={styles.qrcode}>
-                        <QRCode value={detail.prescription.regNo} level="H" size={40}></QRCode>
+                        <QRCode value={detail.prescription.regNo} level="L" size={40}></QRCode>
                     </div>
                 </div>
                 
@@ -156,7 +156,7 @@ export default ()=>{
                 </div>
 
                 <div className={styles.payQrCode}>
-                    <QRCode value={`https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="H" size={100}></QRCode>
+                    <QRCode value={`https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="L" size={100}></QRCode>
                 </div>
             </div>
             }
