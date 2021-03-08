@@ -6,6 +6,8 @@ public class PrescriptionQuery {
 	
 	private String regNo;
 	
+	private String cardNo;
+	
 	private String patientname;//患者姓名
 	
 	private String doctorname;//医生姓名 
@@ -100,6 +102,14 @@ public class PrescriptionQuery {
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	public String getCardNo() {
+		return cardNo;
+	}
+
+	public void setCardNo(String cardNo) {
+		this.cardNo = cardNo;
 	}
 	
 }

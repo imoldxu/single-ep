@@ -103,7 +103,7 @@ public class PrescriptionController {
 		try {
 			Date now = new Date();
 			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-			Date limit = formater.parse("2021-03-31");
+			Date limit = formater.parse("2021-05-31");
 			if(now.after(limit)) {
 				return new Response(ErrorCode.NORMAL_ERROR, null, "授权已过期，请联系管理员");
 			}

@@ -20,6 +20,9 @@
 			<if test="query.regNo != null and query.regNo !=''">
 				AND t_prescription.patient_reg_no = #{query.regNo}
 			</if>
+			<if test="query.cardNo != null and query.cardNo !=''">
+				AND t_prescription.patient_card_no = #{query.cardNo}
+			</if>
 			<if test="query.doctorname != null and query.doctorname !=''">
 				AND t_prescription.doctorname = #{query.doctorname}
 			</if>
