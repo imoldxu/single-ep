@@ -66,11 +66,15 @@ export default () => {
             }
         },
         {
+            title: '药品编号',
+            dataIndex: 'drugno',
+            ellipsis: true,
+        },
+        {
             title: '药品名称',
             dataIndex: 'drugname',
             search: false,
             ellipsis: true,
-            colSize: 2,
         },
         {
             title: '药品规格',
@@ -88,6 +92,7 @@ export default () => {
             title: '厂商',
             dataIndex: 'company',
             search: false,
+            ellipsis: true,
         },
         {
             title: '分类',
@@ -106,15 +111,20 @@ export default () => {
             render: (_, record) => { return (<span>{`${regFenToYuan(record.price)}元/${record.unit}`}</span>) }
         },
         {
+            title: '库存',
+            dataIndex: 'stock',
+            search: false,
+        },
+        {
             title: '状态',
             dataIndex: 'state',
             valueEnum: {
                 0: {
-                    text: '无货',
+                    text: '停售',
                     status: 'Error',
                 },
                 1: {
-                    text: '有货',
+                    text: '在售',
                     status: 'Success',
                 }
             }
