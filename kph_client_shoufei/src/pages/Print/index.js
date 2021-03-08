@@ -87,13 +87,13 @@ export default ()=>{
         <Spin spinning={isloading}>
            { detail &&
             <div ref={printRef} className={`${styles.con}`}>
-                <div className={styles.topHead}>四川锦欣妇女儿童医院●成都市锦江区妇幼保健金卡医院</div>
+                <div className={styles.topHead}>四川锦欣妇女儿童医院互联网线下药房</div>
                 <div className={styles.title_area}>
                     <div className={styles.title}>处方笺</div>
                     <div className={styles.tip}>普通</div>
                     <div className={styles.qrtip}>登记号</div>
                     <div className={styles.qrcode}>
-                        <QRCode value={detail.prescription.regNo} level="Q" size={40}></QRCode>
+                        <QRCode value={detail.prescription.regNo} level="H" size={40}></QRCode>
                     </div>
                 </div>
                 
@@ -156,7 +156,7 @@ export default ()=>{
                 </div>
 
                 <div className={styles.payQrCode}>
-                    <QRCode value={`https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="Q" size={100}></QRCode>
+                    <QRCode value={`https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="H" size={100}></QRCode>
                 </div>
             </div>
             }
