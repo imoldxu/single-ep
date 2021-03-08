@@ -26,7 +26,7 @@ define(['app','angular'], function(app,angular){
 
         $scope.drugTable  = dataVer.get('drugInfo') || []; //药品列表
 
-        $scope.sel = {};
+        $scope.sel = {n: "1"};
 
         $scope.drugIndex; //药品在药品列表中的下标
 
@@ -89,6 +89,8 @@ define(['app','angular'], function(app,angular){
 				
 				$scope.drugArry.id = $scope.drugArry.drugid;
 
+                $scope.sel.n = $scope.drugArry.number,
+
                 $scope.sel.p = $scope.drugArry.frequency;
 
                 $scope.sel.y = $scope.drugArry.myusage;
@@ -98,6 +100,8 @@ define(['app','angular'], function(app,angular){
                 $scope.drugArry = {};
 				
 				$scope.drugArry.singledose = '';
+     
+                $scope.sel.n = "1";
 
                 $scope.sel.p = '';
 
@@ -321,9 +325,11 @@ define(['app','angular'], function(app,angular){
 
                 unit:$scope.drugArry.unit,
 
+                stock:$scope.drugArry.stock,
+
                 number:$scope.sel.n,
 
-                singledose:$scope.drugArry.singledose,
+                singledose:$scope.drugArry.singledose || '',
 
                 myusage:$scope.sel.y,
 

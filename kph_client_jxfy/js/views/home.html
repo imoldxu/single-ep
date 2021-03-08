@@ -211,17 +211,22 @@
 				<div class="keybutton" ng-click="getDrugs('')">全部</div>
 				
 				<div class="keybutton" ng-click="getDrugsByCategory('抗生素')">抗生素</div>
-				<div class="keybutton" ng-click="getDrugsByCategory('输液')">输液</div>
+				<div class="keybutton" ng-click="getDrugsByCategory('耗材')">耗材</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('心血管')">心血管</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('呼吸')">呼吸</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('消化')">消化</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('神经')">神经</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('内分泌')">内分泌</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('解热镇痛')">解热镇痛</div>
-				<div class="keybutton" ng-click="getDrugsByCategory('维生素激素')">维生素激素</div>
+				<div class="keybutton" ng-click="getDrugsByCategory('矿物质类')">矿物质类</div>
+				<div class="keybutton" ng-click="getDrugsByCategory('激素')">激素</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('外用')">外用</div>
 				<div class="keybutton" ng-click="getDrugsByCategory('中成药')">中成药</div>
-				<div class="keybutton" ng-click="getDrugsByCategory('滋补')">滋补</div>
+				<div class="keybutton" ng-click="getDrugsByCategory('特殊膳食')">特殊膳食</div>
+				<div class="keybutton" ng-click="getDrugsByCategory('营养膳食')">营养膳食</div>
+				<div class="keybutton" ng-click="getDrugsByCategory('保健品')">保健品</div>
+				<div class="keybutton" ng-click="getDrugsByCategory('保健食品')">保健食品</div>
+
 			</div>
 			
             <div class="modSel">
@@ -240,14 +245,15 @@
                 <div class="fd">规<i class="ls"></i>格 : <span>{{drugArry.standard}}</span></div>
                 <div class="md">计价单位 : <span>{{drugArry.unit}}</span></div>
                 <div class="md">单<i class="ls"></i>价 : <span>{{drugArry.price ? drugArry.price/100 : 0}}</span>元</div>
-
+				<div class="md">剩余库存 : <span ng-if="drugArry.stock > 0">{{drugArry.stock}}</span><span ng-if="drugArry.stock <= 0" style="color: red;">缺货</span></div>
             </div>
 
             <div class="row">
 
 				<div class="subrow">
 					<span>数<i class="ls"></i>量 :<span>
-					<select ng-init="sel.n = selNum[0]" ng-model="sel.n" ng-options="x for x in selNum">
+					<!-- ng-init="sel.n = selNum[0]" -->
+					<select ng-init="sel.n" ng-model="sel.n" ng-options="x for x in selNum">
                     </select><span>{{drugArry.unit}}</span>
                 </div>
 
