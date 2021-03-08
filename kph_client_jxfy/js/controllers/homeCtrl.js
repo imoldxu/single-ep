@@ -60,9 +60,9 @@ define(['app','angular'], function(app,angular){
         $scope.openModal = function(t){
 
 
-            if ($scope.drugTable.length > 8){
+            if ($scope.drugTable.length > 5){
 
-                alert('一张处方最多可开8种药品');
+                alert('一张处方最多可开5种药品');
 
                 return false
 
