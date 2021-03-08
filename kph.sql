@@ -11,7 +11,7 @@
  Target Server Version : 50643
  File Encoding         : 65001
 
- Date: 25/02/2021 00:40:02
+ Date: 08/03/2021 13:12:54
 */
 
 SET NAMES utf8mb4;
@@ -65,6 +65,7 @@ CREATE TABLE `t_doctordrugs`  (
 DROP TABLE IF EXISTS `t_drug`;
 CREATE TABLE `t_drug`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '药品编号',
+  `drugno` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '药品编号',
   `drugname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `shortname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '简称',
   `standard` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '规格',
@@ -73,14 +74,16 @@ CREATE TABLE `t_drug`  (
   `price` int(11) UNSIGNED NOT NULL COMMENT '单价',
   `unit` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '单位',
   `form` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '剂型',
-  `singledose` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '缺省单次剂量',
-  `defaultusage` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '缺省用法',
-  `frequency` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '缺省用法',
+  `singledose` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '缺省单次剂量',
+  `defaultusage` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '缺省用法',
+  `frequency` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '缺省用法',
   `company` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '厂商信息',
   `fullkeys` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '拼音缩写',
   `shortnamekeys` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '简称缩写',
-  `state` int(11) NOT NULL DEFAULT 1 COMMENT '状态，有货1，无货为0',
+  `state` tinyint(11) NOT NULL DEFAULT 1 COMMENT '状态，有货1，无货为0',
+  `stock` int(11) NOT NULL DEFAULT 0 COMMENT '库存',
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `index_drugno`(`drugno`) USING BTREE,
   INDEX `index_name`(`drugname`) USING BTREE,
   INDEX `index_fullkeys`(`fullkeys`) USING BTREE,
   INDEX `index_shortkeys`(`shortnamekeys`) USING BTREE
@@ -159,9 +162,9 @@ CREATE TABLE `t_prescriptiondrugs`  (
   `price` int(11) NOT NULL COMMENT '单价',
   `unit` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '单位',
   `number` int(11) UNSIGNED NOT NULL COMMENT '数量',
-  `singledose` varchar(120) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '医嘱单次剂量',
-  `myusage` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '医嘱用法',
-  `frequency` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '医嘱频次',
+  `singledose` varchar(120) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '医嘱单次剂量',
+  `myusage` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '医嘱用法',
+  `frequency` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '医嘱频次',
   `drugid` int(11) NOT NULL COMMENT '关联的药品id',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -186,14 +189,7 @@ CREATE TABLE `t_role`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `index_name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Records of t_role
--- ----------------------------
-INSERT INTO `t_role` VALUES (1, 'admin');
-INSERT INTO `t_role` VALUES (2, 'manager');
-INSERT INTO `t_role` VALUES (3, 'tollman');
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for t_role_permission
@@ -232,18 +228,14 @@ DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `department` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部门',
   `phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
   `createtime` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `state` tinyint(4) NOT NULL COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `index_phone`(`phone`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Records of t_user
--- ----------------------------
-INSERT INTO `t_user` VALUES (1, '超级管理员', '13880605659', '7dd75c55c0f3a84969cacc5fcdbbd980', '2021-02-25 00:39:40', 1);
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for t_user_role
@@ -254,10 +246,5 @@ CREATE TABLE `t_user_role`  (
   `rid` int(11) NOT NULL,
   PRIMARY KEY (`uid`, `rid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Records of t_user_role
--- ----------------------------
-INSERT INTO `t_user_role` VALUES (1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
