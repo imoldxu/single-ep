@@ -10,13 +10,15 @@ export default ()=>{
 
   const actionRef = useRef();
 
-  let defaultData
-  const sessionData = sessionStorage.getItem("prescriptionList");
-  if(sessionData){
-    defaultData = JSON.parse(sessionData)
-  }else{
-    defaultData = []
-  }
+  const {prescriptionList, queryPrescriptions} = useModel('usePrescriptionModel');
+
+  // let defaultData
+  // const sessionData = sessionStorage.getItem("prescriptionList");
+  // if(sessionData){
+  //   defaultData = JSON.parse(sessionData)
+  // }else{
+  //   defaultData = []
+  // }
 
   /**
    *  审核节点
@@ -100,7 +102,7 @@ export default ()=>{
       <ProTable
         headerTitle="处方列表"
         actionRef={actionRef}
-        defaultData={defaultData}
+        defaultData={prescriptionList}
         rowKey="key"
         manualRequest={true}
         request={async(params) => {
@@ -108,11 +110,15 @@ export default ()=>{
             if(params.dateRange && params.dateRange.length>1){
               params.startdate = params.dateRange[0];
               params.enddate = params.dateRange[1];
-            }  
-            const response = await queryPrescription(params);
-            sessionStorage.setItem("prescriptionList", JSON.stringify(response.data))
-            return response;
-            }catch(e){
+            } 
+            const resp = await queryPrescriptions(params) 
+            return resp
+            //const response = await queryPrescription(params);
+            // if(response){
+            //   sessionStorage.setItem("prescriptionList", JSON.stringify(response.data))
+            //   return response;
+            // }
+          }catch(e){
               message.error(e.message, 3)
             }
           }

@@ -31,6 +31,8 @@ const loginOut = async () => {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
+  const { setOrderList } = useModel('useOrderModel');
+  const { setPrescriptionList } = useModel('usePrescriptionModel');
 
   const onMenuClick = useCallback(
     (event: {
@@ -42,6 +44,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
         setInitialState({ ...initialState, currentUser: undefined });
+        setOrderList([]);
+        setPrescriptionList([]);
         loginOut();
         return;
       }           
