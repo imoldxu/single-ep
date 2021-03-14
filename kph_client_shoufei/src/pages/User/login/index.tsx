@@ -96,7 +96,6 @@ const Login: React.FC = () => {
     }
     setSubmitting(false);
   };
-  const { status } = {};
 
   return (
     <div className={styles.container}>
@@ -135,17 +134,7 @@ const Login: React.FC = () => {
             onFinish={async (values) => {
               handleSubmit(values as API.LoginParams);
             }}
-          >
-
-            {status === 'error' && (
-              <LoginMessage
-                content={intl.formatMessage({
-                  id: 'pages.login.accountLogin.errorMessage',
-                  defaultMessage: '账户或密码错误',
-                })}
-              />
-            )}
-            
+          >            
             <ProFormText
               name="phone"
               fieldProps={{
