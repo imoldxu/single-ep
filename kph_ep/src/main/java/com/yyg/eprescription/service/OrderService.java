@@ -125,7 +125,7 @@ public class OrderService {
 		order.setAmount(amount);
 		Date now = new Date();
 		order.setCreatetime(now);
-		if (oldOrder.getPayway() == Bill.CASH || oldOrder.getPayway() == Bill.SHIYIBAO || oldOrder.getPayway() == Bill.YIDIYIBAO) {
+		if (oldOrder.getPayway() == Bill.CASH || oldOrder.getPayway() == Bill.BANKCARD || oldOrder.getPayway() == Bill.SHIYIBAO || oldOrder.getPayway() == Bill.YIDIYIBAO) {
 			// 现金退款需要收费处点击退款才认为是已退款
 			order.setState(Order.STATE_REFUNDIND);
 		} else {
@@ -283,7 +283,7 @@ public class OrderService {
 		if (order.getState() != Order.STATE_PAYED && order.getState() != Order.STATE_REFUNDIND) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "订单状态异常");
 		}
-		if (order.getPayway() != Bill.CASH && order.getPayway() != Bill.SHIYIBAO && order.getPayway() != Bill.YIDIYIBAO) {
+		if (order.getPayway() != Bill.CASH && order.getPayway() != Bill.BANKCARD && order.getPayway() != Bill.SHIYIBAO && order.getPayway() != Bill.YIDIYIBAO) {
 			throw new HandleException(ErrorCode.NORMAL_ERROR, "线上支付,请到便民药房发起退款");
 		}
 

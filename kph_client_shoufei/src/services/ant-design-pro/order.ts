@@ -84,6 +84,15 @@ export async function cashOver(data: { orderno: string }, options?: { [key: stri
     });
 }
 
+/** 银行卡支付完成 */
+export async function bankcardOver(data: { orderno: string }, options?: { [key: string]: any }) {
+    return request<any>('/api/order/bankcardOver', {
+        method: 'PUT',
+        data: data,
+        ...(options || {}),
+    });
+}
+
 /** 线下退款 */
 export async function offlineRefund(data: { orderno: string }, options?: { [key: string]: any }) {
     return request<any>('/api/order/offlineRefund', {

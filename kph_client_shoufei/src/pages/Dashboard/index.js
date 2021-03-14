@@ -87,6 +87,7 @@ export default ()=>{
                                 <Option value="3">医保</Option>
                                 <Option value="4">异地医保</Option>
                                 <Option value="5">现金</Option>
+                                <Option value="6">银行卡</Option>
                             </Select>
                             </FormItem>
                         </Col>

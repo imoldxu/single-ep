@@ -38,7 +38,8 @@ public class Bill {
 	public static final int ZFB = 2;
 	public static final int SHIYIBAO = 3;
 	public static final int YIDIYIBAO = 4;
-	public static final int CASH = 5; 
+	public static final int CASH = 5;
+	public static final int BANKCARD = 6;//刷卡
 	
 	@Column(name = "payway")
 	@ColumnType(jdbcType = JdbcType.TINYINT)

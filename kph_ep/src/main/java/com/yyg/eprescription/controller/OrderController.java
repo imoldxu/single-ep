@@ -161,6 +161,21 @@ public class OrderController {
 	}
 	
 	@RequiresRoles({"tollman"})
+	@RequestMapping(value = "/bankcardOver", method = RequestMethod.PUT)
+	@ApiOperation(value = "确认现金支付", notes = "确认现金支付")
+	public void bankcardOver(
+			@ApiParam(name = "orderStateBo", value = "订单状态修改") @RequestBody @Valid OrderStateBo orderStateBo,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		Subject subject = SecurityUtils.getSubject();
+		User user = (User) subject.getPrincipal();
+		
+		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getName(),"bankcard");
+		
+		return;
+	}
+	
+	@RequiresRoles({"tollman"})
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/offlineRefund", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医院线下退款", notes = "确认医院线下退款")

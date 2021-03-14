@@ -4,7 +4,7 @@ import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 //import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
-import { queryPatientOrder, cashOver, offlineRefund, yibaoOver, yidiYibaoOver } from '@/services/ant-design-pro/order';
+import { queryPatientOrder, cashOver, offlineRefund, yibaoOver, yidiYibaoOver, bankcardOver } from '@/services/ant-design-pro/order';
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { regFenToYuan } from "@/utils/money";
 import PayModal from "./payModal";
@@ -20,6 +20,21 @@ export default ()=>{
     const hide = message.loading('现金支付确认提交中')
     try{
         await cashOver({orderno:orderno})
+        message.success("提交成功", 3)    
+        actionRef.current.reload();
+        setModalVisible(false)
+        setModalValue({amount:0})
+    }catch(e){
+        message.error(e.message, 3)
+    }finally{
+        hide()
+    }
+  };
+
+  const handleBankCardOver = async (orderno) => {
+    const hide = message.loading('银行卡支付确认提交中')
+    try{
+        await bankcardOver({orderno:orderno})
         message.success("提交成功", 3)    
         actionRef.current.reload();
         setModalVisible(false)
@@ -156,6 +171,9 @@ export default ()=>{
                 },
                 5: {
                     text: '现金',
+                },
+                6: {
+                    text: '银行卡',
                 }
             }
         },
@@ -243,7 +261,7 @@ export default ()=>{
                 //         </a>
                 //     </Popconfirm>
             )
-        }else if((state == 2 || state == 4) && ( payway== 3 || payway == 4 || payway == 5)){//cash shiyibao yidiyibao
+        }else if((state == 2 || state == 4) && ( payway == 3 || payway == 4 || payway == 5 || payway == 6)){//cash shiyibao yidiyibao
             return (
                 <Space>
                     <Popconfirm
@@ -283,6 +301,7 @@ export default ()=>{
       />
       <PayModal key="modal"
         handleCashPay={handleCashOver}
+        handleBankCardPay={handleBankCardOver}
         handleYibaoPay={handleYibaoOver}
         handleYidiYibaoPay={handleYidiYibaoOver}
         handleCancel={()=>{

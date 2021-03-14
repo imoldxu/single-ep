@@ -65,6 +65,9 @@ public class BillService {
 		case Bill.CASH:
 			paymode = "cash";
 			break;
+		case Bill.BANKCARD:
+			paymode = "bankcard";
+			break;
 		default:
 			throw new HandleException(403, "不支持的支付方式");
 		}
@@ -82,6 +85,8 @@ public class BillService {
 			return Bill.YIDIYIBAO;
 		} else if(payMode.equalsIgnoreCase("cash")){
 			return Bill.CASH;
+		} else if(payMode.equalsIgnoreCase("bankcard")){
+			return Bill.BANKCARD;
 		} else {
 			throw new HandleException(403, "不支持的支付方式");
 		}

@@ -8,6 +8,7 @@ import React, { useRef, useState } from "react";
 const PayModal = (props) => {
     const {
         handleCashPay,
+        handleBankCardPay,
         handleYibaoPay,
         handleYidiYibaoPay,
         handleCancel,
@@ -35,11 +36,12 @@ const PayModal = (props) => {
                     <Statistic key="amount" title="缴费金额" value={`${regFenToYuan(amount)}元`} valueStyle={{color:"red"}}/>     
                 </Row>
                 <Row key="tip" justify="center" gutter={[16,16]}>
-                    <span key="ps">请确认在已经收到患者缴费的情况下，选择以下收费方式</span>
+                    <span key="ps">请确认在已经收到患者缴费后，选择患者的缴费方式</span>
                 </Row>
                 <Row key="payway" justify="center" gutter={[16,16]}>    
                     <Space key="buttons" direction="vertical" align="center" size="large">
                         <Button key="cash" style={{backgroundColor:"#1ca4e4", width:"300px", color:"white"}} onClick={()=>handleCashPay(orderno)} size="large" shape="round">现 金</Button>
+                        <Button key="bankcard" style={{backgroundColor:"#1e7b41", width:"300px", color:"white"}} onClick={()=>handleBankCardPay(orderno)} size="large" shape="round">银 行 卡</Button>
                         <Button key="shiyibao" style={{backgroundColor:"#d2960f", width:"300px", color:"white"}} onClick={()=>handleYibaoPay(orderno)} size="large" shape="round">市 医 保</Button>
                         <Button key="yidiyibao" style={{backgroundColor:"#9a9e9a", width:"300px", color:"white"}} onClick={()=>handleYidiYibaoPay(orderno)} size="large" shape="round">异 地 医 保</Button>
                     </Space>
