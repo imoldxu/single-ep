@@ -125,7 +125,6 @@ const errorHandler = (error: ResponseError) => {
     if(data.code){
       if(data.code===4 || data.code===15 ){
         history.push('/user/login')
-        return;
       }
       //将后台返回的{code,message}抛出给外面处理
       throw data;
