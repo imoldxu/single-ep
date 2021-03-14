@@ -15,13 +15,6 @@ export default ()=>{
   
   const actionRef = useRef();
 
-  // let defaultData
-  // const sessionData = sessionStorage.getItem("orderList");
-  // if(sessionData){
-  //   defaultData = JSON.parse(sessionData)
-  // }else{
-  //   defaultData = []
-  // }
   const {orderList, queryOrders} = useModel('useOrderModel')
 
   async function commitRefund(values){
@@ -232,7 +225,8 @@ export default ()=>{
       <ProTable
         headerTitle="交易列表"
         actionRef={actionRef}
-        defaultData={orderList}
+        defaultData={orderList?.data}
+        pagination={{current: orderList?.current, pageSize: orderList?.pageSize, total: orderList?.total}}
         rowKey="key"
         request={async (params) => {
             try{
@@ -243,11 +237,6 @@ export default ()=>{
 
                 const resp = await queryOrders(params)
                 return resp
-                //const response = await queryOrder(params)
-                // if(response){
-                //   sessionStorage.setItem("orderList", JSON.stringify(response.data))
-                //   return response
-                // }
             }catch(e){
                 message.error(e.message, 3)
             }

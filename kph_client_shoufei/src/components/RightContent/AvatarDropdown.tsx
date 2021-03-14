@@ -44,8 +44,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
         setInitialState({ ...initialState, currentUser: undefined });
-        setOrderList([]);
-        setPrescriptionList([]);
+        setOrderList(undefined);
+        setPrescriptionList(undefined);
         loginOut();
         return;
       }           

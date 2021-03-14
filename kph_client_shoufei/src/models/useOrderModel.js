@@ -3,11 +3,11 @@ import { queryOrder } from '@/services/ant-design-pro/order'
 
 export default function useOrderModel(){
 
-    const [orderList, setOrderList] = useState([])
+    const [orderList, setOrderList] = useState()
 
     async function queryOrders(payload){
         const resp = await queryOrder(payload)
-        setOrderList(resp.data)
+        setOrderList({...resp, pageSize: payload.pageSize})
         return resp
     }
 
