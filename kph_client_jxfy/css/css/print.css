@@ -244,10 +244,11 @@ body {
 .con .payQrCode{
   position: absolute;
   right: 30px;
-  bottom: 135px;
-  padding-left: 30px;
+  bottom: 125px;
+  padding-left: 20px;
   padding-right: 20px;
   background-color: white;
+  font-size: small;
 }
 
 .printinfo {

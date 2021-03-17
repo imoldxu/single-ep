@@ -28,10 +28,10 @@
     <div class="title_area">
         <div class="title">处方笺</div>
         <div class="tip">普通</div>
-        <div class="qrtip">登记号</div>
+        <!-- <div class="qrtip">登记号</div>
         <div class="qrcode">
             <qrcode data="{{userArry.regNo}}" version="2" error-correction-level="L" size="40"></qrcode>
-        </div>
+        </div> -->
     </div>
     
     <div class="conHead">
@@ -90,7 +90,8 @@
     </div>
 
     <div class="payQrCode">
-        <qrcode data="https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d={{paycode}}&fairtype=f" version="2" error-correction-level="L" size="120"></qrcode>
+        <div>微信或支付宝请扫码支付</div>
+        <qrcode style="padding-left: 20px;" data="https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d={{paycode}}&fairtype=f" version="2" error-correction-level="L" size="100"></qrcode>
     </div>
 </div>
 

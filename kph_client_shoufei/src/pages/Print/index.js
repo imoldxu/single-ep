@@ -91,10 +91,10 @@ export default ()=>{
                 <div className={styles.title_area}>
                     <div className={styles.title}>处方笺</div>
                     <div className={styles.tip}>普通</div>
-                    <div className={styles.qrtip}>登记号</div>
+                    {/* <div className={styles.qrtip}>登记号</div>
                     <div className={styles.qrcode}>
                         <QRCode value={detail.prescription.regNo} level="L" size={40}></QRCode>
-                    </div>
+                    </div> */}
                 </div>
                 
                 <div className={styles.conHead}>
@@ -156,7 +156,8 @@ export default ()=>{
                 </div>
 
                 <div className={styles.payQrCode}>
-                    <QRCode value={`https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="L" size={100}></QRCode>
+                    <div>微信或支付宝扫码支付</div>
+                    <QRCode style={{margin: "0 auto"}} value={`https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d=${payCode}&fairtype=f`} level="L" size={100}></QRCode>
                 </div>
             </div>
             }
