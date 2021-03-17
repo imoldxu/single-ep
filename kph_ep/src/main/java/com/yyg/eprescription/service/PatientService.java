@@ -18,7 +18,7 @@ public class PatientService {
 	public Patient getPatientByCardNo(String cardNo, String regNo) {
 		Patient ret = patientMapper.getPatientByCardNo(cardNo, regNo);
 		if(ret == null) {
-			throw new HandleException(ErrorCode.NORMAL_ERROR, "卡号没有对应的患者");
+			throw new HandleException(ErrorCode.NORMAL_ERROR, "没有找到匹配的患者信息，请联系信息科");
 		}
 		return ret;
 	}
