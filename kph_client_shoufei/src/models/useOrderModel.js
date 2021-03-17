@@ -7,7 +7,7 @@ export default function useOrderModel(){
 
     async function queryOrders(payload){
         const resp = await queryOrder(payload)
-        setOrderList({...resp, pageSize: payload.pageSize})
+        setOrderList({...resp, current: payload.current, pageSize: payload.pageSize})
         return resp
     }
 
