@@ -12,6 +12,25 @@
 		<id column="id" property="id"></id>
 	</resultMap>
 	
+	<select id="queryBill" resultMap="billMap">
+	    select * from t_bill 
+	    <where>
+		   <if test="query.orderno != null and query.orderno !=''">
+		        t_bill.orderno = #{query.orderno} 
+		   </if>
+		   <if test="query.payid != null and query.payid !=''">
+		       AND  t_bill.payid = #{query.payid} 
+		   </if>
+		   <if test="query.payway != null">
+		       AND t_bill.payway = #{query.payway} 
+		   </if>
+		   <if test="query.startTime != null and query.endTime != null">
+		       AND t_bill.createtime BETWEEN #{query.startTime} AND #{query.endTime} 
+		   </if>
+		</where>
+		order by t_bill.id ASC;
+	</select>
+	
 	<select id="queryBillWithTotal" resultMap="billMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
 	    select SQL_CALC_FOUND_ROWS * from t_bill 
 	    <where>
@@ -37,6 +56,9 @@
 		select type, sum(amount) as totalAmount FROM t_bill where createtime between #{query.startTime} and #{query.endTime} 
 		<if test="query.payway !=null">
 			AND payway = #{query.payway}
+		</if>
+		<if test="query.payid != null and query.payid !=''">
+			AND payid = #{query.payid}
 		</if>
 		GROUP BY type
 	</select>

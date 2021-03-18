@@ -1,8 +1,8 @@
 import { PageContainer } from "@ant-design/pro-layout"
 import { Button, Card, Col, DatePicker, message, Row, Select, Space, Statistic } from "antd"
 import Form from "antd/lib/form/Form"
-import { statistics } from '@/services/ant-design-pro/bill';
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { downloadBill, statistics } from '@/services/ant-design-pro/bill';
+import { DownloadOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useRef, useState } from "react";
 import FormItem from "antd/lib/form/FormItem";
 import moment from 'moment';
@@ -127,6 +127,52 @@ export default ()=>{
                     </Card>
                 </Col>
             </Row>
+            <Card>
+            <Button
+              type="primary"
+              key="download"
+              onClick={() => {
+                  formRef.current
+                  .validateFields()
+                  .then(async values => {
+                        const { rangeTime, payway } = values;
+                        let query = {}
+                        if(rangeTime && rangeTime.length>1){
+                            query.startTime = rangeTime[0].format('yyyy-MM-DD') + " 00:00:00"
+                            query.endTime = rangeTime[1].format('yyyy-MM-DD') + " 23:59:59"
+                        }
+                        if( payway && payway !=0 ){
+                            query.payway = payway
+                        }
+                        try{
+                            const rs = await downloadBill(query)
+                            //接收到后端的数据流以blob的方式创建一个a标签自动触发下载
+                            const blob = new Blob([rs]) //, { type: 'text/plain' })
+                            const fileName = "账单明细报表.xlsx";
+                            if ('download' in document.createElement('a')) { // 非IE下载
+                                const elink = document.createElement('a');
+                                elink.download = fileName;
+                                elink.style.display = 'none';
+                                elink.href = URL.createObjectURL(blob);
+                                document.body.appendChild(elink);
+                                elink.click();
+                                URL.revokeObjectURL(elink.href);// 释放 URL对象
+                                document.body.removeChild(elink);
+                            } else { // IE10+下载
+                                navigator.msSaveBlob(blob, fileName)
+                            }
+                        }catch(e){
+                            message.error(e.message)
+                        }
+                  })
+                  .catch(e => {
+                      console.log(e)
+                  });
+                }}
+                >
+                    <DownloadOutlined />下载报表
+                </Button>
+            </Card>
             </Space>
         </PageContainer>
     )

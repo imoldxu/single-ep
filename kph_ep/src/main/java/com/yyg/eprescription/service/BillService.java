@@ -74,6 +74,33 @@ public class BillService {
 		return paymode;
 	}
 	
+	public String payWay2Name(int payway){
+		String paymode = "";
+		switch (payway) {
+		case Bill.WXPAY:
+			paymode = "微信";
+			break;
+		case Bill.ZFB:
+			paymode = "支付宝";
+			break;
+		case Bill.SHIYIBAO:
+			paymode = "市医保";
+			break;
+		case Bill.YIDIYIBAO:
+			paymode = "异地医保";
+			break;
+		case Bill.CASH:
+			paymode = "现金";
+			break;
+		case Bill.BANKCARD:
+			paymode = "银行卡";
+			break;
+		default:
+			throw new HandleException(403, "不支持的支付方式");
+		}
+		return paymode;
+	}
+	
 	public int payMode2Payway(String payMode){
 		if(payMode.equalsIgnoreCase("wxjs")) {
 			return Bill.WXPAY;
@@ -91,7 +118,7 @@ public class BillService {
 			throw new HandleException(403, "不支持的支付方式");
 		}
 	}
-	
+
 	//获取账单明细
 	public PageResult<Bill> query(BillQuery billQuery) {
 		
@@ -222,6 +249,11 @@ public class BillService {
 		ex.createCriteria().andEqualTo("orderno", orderno).andEqualTo("type", Bill.TYPE_PAY);
 		Bill bill = billMapper.selectOneByExample(ex);
 		return bill;
+	}
+
+	public List<Bill> queryAll(BillQuery query) {
+		List<Bill> bills = billMapper.queryBill(query);
+		return bills;
 	}
 
 }

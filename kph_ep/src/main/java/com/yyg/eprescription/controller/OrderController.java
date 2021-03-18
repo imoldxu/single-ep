@@ -123,7 +123,7 @@ public class OrderController {
 		Subject subject = SecurityUtils.getSubject();
 		User user = (User) subject.getPrincipal();
 		
-		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getName(),"yidiyibao");
+		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getPhone(), "yidiyibao");
 		
 		return;
 	}
@@ -139,7 +139,7 @@ public class OrderController {
 		Subject subject = SecurityUtils.getSubject();
 		User user = (User) subject.getPrincipal();
 		
-		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getName(),"shiyibao");
+		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getPhone(), "shiyibao");
 		
 		return;
 	}
@@ -155,7 +155,7 @@ public class OrderController {
 		Subject subject = SecurityUtils.getSubject();
 		User user = (User) subject.getPrincipal();
 		
-		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getName(),"cash");
+		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getPhone(), "cash");
 		
 		return;
 	}
@@ -170,7 +170,7 @@ public class OrderController {
 		Subject subject = SecurityUtils.getSubject();
 		User user = (User) subject.getPrincipal();
 		
-		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getName(),"bankcard");
+		orderService.offlinePayOver(orderStateBo.getOrderno(), user.getPhone(), "bankcard");
 		
 		return;
 	}
@@ -179,14 +179,14 @@ public class OrderController {
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/offlineRefund", method = RequestMethod.PUT)
 	@ApiOperation(value = "确认医院线下退款", notes = "确认医院线下退款")
-	public void cashRefund(
+	public void offlineRefund(
 			@ApiParam(name = "orderStateBo", value = "订单状态修改")  @RequestBody @Valid OrderStateBo orderStateBo,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		Subject subject = SecurityUtils.getSubject();
 		User user = (User) subject.getPrincipal();
 		
-		orderService.offlineRefund(orderStateBo.getOrderno(), user.getName());
+		orderService.offlineRefund(orderStateBo.getOrderno(), user.getPhone());
 		
 		return;
 	}

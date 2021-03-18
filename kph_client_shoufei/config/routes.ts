@@ -79,6 +79,13 @@
     component: './Charge',
   },
   {
+    name: 'dashboard',
+    icon: 'dashboard',
+    path: '/mybill',
+    access: 'tollman',
+    component: './TollmanBills',
+  },
+  {
     name: 'saleStatistic',
     icon: 'BarChart',
     access: 'admin',

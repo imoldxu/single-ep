@@ -19,4 +19,6 @@ public interface BillMapper extends BaseMapper<Bill>{
 	
 	public List<BillStatisticDTO> statistic(@Param("query") BillQuery query);
 
+	public List<Bill> queryBill(@Param("query") BillQuery query);
+
 }
