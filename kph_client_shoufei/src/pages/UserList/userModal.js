@@ -65,11 +65,11 @@ const UserModal = (props) => {
                     hasFeedback>
                     <Input placeholder="请输入用户姓名"></Input>
                 </FormItem>
-                <FormItem name="phone" label="手机号"
+                <FormItem name="phone" label="登录账号"
                     rules={[{ required: true }]}
                     hasFeedback
                 >
-                    <Input placeholder="请输入手机号" maxLength="11"></Input>
+                    <Input placeholder="请输入登录账号" maxLength="11"></Input>
                 </FormItem>
                 <FormItem name="role" label="角色"
                     rules={[{ required: true }]}

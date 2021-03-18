@@ -20,7 +20,7 @@ export default ()=>{
       dataIndex: 'name',
     },
     {
-      title: '手机号',
+      title: '登录账号',
       dataIndex: 'phone',
     },
     {

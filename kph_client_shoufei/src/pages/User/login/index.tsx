@@ -144,7 +144,7 @@ const Login: React.FC = () => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.username.placeholder',
-                defaultMessage: '手机号',
+                defaultMessage: '登录账号',
               })}
               rules={[
                 {
@@ -152,7 +152,7 @@ const Login: React.FC = () => {
                   message: (
                     <FormattedMessage
                       id="pages.login.username.required"
-                      defaultMessage="请输入手机号!"
+                      defaultMessage="请输入登录账号!"
                     />
                   ),
                 },
