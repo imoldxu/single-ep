@@ -147,12 +147,12 @@ export default ()=>{
                             <FormItem name="payway" label="收款渠道">
                             <Select>
                                 <Option value="0">全部</Option>
-                                <Option value="1">微信</Option>
-                                <Option value="2">支付宝</Option>
-                                <Option value="3">医保</Option>
-                                <Option value="4">异地医保</Option>
                                 <Option value="5">现金</Option>
                                 <Option value="6">银行卡</Option>
+                                <Option value="3">医保</Option>
+                                <Option value="4">异地医保</Option>
+                                {/* <Option value="1">微信</Option>
+                                <Option value="2">支付宝</Option> */}
                             </Select>
                             </FormItem>
                         </Col>
@@ -270,7 +270,7 @@ export default ()=>{
                             });
                           }}
                           >
-                              <DownloadOutlined />下载报表
+                              <DownloadOutlined />下载明细
                           </Button>
                     ]}
                 />

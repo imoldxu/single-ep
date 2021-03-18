@@ -148,7 +148,7 @@ export default ()=>{
                             const rs = await downloadBill(query)
                             //接收到后端的数据流以blob的方式创建一个a标签自动触发下载
                             const blob = new Blob([rs]) //, { type: 'text/plain' })
-                            const fileName = "账单明细报表.xlsx";
+                            const fileName = "账单对账明细.xlsx";
                             if ('download' in document.createElement('a')) { // 非IE下载
                                 const elink = document.createElement('a');
                                 elink.download = fileName;
@@ -170,7 +170,7 @@ export default ()=>{
                   });
                 }}
                 >
-                    <DownloadOutlined />下载报表
+                    <DownloadOutlined />下载对账明细
                 </Button>
             </Card>
             </Space>

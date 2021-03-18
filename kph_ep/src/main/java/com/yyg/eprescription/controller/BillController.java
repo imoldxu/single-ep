@@ -239,7 +239,7 @@ public class BillController {
         XSSFCellStyle bodyStyle = exportUtil.getBodyStyle();  
         // 构建表头  
         XSSFRow headRow = sheet.createRow(0);
-        String[] titles = { "账单编号","工号/第三方渠道订单号","支付方式","支付金额","支付时间","关联订单号"}; 
+        String[] titles = { "账单编号","收款工号/第三方渠道订单号","支付方式","支付金额","支付时间","关联订单号"}; 
         XSSFCell cell = null;  
         for (int i = 0; i < titles.length; i++)  
         {  
