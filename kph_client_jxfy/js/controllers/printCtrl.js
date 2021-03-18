@@ -69,7 +69,23 @@ define(['angular','layer'], function(angular,layer){
 				requestType: 'json',
 
 				data: {
-					...$scope.userArry,
+					prescriptionno: $scope.userArry.prescriptionno,
+					doctorname: $scope.userArry.doctorname,
+					department: $scope.userArry.department,
+					diagnosis: $scope.userArry.diagnosis,
+					patientname: $scope.userArry.patientname,
+					patientage: $scope.userArry.patientage,
+					patientsex: $scope.userArry.patientsex,
+					patientphone: $scope.userArry.patientphone,
+					patientBirthday: $scope.userArry.patientBirthday,
+					regNo: $scope.userArry.regNo,
+					cardNo: $scope.userArry.cardNo,
+					type: 1,//西药
+					zyusage: "",
+					zynum: 1,
+					zysingledoes: "",
+					zyfrequence: "",
+					zymode: "",
 					drugs: $scope.drugArry
 				},
 				headers: {

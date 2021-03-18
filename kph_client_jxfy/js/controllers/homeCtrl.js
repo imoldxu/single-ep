@@ -31,7 +31,6 @@ define(['app','angular'], function(app,angular){
         $scope.drugIndex; //药品在药品列表中的下标
 
         $scope.ipt ={
-            ...$scope.userArry,
             "prescriptionno":$scope.userArry.prescriptionno,
             "doctorname":$scope.userArry.doctorname == null ? $scope.docArray == null ? '' :  $scope.docArray.doctorname : $scope.userArry.doctorname,
             "department":$scope.userArry.department == null ? $scope.docArray == null ? '' :  $scope.docArray.department : $scope.userArry.department,
@@ -40,7 +39,10 @@ define(['app','angular'], function(app,angular){
             "patientage":$scope.userArry.patientage,
             "patientsex":$scope.userArry.patientsex,
             "patientphone":$scope.userArry.patientphone,
-			"type":1,//西药
+			"patientBirthday":$scope.userArry.patientBirthday,
+            "regNo": $scope.userArry.regNo,
+            "cardNo": $scope.userArry.cardNo,
+            "type":1,//西药
 			"zyusage":"",
 			"zynum":1,
 			"zysingledoes":"",
