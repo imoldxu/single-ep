@@ -36,7 +36,7 @@ const PayModal = (props) => {
                     <Statistic key="amount" title="缴费金额" value={`${regFenToYuan(amount)}元`} valueStyle={{color:"red"}}/>     
                 </Row>
                 <Row key="tip" justify="center" gutter={[16,16]}>
-                    <span key="ps">请确认在已经收到患者缴费后，选择患者的缴费方式</span>
+                    <div key="ps">请确认在已经收到患者缴费后，选择患者的缴费方式</div>
                 </Row>
                 <Row key="payway" justify="center" gutter={[16,16]}>    
                     <Space key="buttons" direction="vertical" align="center" size="large">
