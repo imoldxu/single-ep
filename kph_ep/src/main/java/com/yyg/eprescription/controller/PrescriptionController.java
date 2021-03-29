@@ -100,16 +100,16 @@ public class PrescriptionController {
 			@ApiParam(name="openPrescriptionBo",value="开处方")  @RequestBody @Valid OpenPrescriptionBo openPrescriptionBo,
 			HttpServletRequest request, HttpServletResponse respons) {
 		
-		try {
-			Date now = new Date();
-			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-			Date limit = formater.parse("2021-05-31");
-			if(now.after(limit)) {
-				return new Response(ErrorCode.NORMAL_ERROR, null, "授权已过期，请联系管理员");
-			}
-		}catch (Exception e) {
-			return new Response(ErrorCode.NORMAL_ERROR, null, "授权已过期，请联系管理员");
-		}
+//		try {
+//			Date now = new Date();
+//			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+//			Date limit = formater.parse("2021-05-31");
+//			if(now.after(limit)) {
+//				return new Response(ErrorCode.NORMAL_ERROR, null, "授权已过期，请联系管理员");
+//			}
+//		}catch (Exception e) {
+//			return new Response(ErrorCode.NORMAL_ERROR, null, "授权已过期，请联系管理员");
+//		}
 			
 		Response resp = null;
 		try{	
