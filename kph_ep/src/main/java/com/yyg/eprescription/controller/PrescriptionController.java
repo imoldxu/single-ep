@@ -117,6 +117,9 @@ public class PrescriptionController {
 			
 			resp = new Response(ErrorCode.OK, null, "OK");
 			return resp;
+		}catch (HandleException e) {
+			resp = new Response(e.getErrorCode(), null, e.getMessage());
+			return resp;
 		}catch (Exception e) {
 			e.printStackTrace();
 			resp = new Response(ErrorCode.ARG_ERROR, null, "系统异常");
