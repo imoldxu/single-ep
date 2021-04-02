@@ -23,8 +23,13 @@ define(['angular','layer'], function(angular,layer){
 
 		$scope.isCommit = false;
 
+		$scope.isDrug = true
+
         angular.forEach($scope.drugArry, function(data,index,array){
 
+			if(0 == data.drugno.indexOf("F")){
+				$scope.isDrug = false
+			}
 
             $scope.price  = $scope.price  + data.price*data.number;
 

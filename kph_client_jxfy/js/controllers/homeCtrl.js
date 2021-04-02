@@ -317,6 +317,8 @@ define(['app','angular'], function(app,angular){
             var drugInfo = {
 				drugid:$scope.drugArry.id,
 
+                drugno:$scope.drugArry.drugno,
+
                 drugname:$scope.drugArry.drugname,
 
                 standard :$scope.drugArry.standard,

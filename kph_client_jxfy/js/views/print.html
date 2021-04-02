@@ -23,7 +23,7 @@
 
 </div>
 
-<div class="con">
+<div class="con"  ng-if="isDrug">
     <div class="topHead">四川锦欣妇女儿童医院互联网线下药房</div>
     <div class="title_area">
         <div class="title">处方笺</div>
@@ -92,6 +92,31 @@
     <div class="payQrCode">
         <div>微信或支付宝请扫码支付</div>
         <qrcode style="padding-left: 20px;" data="https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d={{paycode}}&fairtype=f" version="2" error-correction-level="L" size="100"></qrcode>
+    </div>
+</div>
+
+<div class="con" ng-if="!isDrug">
+    <div class="topHead" style="margin-bottom: 10px;">四川锦欣妇女儿童医院互联网线下药房导诊单</div>
+    <div style="margin-left: 35px;">卡号: {{userArry.cardNo}}</div>
+    <div style="margin-left: 35px;">登记号: {{userArry.regNo}}</div>
+    <div style="margin-left: 35px;">就诊人：{{userArry.patientname}}</div>
+    <div style="margin-left: 35px;">开单人：{{userArry.doctorname}}</div>
+    <div style="margin-left: 35px;">开单时间：{{nowTime}}</div>
+    <div style="margin-left: 35px;">医嘱明细：</div>
+    <div style="margin-left: 35px;" class="infoList" ng-repeat="x in drugArry">
+        <div style="display: inline-block; margin-right: 10px;">{{$index+1}}</div>
+        <div style="display: inline-block;">{{x.drugname}}</div>
+        <div style="display: inline-block;">{{x.number +x.unit}}</div>
+        <div style="display: inline-block;">{{x.price*x.number/100}}元</div>
+        <div style="margin-left: 21px;"><span>{{'用法用量:'+ x.singledose}}</span><span style="margin-left: 20px;">{{x.frequency}}</span><span style="margin-left: 20px;">{{x.myusage}}</span></div>
+    </div>
+    <div style="margin-left: 35px;">总金额(元):{{price/100}}元</div>
+    <div style="margin-left: 35px;">取药地址：一楼母婴店旁</div>
+    <div style="margin-left: 35px;">——————————————————————————</div>
+    <div style="margin-left: 35px;">备注：此单据仅作导诊单使用，不做其他用途</div>
+    <div style="text-align: center;margin-top: 15px">
+        <div>微信或支付宝请扫码支付</div>
+        <qrcode data="https://jxfyhosp.cdwit120.com/pharmacy/scan/index?u=jxfyhpk&d={{paycode}}&fairtype=f" version="2" error-correction-level="L" size="100"></qrcode>
     </div>
 </div>
 
