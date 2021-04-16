@@ -23,8 +23,16 @@
 
 </div>
 
+<div class="foot noprint">
+    
+    <div class="next" ng-if="!isCommit"  ng-click="commit()">确认并打印处方</div>
+    <div class="next" ng-if="isCommit"  ng-click="print()">再次打印处方</div>
+    <div  style="background: #89969c" class="next" ng-if="!isCommit" ng-click="goBack()">返回上一步</div>
+
+</div>
+
 <div class="con"  ng-if="isDrug">
-    <div class="topHead">四川锦欣妇女儿童医院互联网线下药房</div>
+    <!-- <div class="topHead">四川锦欣妇女儿童医院互联网线下药房</div> -->
     <div class="title_area">
         <div class="title">处方笺</div>
         <div class="tip">普通</div>
@@ -96,11 +104,11 @@
 </div>
 
 <div class="con" ng-if="!isDrug">
-    <div class="topHead" style="margin-bottom: 10px;">四川锦欣妇女儿童医院互联网线下药房导诊单</div>
+    <div class="topHead" style="margin-bottom: 10px;">导诊单</div>
     <div style="margin-left: 35px;">卡号: {{userArry.cardNo}}</div>
     <div style="margin-left: 35px;">登记号: {{userArry.regNo}}</div>
     <div style="margin-left: 35px;">就诊人：{{userArry.patientname}}</div>
-    <div style="margin-left: 35px;">开单人：{{userArry.doctorname}}</div>
+    <!-- <div style="margin-left: 35px;">开单人：{{userArry.doctorname}}</div> -->
     <div style="margin-left: 35px;">开单时间：{{nowTime}}</div>
     <div style="margin-left: 35px;">医嘱明细：</div>
     <div style="margin-left: 35px;" class="infoList" ng-repeat="x in drugArry">
@@ -120,10 +128,4 @@
     </div>
 </div>
 
-<div class="foot noprint">
-    
-    <div class="next" ng-if="!isCommit"  ng-click="commit()">确认并打印处方</div>
-    <div class="next" ng-if="isCommit"  ng-click="print()">再次打印处方</div>
-    <div class="next" ng-if="!isCommit" ng-click="goBack()">返回上一步</div>
 
-</div>
