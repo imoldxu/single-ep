@@ -147,6 +147,7 @@ export default ()=>{
                             navigator.msSaveBlob(blob, fileName)
                         }
                       }catch(e){
+                        console.log(e)
                         message.error(e.message)
                       }
                     }else{

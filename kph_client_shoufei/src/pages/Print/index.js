@@ -87,7 +87,7 @@ export default ()=>{
         <Spin spinning={isloading}>
            { detail &&
             <div ref={printRef} className={`${styles.con}`}>
-                <div className={styles.topHead}>四川锦欣妇女儿童医院互联网线下药房</div>
+                {/* <div className={styles.topHead}>四川锦欣妇女儿童医院互联网线下药房</div> */}
                 <div className={styles.title_area}>
                     <div className={styles.title}>处方笺</div>
                     <div className={styles.tip}>普通</div>

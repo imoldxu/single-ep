@@ -37,7 +37,7 @@ const goto = (role) => {
     if(role.tollman){
       history.push('/Charge')
     } else if(role.admin){
-      history.push('/saleStatistic')
+      history.push('/userList')
     } else{
       history.push('/OrderList');
     }

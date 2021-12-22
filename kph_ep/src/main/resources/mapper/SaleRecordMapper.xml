@@ -12,6 +12,11 @@
 		id="statisticMap" autoMapping="true">
 	</resultMap>
 
+	<resultMap
+		type="com.yyg.eprescription.vo.SalesRecordDepartmentStatisticVo"
+		id="departStatisticMap" autoMapping="true">
+	</resultMap>
+
 	<select id="querySalesRecordWithTotal"
 		resultMap="record, com.yyg.eprescription.mapper.CommonMapper.totalResult">
 		SELECT SQL_CALC_FOUND_ROWS t_sales_record.*, t_prescription.prescriptionno,
@@ -48,6 +53,40 @@
 		SELECT
 		FOUND_ROWS() as total;
 	</select>
+
+	<select id="querySalesRecord"
+		resultMap="record">
+		SELECT t_sales_record.*, t_prescription.prescriptionno,
+		t_prescription.patient_reg_no as regNo, t_prescription.doctorname,
+		t_prescription.department, t_order.orderno, t_order.payway, t_drug.drugno
+		FROM t_sales_record LEFT JOIN t_prescription ON t_sales_record.prescriptionid = t_prescription.id
+		LEFT JOIN t_order ON t_sales_record.orderid = t_order.id 
+		LEFT JOIN t_drug ON t_drug.id = t_sales_record.drugid
+		<where>
+			<if test="query.startTime !=null and query.endTime != null">
+				t_sales_record.createtime between #{query.startTime} and
+				#{query.endTime}
+			</if>
+			<if test="query.regNo != null and query.regNo !=''">
+				AND t_prescription.patient_reg_no = #{query.regNo}
+			</if>
+			<if
+				test="query.prescriptionno != null and query.prescriptionno !=''">
+				AND t_prescription.prescriptionno = #{query.prescriptionno}
+			</if>
+			<if test="query.drugno != null and query.drugno !=''">
+				AND t_drug.drugno = #{query.drugno}
+			</if>
+			<if test="query.department != null and query.department !=''">
+				AND t_prescription.department = #{query.department}
+			</if>
+			<if test="query.doctorname != null and query.doctorname !=''">
+				AND t_prescription.doctorname = #{query.doctorname}
+			</if>
+		</where>
+		order by t_sales_record.id DESC
+	</select>
+
 
 	<select id="statistic"
 		resultMap="statisticMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
@@ -110,6 +149,63 @@
 		</where>
 		GROUP BY t_sales_record.drugid, t_prescription.doctorname,
 		t_prescription.department
+		Order by t_sales_record.drugid DESC,
+		totalPrice DESC, totalSale DESC;
+	</select>
+	
+	<select id="departStatistic"
+		resultMap="departStatisticMap, com.yyg.eprescription.mapper.CommonMapper.totalResult">
+		SELECT SQL_CALC_FOUND_ROWS SUM(t_sales_record.num-t_sales_record.refundnum) as totalSale,
+		SUM((t_sales_record.num-t_sales_record.refundnum)*t_sales_record.price)
+		as totalPrice, t_prescription.department,
+		t_drug.drugno, t_drug.drugname, t_drug.standard,
+		t_drug.company as drugcompany FROM
+		t_sales_record LEFT JOIN
+		t_prescription ON
+		t_sales_record.prescriptionid = t_prescription.id
+		LEFT JOIN t_drug ON
+		t_drug.id = t_sales_record.drugid
+		<where>
+			<if test="query.startTime !=null and query.endTime != null">
+				t_sales_record.createtime between #{query.startTime} and
+				#{query.endTime}
+			</if>
+			<if test="query.department != null and query.department !=''">
+				AND t_prescription.department = #{query.department}
+			</if>
+			<if test="query.drugno != null and query.drugno !=''">
+				AND t_drug.drugno = #{query.drugno}
+			</if>
+		</where>
+		GROUP BY t_sales_record.drugid, t_prescription.department
+		Order by t_sales_record.drugid DESC,
+		totalPrice DESC, totalSale DESC
+		limit
+		${(query.current-1)*query.pageSize}, ${query.pageSize};
+		SELECT FOUND_ROWS() as total;
+	</select>
+	
+	<select id="departStatisticAll" resultMap="departStatisticMap">
+		SELECT SUM(t_sales_record.num-t_sales_record.refundnum) as totalSale,
+		SUM((t_sales_record.num-t_sales_record.refundnum)*t_sales_record.price)
+		as totalPrice, t_prescription.department,
+		t_drug.drugno, t_drug.drugname, t_drug.standard,
+		t_drug.company as drugcompany FROM
+		t_sales_record LEFT JOIN t_prescription ON t_sales_record.prescriptionid = t_prescription.id
+		LEFT JOIN t_drug ON t_drug.id = t_sales_record.drugid
+		<where>
+			<if test="query.startTime !=null and query.endTime != null">
+				t_sales_record.createtime between #{query.startTime} and
+				#{query.endTime}
+			</if>
+			<if test="query.department != null and query.department !=''">
+				AND t_prescription.department = #{query.department}
+			</if>
+			<if test="query.drugno != null and query.drugno !=''">
+				AND t_drug.drugno = #{query.drugno}
+			</if>
+		</where>
+		GROUP BY t_sales_record.drugid,	t_prescription.department
 		Order by t_sales_record.drugid DESC,
 		totalPrice DESC, totalSale DESC;
 	</select>

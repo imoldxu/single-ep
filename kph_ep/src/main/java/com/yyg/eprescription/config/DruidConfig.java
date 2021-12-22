@@ -53,4 +53,5 @@ public class DruidConfig {
 		filterRegistrationBean.addInitParameter("exclusions", "*.js.*.gif,*.png,*.css,*.ico,/druid/*");
 		return filterRegistrationBean;
 	}
+
 }

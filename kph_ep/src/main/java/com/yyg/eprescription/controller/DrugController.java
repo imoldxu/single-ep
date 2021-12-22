@@ -141,7 +141,7 @@ public class DrugController {
 		return resp;
 	}
 	
-	@RequiresRoles({"admin"})
+	@RequiresRoles(value={"admin","manager"}, logical=Logical.OR)
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/uploadByExcel", method = RequestMethod.POST)
 	@ApiOperation(value = "新增上传药品信息", notes = "新增上传药品信息")
@@ -168,7 +168,7 @@ public class DrugController {
 	    }
 	}
 	
-	@RequiresRoles({"admin"})
+	@RequiresRoles(value={"admin","manager"}, logical=Logical.OR)
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/addDrug", method = RequestMethod.POST)
 	@ApiOperation(value = "添加药品信息", notes = "")
@@ -179,7 +179,7 @@ public class DrugController {
 		return ret;
 	}
 	
-	@RequiresRoles({"admin"})
+	@RequiresRoles(value={"admin","manager"}, logical=Logical.OR)
 	//@CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
 	@RequestMapping(value = "/modifyDrug", method = RequestMethod.PUT)
 	@ApiOperation(value = "修改药品信息", notes = "")

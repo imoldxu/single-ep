@@ -19,6 +19,7 @@ import com.yyg.eprescription.entity.Drug;
 import com.yyg.eprescription.entity.PrescriptionDrugs;
 import com.yyg.eprescription.entity.SalesRecord;
 import com.yyg.eprescription.mapper.SalesRecordMapper;
+import com.yyg.eprescription.vo.SalesRecordDepartmentStatisticVo;
 import com.yyg.eprescription.vo.SalesRecordStatisticVo;
 import com.yyg.eprescription.vo.SalesRecordVo;
 
@@ -39,6 +40,12 @@ public class SalesRecordService {
 		
 		List<List<?>> sqlResult = recordMapper.querySalesRecordWithTotal(query);		
 		PageResult<SalesRecordVo> result = PageResult.buildPageResult(sqlResult, SalesRecordVo.class);	
+		return result;
+	}
+	
+	public List<SalesRecordVo> queryAll(SaleRecordQuery query){
+		
+		List<SalesRecordVo> result = recordMapper.querySalesRecord(query);		
 		return result;
 	}
 
@@ -137,6 +144,21 @@ public class SalesRecordService {
 	public List<SalesRecordStatisticVo> statisticAll(SaleRecordQuery query){
 		
 		List<SalesRecordStatisticVo> result = recordMapper.statisticAll(query);
+		return  result;
+	}
+	
+   public PageResult<SalesRecordDepartmentStatisticVo> departStatistic(SaleRecordQuery query){
+		
+		List<List<?>> sqlResult = recordMapper.departStatistic(query);
+		
+		PageResult<SalesRecordDepartmentStatisticVo> result = PageResult.buildPageResult(sqlResult, SalesRecordDepartmentStatisticVo.class);
+		
+		return  result;
+	}
+	
+	public List<SalesRecordDepartmentStatisticVo> departStatisticAll(SaleRecordQuery query){
+		
+		List<SalesRecordDepartmentStatisticVo> result = recordMapper.departStatisticAll(query);
 		return  result;
 	}
 }

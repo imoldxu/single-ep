@@ -43,6 +43,8 @@ public class SalesRecordVo {
 	
 	private Integer refundnum;
 
+	private Integer payway;
+	
 	public Long getId() {
 		return id;
 	}
@@ -185,6 +187,14 @@ public class SalesRecordVo {
 
 	public void setDrugno(String drugno) {
 		this.drugno = drugno;
+	}
+
+	public Integer getPayway() {
+		return payway;
+	}
+
+	public void setPayway(Integer payway) {
+		this.payway = payway;
 	}
 	
 	
