@@ -27,7 +27,7 @@ define(['angular','layer'], function(angular,layer){
 
         angular.forEach($scope.drugArry, function(data,index,array){
 
-			if(0 == data.drugno.indexOf("F")){
+			if(0 == data.drugno.indexOf("F") || 0 == data.drugno.indexOf("S"){
 				$scope.isDrug = false
 			}
 
